@@ -21,7 +21,6 @@
     <Folder Include="Areas\Home\Views\" />
     <Folder Include="Areas\Meetups\" />
     <Folder Include="Areas\Movies\" />
-    <Folder Include="Areas\Users\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,6 +23,8 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
+        private readonly IUserProfileService _userProfileService;
+
         private readonly SignInManager<UserAccount> _signInManager;
         private readonly UserManager<UserAccount> _userManager;
         private readonly IUserStore<UserAccount> _userStore;
@@ -35,7 +37,8 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
             IUserStore<UserAccount> userStore,
             SignInManager<UserAccount> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUserProfileService userProfileService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,6 +46,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _userProfileService = userProfileService;
         }
 
         /// <summary>
@@ -79,6 +83,11 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Required]
+            [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
+            [Display(Name = "Display Name")]
+            public string DisplayName { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -114,6 +123,10 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                // Create User Profile
+                var profileId = await _userProfileService.CreateUserProfile(user.Id, Input.DisplayName);
+                user.SetProfileId(profileId);
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -148,8 +161,11 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-            }
 
+                // Delete UserProfile if User was not created successfully.
+                await _userProfileService.RemoveUserProfile(user.Id);
+            }
+            
             // If we got this far, something failed, redisplay form
             return Page();
         }

@@ -2,6 +2,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure();
 
+builder.Services.AddTransient<IUserProfileService, UserProfileService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
