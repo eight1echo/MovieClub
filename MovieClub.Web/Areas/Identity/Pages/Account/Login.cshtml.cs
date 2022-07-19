@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MovieClub.Web.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<UserAccount> _signInManager;

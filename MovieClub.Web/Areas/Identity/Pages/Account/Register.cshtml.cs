@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MovieClub.Web.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class RegisterModel : PageModel
     {
         private readonly IUserCommandService _userProfileService;

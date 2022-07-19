@@ -1,4 +1,8 @@
-﻿namespace MovieClub.Web.Pages;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace MovieClub.Web.Pages;
+
+[AllowAnonymous]
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
