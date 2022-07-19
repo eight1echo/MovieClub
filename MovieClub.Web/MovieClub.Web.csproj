@@ -18,13 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MovieClub.Infrastructure\MovieClub.Infrastructure.csproj" />
-    <ProjectReference Include="..\MovieClub.Shared\MovieClub.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Clubs\" />
-    <Folder Include="Areas\Movies\" />
-    <Folder Include="Areas\Meetups\" />
+    <Folder Include="Areas\Meetups\Pages\" />
+    <Folder Include="Areas\Movies\Pages\" />
+    <Folder Include="Areas\Users\Pages\" />
   </ItemGroup>
 
 </Project>

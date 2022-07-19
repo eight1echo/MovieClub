@@ -23,7 +23,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly IUserProfileService _userProfileService;
+        private readonly IUserCommandService _userProfileService;
 
         private readonly SignInManager<UserAccount> _signInManager;
         private readonly UserManager<UserAccount> _userManager;
@@ -38,7 +38,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
             SignInManager<UserAccount> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IUserProfileService userProfileService)
+            IUserCommandService userProfileService)
         {
             _userManager = userManager;
             _userStore = userStore;

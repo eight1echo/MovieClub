@@ -12,12 +12,12 @@ public static class DependencyInjection
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         // Identity
-/*        services.AddAuthorization(options =>
+        services.AddAuthorization(options =>
         {
             options.FallbackPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .Build();
-        });*/
+        });
 
         services.AddDefaultIdentity<UserAccount>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<ApplicationDbContext>();

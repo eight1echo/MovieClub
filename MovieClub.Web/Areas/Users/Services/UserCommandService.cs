@@ -1,10 +1,10 @@
-﻿namespace MovieClub.Web.Areas.Users;
+﻿namespace MovieClub.Web.Areas.Users.Services;
 
-public class UserProfileService : IUserProfileService
+public class UserCommandService : IUserCommandService
 {
     private readonly ApplicationDbContext _context;
 
-    public UserProfileService(ApplicationDbContext context)
+    public UserCommandService(ApplicationDbContext context)
     {
         _context = context;
     }
