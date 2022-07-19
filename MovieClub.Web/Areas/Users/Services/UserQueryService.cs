@@ -3,37 +3,16 @@
 public class UserQueryService : IUserQueryService
 {
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<UserAccount> _userManager;
 
-    public UserQueryService(ApplicationDbContext context, UserManager<UserAccount> userManager)
+    public UserQueryService(ApplicationDbContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
-    public async Task<int> GetProfileIdFromSession(HttpContext httpContext, ClaimsPrincipal user)
+    public async Task<UserProfileDTO?> GetUserProfile(string userAccountId)
     {
-        int? userProfileId = httpContext.Session.GetInt32("UserProfileId");
-
-        if (userProfileId is null)
-        {
-            var userProfile = await GetCurrentUserProfile(user);
-
-            if (userProfile is null)
-                throw new Exception("User Profile does not exist.");
-
-            userProfileId = userProfile.Id;
-        }
-
-        return (int)userProfileId;
-    }
-
-    public async Task<UserProfileDTO?> GetCurrentUserProfile(ClaimsPrincipal user)
-    {
-        var currentUser = _userManager.GetUserId(user);
-
         var profile = await _context.UserProfiles
-            .Where(up => up.UserAccountId == currentUser)
+            .Where(up => up.UserAccountId == userAccountId)
             .Select(up => new UserProfileDTO { Id = up.Id })
             .FirstOrDefaultAsync();
 

@@ -15,18 +15,22 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
+        private readonly ICurrentUserService _userService;
         private readonly SignInManager<UserAccount> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
 
-        public LogoutModel(SignInManager<UserAccount> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(SignInManager<UserAccount> signInManager, ILogger<LogoutModel> logger, ICurrentUserService userService)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userService = userService;
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
+            await _userService.ClearSessionState(HttpContext);
+
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {

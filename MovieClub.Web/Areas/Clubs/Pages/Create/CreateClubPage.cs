@@ -3,12 +3,12 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Create;
 public class CreateClubPage : PageModel
 {
     private readonly IClubCommandService _clubCommands;
-    private readonly IUserQueryService _userQueries;
+    private readonly ICurrentUserService _userService;
 
-    public CreateClubPage(IClubCommandService clubCommandService, IUserQueryService userQueries)
+    public CreateClubPage(IClubCommandService clubCommandService, ICurrentUserService userService)
     {
         _clubCommands = clubCommandService;
-        _userQueries = userQueries;
+        _userService = userService;
     }
 
     [BindProperty]
@@ -23,7 +23,7 @@ public class CreateClubPage : PageModel
     {
         if (ModelState.IsValid)
         {
-            var userProfileId = await _userQueries.GetProfileIdFromSession(HttpContext, User);
+            var userProfileId = await _userService.GetProfileIdFromSession(HttpContext, User);
             await _clubCommands.CreateClub(userProfileId, CreateClubModel);
 
             return RedirectToPage("./Index");

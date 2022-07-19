@@ -3,12 +3,12 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Index;
 public class IndexModel : PageModel
 {
     private readonly IClubQueryService _clubQueries;
-    private readonly IUserQueryService _userQueries;
+    private readonly ICurrentUserService _userService;
 
-    public IndexModel(IClubQueryService clubQueries, IUserQueryService userQueries)
+    public IndexModel(IClubQueryService clubQueries, ICurrentUserService userService)
     {
         _clubQueries = clubQueries;
-        _userQueries = userQueries;
+        _userService = userService;
     }
 
     public ClubIndexModel? ClubIndex { get; set; }
@@ -20,7 +20,7 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnGet()
     {
-        var userProfileId = await _userQueries.GetProfileIdFromSession(HttpContext, User);
+        var userProfileId = await _userService.GetProfileIdFromSession(HttpContext, User);
         ClubIndex = await _clubQueries.ClubIndexQuery(userProfileId);
 
         return Page();
@@ -30,7 +30,7 @@ public class IndexModel : PageModel
     {
         if (ModelState.IsValid)
         {
-            var userProfileId = await _userQueries.GetProfileIdFromSession(HttpContext, User);
+            var userProfileId = await _userService.GetProfileIdFromSession(HttpContext, User);
             SearchedClubs = await _clubQueries.ClubSearch(userProfileId, SearchValue!);
             return Page();
         }

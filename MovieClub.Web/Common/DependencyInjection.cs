@@ -27,6 +27,8 @@ public static class DependencyInjection
         services.AddTransient<IUserCommandService, UserCommandService>();
         services.AddTransient<IUserQueryService, UserQueryService>();
 
+        services.AddTransient<ICurrentUserService, CurrentUserService>();
+
         return services;
     }
 }
