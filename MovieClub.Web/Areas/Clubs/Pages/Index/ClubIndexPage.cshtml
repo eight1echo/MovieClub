@@ -1,0 +1,83 @@
+﻿@page "/clubs"
+@model IndexModel
+@{
+}
+
+<form method="post" id="Search"></form>
+
+<div class="row pb-5 pt-5">
+    <div class="col-3 text-center">
+        <input type="text" asp-for="SearchValue" class="form-control" form="Search" placeholder="Search existing Clubs" />
+        <span asp-validation-for="SearchValue" class="text-danger"></span>
+    </div>
+    <div class="col-2">
+        <input asp-page-handler="Search" type="submit" value="Search" class="btn btn-primary" form="Search" />
+    </div>
+    <div class="col-7 d-flex justify-content-end">
+        <a asp-page="Create" class="btn btn-success">Create New Club</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-3">
+        <h4>Club Name</h4>
+    </div>
+    <div class="col-3">
+        <h4>Leader</h4>
+    </div>
+    <div class="col-3">
+        <h4>Members</h4>
+    </div>
+</div>
+
+@if (Model.ClubIndex is not null)
+{
+    @if (Model.ClubIndex.ClubsLeader.Any())
+    {
+        @foreach (var club in Model.ClubIndex.ClubsLeader) 
+        {
+            <div class="row">
+                <div class="col-3">
+                    <h4>@club.Name</h4>
+                </div>
+                <div class="col-3">
+                    <h4>@club.Memberships.Where(m => m.Rank == MembershipRank.Leader).First().UserProfile.DisplayName</h4>
+                </div>
+                <div class="col-3">
+                    <h4>@club.Memberships.Count</h4>
+                </div>
+            </div>
+            
+        }
+    }
+
+    @if (Model.ClubIndex.ClubsMember.Any())
+    {
+        @foreach (var club in Model.ClubIndex.ClubsMember) 
+        {
+            <h1>@club.Name</h1>
+        }
+    }
+
+    @if (Model.ClubIndex.ClubsPending.Any())
+    {
+        @foreach (var club in Model.ClubIndex.ClubsPending) 
+        {
+            <h1>@club.Name</h1>
+        }
+    }
+}
+
+@if (Model.SearchedClubs is not null)
+{
+    <h2>Search Results: </h2>
+    @foreach (var club in Model.SearchedClubs) 
+    {
+        <h1>@club.Name</h1>
+    }
+}
+
+
+
+
+
