@@ -1,4 +1,4 @@
-﻿namespace MovieClub.Web.Shared.Interfaces;
+﻿namespace MovieClub.Shared.Interfaces;
 
 public interface IUserProfileService
 {

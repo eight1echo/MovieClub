@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-MovieClub.Web-DFA3721C-E85A-43DF-9692-FDF5E7451C2B</UserSecretsId>
+    <UserSecretsId>aspnet-MovieClub.Web-28F89CA6-D663-43EA-8B4B-48072D224062</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,14 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Clubs\" />
-    <Folder Include="Areas\Home\Views\" />
-    <Folder Include="Areas\Meetups\" />
-    <Folder Include="Areas\Movies\" />
+    <ProjectReference Include="..\MovieClub.Infrastructure\MovieClub.Infrastructure.csproj" />
+    <ProjectReference Include="..\MovieClub.Shared\MovieClub.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MovieClub.Infrastructure\MovieClub.Infrastructure.csproj" />
+    <Folder Include="Areas\Clubs\" />
+    <Folder Include="Areas\Movies\" />
+    <Folder Include="Areas\Meetups\" />
   </ItemGroup>
 
 </Project>

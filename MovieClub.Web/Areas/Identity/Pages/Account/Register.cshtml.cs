@@ -165,7 +165,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
                 // Delete UserProfile if User was not created successfully.
                 await _userProfileService.RemoveUserProfile(user.Id);
             }
-            
+
             // If we got this far, something failed, redisplay form
             return Page();
         }
