@@ -1,6 +1,6 @@
-﻿namespace MovieClub.Shared.Interfaces;
+﻿namespace MovieClub.Web.Common.Interfaces;
 
-public interface IUserProfileService
+public interface IUserCommandService
 {
     Task<int> CreateUserProfile(string userAccountId, string displayName);
     Task RemoveUserProfile(string userAccountId);
