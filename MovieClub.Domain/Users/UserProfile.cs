@@ -13,9 +13,9 @@ public class UserProfile : BaseEntity
 
 
     private readonly List<Attendance> _attendance;
-    public IReadOnlyCollection<Attendance> Attendance => _attendance;
+    public virtual IReadOnlyCollection<Attendance> Attendance => _attendance;
 
 
     private readonly List<Membership> _memberships;
-    public IReadOnlyCollection<Membership> Memberships => _memberships;
+    public virtual IReadOnlyCollection<Membership> Memberships => _memberships;
 }

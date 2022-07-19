@@ -18,13 +18,17 @@ public class UserQueryService : IUserQueryService
         if (userProfileId is null)
         {
             var userProfile = await GetCurrentUserProfile(user);
+
+            if (userProfile is null)
+                throw new Exception("User Profile does not exist.");
+
             userProfileId = userProfile.Id;
         }
 
         return (int)userProfileId;
     }
 
-    public async Task<UserProfileDTO> GetCurrentUserProfile(ClaimsPrincipal user)
+    public async Task<UserProfileDTO?> GetCurrentUserProfile(ClaimsPrincipal user)
     {
         var currentUser = _userManager.GetUserId(user);
 

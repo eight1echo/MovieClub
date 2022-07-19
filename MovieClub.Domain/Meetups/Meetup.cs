@@ -11,10 +11,10 @@ public class Meetup : BaseEntity
     }
 
     public int ClubId { get; private set; }
-    public Club? Club { get; set; }
+    public virtual Club Club { get; set; } = null!;
 
     public int MovieId { get; private set; }
-    public Movie? Movie { get; set; }
+    public virtual Movie Movie { get; set; } = null!;
 
     public bool MovieHidden { get; private set; }
 
@@ -22,7 +22,7 @@ public class Meetup : BaseEntity
 
 
     private readonly List<Attendance> _attendance;
-    public IReadOnlyCollection<Attendance> Attendance => _attendance;
+    public virtual IReadOnlyCollection<Attendance> Attendance => _attendance;
 
     // Required for EF
     #nullable disable

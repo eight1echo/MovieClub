@@ -8,14 +8,13 @@ public class Attendance : BaseEntity
         Status = status;
     }
     public int MeetupId { get; private set; }
-    public Meetup? Meetup { get; set; }
+    public virtual Meetup Meetup { get; set; } = null!;
 
     public int UserProfileId { get; private set; }
-    public UserProfile? UserProfile { get; set; }
+    public virtual UserProfile UserProfile { get; set; } = null!;
 
     public AttendanceStatus Status { get; private set; }
 
     // Required for EF
-    #nullable disable
     private Attendance() { }
 }

@@ -9,14 +9,13 @@ public class Membership : BaseEntity
     }
 
     public int ClubId { get; private set; }
-    public Club? Club { get; set; }
+    public virtual Club Club { get; set; } = null!;
 
     public int UserProfileId { get; private set; }
-    public UserProfile? UserProfile { get; set; }
+    public virtual UserProfile UserProfile { get; set; } = null!;
 
     public MembershipRank Rank { get; set; }
 
     // Required for EF
-    #nullable disable
     private Membership() { }
 }

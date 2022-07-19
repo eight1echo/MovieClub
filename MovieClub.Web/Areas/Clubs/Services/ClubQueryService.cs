@@ -36,7 +36,7 @@ public class ClubQueryService : IClubQueryService
 
         foreach (var club in clubs)
         {
-            var userMembership = club.Memberships.Where(m => m.UserProfile.Id == userProfileId).FirstOrDefault();
+            var userMembership = club.Memberships.Where(m => m.UserProfile.Id == userProfileId).First();
 
             switch (userMembership.Rank)
             {

@@ -13,7 +13,7 @@ public class ClubCommandService : IClubCommandService
 
     public async Task<int> CreateClub(int userProfileId, CreateClubModel model)
     {
-        var newClub = new Club(userProfileId, model.Name);
+        var newClub = new Club(userProfileId, model.Name!);
 
         _context.Clubs.Add(newClub);
         await _context.SaveChangesAsync();

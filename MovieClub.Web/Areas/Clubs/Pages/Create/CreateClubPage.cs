@@ -12,7 +12,7 @@ public class CreateClubPage : PageModel
     }
 
     [BindProperty]
-    public CreateClubModel? CreateClubModel { get; set; }
+    public CreateClubModel CreateClubModel { get; set; } = new CreateClubModel();
 
     public IActionResult OnGetAsync()
     {
@@ -23,8 +23,8 @@ public class CreateClubPage : PageModel
     {
         if (ModelState.IsValid)
         {
-            var userProfile = await _userQueries.GetCurrentUserProfile(User);
-            await _clubCommands.CreateClub(userProfile.Id, CreateClubModel);
+            var userProfileId = await _userQueries.GetProfileIdFromSession(HttpContext, User);
+            await _clubCommands.CreateClub(userProfileId, CreateClubModel);
 
             return RedirectToPage("./Index");
         }

@@ -46,6 +46,9 @@
                 <div class="col-3">
                     <h4>@club.Memberships.Count</h4>
                 </div>
+                <div class="col-3">
+                    <a asp-area="Meetups" asp-page="Create" asp-route-id="@club.Id" class="btn btn-outline-success btn-sm">Host Meetup</a>
+                </div>
             </div>
             
         }

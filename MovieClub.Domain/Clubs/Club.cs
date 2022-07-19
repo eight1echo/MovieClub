@@ -11,10 +11,10 @@ public class Club : BaseEntity
     public string Name { get; private set; }
 
     private readonly List<Membership> _memberships;
-    public IReadOnlyCollection<Membership> Memberships => _memberships;
+    public virtual IReadOnlyCollection<Membership> Memberships => _memberships;
 
     private readonly List<Meetup> _meetups;
-    public IReadOnlyCollection<Meetup> Meetups => _meetups;
+    public virtual IReadOnlyCollection<Meetup> Meetups => _meetups;
 
     // Required for EF
     #nullable disable
