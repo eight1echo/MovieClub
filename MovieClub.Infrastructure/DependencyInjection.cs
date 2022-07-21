@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using MovieClub.Infrastructure.External;
+using MovieClub.Infrastructure.External.TMDb;
 
 namespace MovieClub.Infrastructure;
 public static class DependencyInjection
@@ -33,6 +36,9 @@ public static class DependencyInjection
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.AllowedForNewUsers = true;
         });
+
+        // TMDb
+        services.AddHttpClient<ITMDbClient, TMDbClient>();
 
         return services;
     }
