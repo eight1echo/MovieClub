@@ -1,0 +1,65 @@
+﻿@page
+@model MovieClub.Web.Areas.Meetups.Pages.Create.CreateMeetupPage
+@{
+}
+
+<form method="post" id="Search"></form>
+
+<div class="row pt-5">
+
+    <div class="col-6 offset-3">
+
+        <div class="row">
+            <div class="col-9 offset-1 text-center">
+                <input type="text" asp-for="MovieSearchValue" class="form-control" form="Search" placeholder="Search Movies"/>
+            </div>
+
+            <div class="col-2">
+                <input type="hidden" asp-for="ClubId" value="@Model.ClubId" form="Search"/>
+                <input asp-page-handler="SearchMovies" type="submit" value="Search" class="btn btn-primary" form="Search"/>
+            </div>
+        </div>
+
+
+        <div class="row text-center p-4">
+            <h4>New Meetup:</h4>
+        </div>
+
+        <form method="post">
+
+            @if(Model.MovieSelect != null)
+            {
+                <div class="row">
+                    <div class="col-6 offset-2 text-center form-group">
+                        <select asp-for="CreateMeetupModel.MovieId" asp-items="@Model.MovieSelect">
+                            <option>Select Movie: </option>
+                        </select>
+                    </div>
+                </div>
+            }
+                
+            <div class="row pt-5">
+                <div class="col-5 offset-3 text-center"><h6>Hide Movie Selection?</h6></div>
+                <div class="col-1 form-group">
+                    <input type="checkbox" asp-for="CreateMeetupModel.MovieHidden" />
+                </div>
+            </div>
+
+            <div class="row pt-5">
+                <div class="col-8 offset-2 form-group">
+                    <input asp-for="CreateMeetupModel.Date" class="form-control" value="@DateTime.Today"/>
+                    <span asp-validation-for="CreateMeetupModel.Date" class="text-danger"></span>
+                </div>
+                </div>
+
+                <div class="row pt-5">
+                    <div class="col-2 offset-4 form-group">
+                    <input type="hidden" asp-for="CreateMeetupModel.ClubId" value="@Model.ClubId" />
+                    <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-success" />
+                </div>
+                </div>
+
+            </form>
+
+    </div>
+</div>

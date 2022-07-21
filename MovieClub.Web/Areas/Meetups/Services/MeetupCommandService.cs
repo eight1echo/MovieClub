@@ -1,4 +1,6 @@
-﻿namespace MovieClub.Web.Areas.Meetups.Services;
+﻿using MovieClub.Web.Areas.Meetups.Pages.Create;
+
+namespace MovieClub.Web.Areas.Meetups.Services;
 
 public class MeetupCommandService : IMeetupCommandService
 {
@@ -8,4 +10,13 @@ public class MeetupCommandService : IMeetupCommandService
     {
         _context = context;
     }
+
+    public async Task CreateMeetup(CreateMeetupModel model)
+    {
+        var meetup = new Meetup(model.UserProfileId, model.ClubId, model.MovieId, model.Date, model.MovieHidden);
+
+        _context.Meetups.Add(meetup);
+        await _context.SaveChangesAsync();
+    }
 }
+

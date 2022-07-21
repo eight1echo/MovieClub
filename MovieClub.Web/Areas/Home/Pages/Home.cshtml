@@ -1,5 +1,5 @@
-﻿@page
-@model ClubIndexPage
+﻿@page "/home"
+@model HomePage
 @{
     ViewData["Title"] = "Home";
 }
@@ -11,10 +11,6 @@
     @*Club Browser*@
     <div class="col-7">
 
-        <div class="row pt-5 text-center">
-            <h3>Club Browser</h3>
-        </div>
-
         <div class="row pt-5">
             <div class="col-3 offset-1">
                 <input type="text" asp-for="SearchValue" class="form-control input" form="Search" placeholder="Search existing Clubs" />
@@ -23,7 +19,7 @@
             <div class="col-2">
                 <input asp-page-handler="Search" type="submit" value="Search" class="btn btn-primary" form="Search" />
             </div>
-            <div class="col-2 offset-2">
+            <div class="col-3 offset-2">
                 <a asp-page="Create" class="btn btn-success">Create New Club</a>
             </div>
         </div>
@@ -70,7 +66,7 @@
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.UserRank" readonly />
                         </div>
                         <div class="col-3">
-                            <a asp-area="Meetups" asp-page="Create" asp-route-id="@club.Id" class="btn btn-warning">Host Meetup</a>
+                            <a asp-area="Meetups" asp-page="Create/CreateMeetupPage" asp-route-id="@club.Id" class="btn btn-warning">Host Meetup</a>
                         </div>
                     </div>
                 }
@@ -81,16 +77,16 @@
                 @foreach (var club in Model.Clubs.ClubsMember) 
                 {
                     <div class="row">
-                        <div class="col-2">
+                        <div class="col-3">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.Name" readonly />
                         </div>
                         <div class="col-1">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.Memberships.Count" readonly />
                         </div>
-                        <div class="col-2">
+                        <div class="col-3">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.ClubLeader" readonly />
                         </div>
-                        <div class="col-1">
+                        <div class="col-2">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.UserRank" readonly />
                         </div>
                         <div class="col-3">
@@ -111,16 +107,16 @@
                 @foreach (var club in Model.Clubs.ClubsPending) 
                 {
                     <div class="row">
-                        <div class="col-2">
+                        <div class="col-3">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.Name" readonly />
                         </div>
                         <div class="col-1">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.Memberships.Count" readonly />
                         </div>
-                        <div class="col-2">
+                        <div class="col-3">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.ClubLeader" readonly />
                         </div>
-                        <div class="col-1">
+                        <div class="col-2">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.UserRank" readonly />
                         </div>
                         <div class="col-3">
@@ -139,16 +135,16 @@
             @foreach (var club in Model.SearchedClubs) 
             {
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-3">
                         <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.Name" readonly />
                     </div>
                     <div class="col-1">
                         <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.Memberships.Count" readonly />
                     </div>
-                    <div class="col-2">
+                    <div class="col-3">
                         <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.ClubLeader" readonly />
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <input class="form-control text-center bg-dark input-readonly" type="text" value="" readonly />
                     </div>
                     <div class="col-3">
@@ -160,26 +156,46 @@
                 </div>
             }
         }
+
     </div>
 
     @*Upcoming Meetups*@
-    <div class="col-4 offset-1">
+    <div class="col-5">
 
-        <div class="row text-center">
+        <div class="row pt-5 text-center">
             <h3>Upcoming Meetups</h3>
         </div>
 
+        <div class="row column-header pt-5">
+            <div class="col-4">
+                <h6>Club</h6>
+            </div>
+            <div class="col-4">
+                <h6>Date</h6>
+            </div>
+            <div class="col-4">
+                <h6>Movie</h6>
+            </div>
+        </div>
+
+        @if (Model.Meetups is not null)
+        {
+            @if (Model.Meetups.UpcomingMeetups.Any())
+            {
+                @foreach (var m in Model.Meetups.UpcomingMeetups)
+                {
+                    <div class="row">
+                        <div class="col-6">
+                            <input class="form-control text-center bg-dark input-readonly" type="text" value="@m.Date" readonly />
+                        </div>
+                        <div class="col-6">
+                            <input class="form-control text-center bg-dark input-readonly" type="text" value="@m.Movie.Title" readonly />
+                        </div>
+                    </div>
+                }
+            }
+        }
+
     </div>
 
-
 </div>
-
-
-
-
-
-
-
-
-
-

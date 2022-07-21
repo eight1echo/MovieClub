@@ -1,4 +1,5 @@
 ﻿using MovieClub.Web.Areas.Clubs.Pages.Index;
+using MovieClub.Web.Areas.Home;
 
 namespace MovieClub.Web.Areas.Clubs.Services;
 
@@ -11,7 +12,7 @@ public class ClubQueryService : IClubQueryService
         _context = context;
     }
 
-    public async Task<ClubIndexModel> ClubIndexQuery(int userProfileId)
+    public async Task<ClubHomeModel> ClubHomeQuery(int userProfileId)
     {
         // Returns all Clubs where the User has an existing Membership.
 
@@ -21,6 +22,12 @@ public class ClubQueryService : IClubQueryService
             {
                 Id = c.Id,
                 Name = c.Name,
+
+                UserRank = c.Memberships
+                    .Where(m => m.UserProfileId == userProfileId)
+                    .Select(m => new MembershipDTO { Rank = m.Rank })
+                    .First().Rank,
+
                 Memberships = c.Memberships.Select(m => new MembershipDTO
                 {
                     Rank = m.Rank,
@@ -30,15 +37,14 @@ public class ClubQueryService : IClubQueryService
                         DisplayName = m.UserProfile.DisplayName
                     }
                 }).ToList()
+
             }).ToListAsync();
 
-        var model = new ClubIndexModel();
+        var model = new ClubHomeModel();
 
         foreach (var club in clubs)
         {
-            var userMembership = club.Memberships.Where(m => m.UserProfile.Id == userProfileId).First();
-
-            switch (userMembership.Rank)
+            switch (club.UserRank)
             {
                 case MembershipRank.Leader:
                     model.ClubsLeader.Add(club);
@@ -66,7 +72,16 @@ public class ClubQueryService : IClubQueryService
             .Select(c => new ClubDTO
             {
                 Id = c.Id,
-                Name = c.Name
+                Name = c.Name,
+                Memberships = c.Memberships.Select(m => new MembershipDTO
+                {
+                    Rank = m.Rank,
+                    UserProfile = new UserProfileDTO
+                    {
+                        Id = m.UserProfile.Id,
+                        DisplayName = m.UserProfile.DisplayName
+                    }
+                }).ToList()
             }).ToListAsync();
 
         return clubs;

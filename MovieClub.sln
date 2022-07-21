@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieClub.Domain", "MovieCl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieClub.Infrastructure", "MovieClub.Infrastructure\MovieClub.Infrastructure.csproj", "{CED509FF-655E-4C86-93DA-95AABEB205A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieClub.Web", "MovieClub.Web\MovieClub.Web.csproj", "{7360B20D-A44B-47DA-93A2-08866FD68CA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieClub.Web", "MovieClub.Web\MovieClub.Web.csproj", "{7360B20D-A44B-47DA-93A2-08866FD68CA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

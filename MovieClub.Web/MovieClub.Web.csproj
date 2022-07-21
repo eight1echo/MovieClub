@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Meetups\Pages\" />
     <Folder Include="Areas\Movies\Pages\" />
     <Folder Include="Areas\Users\Pages\" />
   </ItemGroup>
