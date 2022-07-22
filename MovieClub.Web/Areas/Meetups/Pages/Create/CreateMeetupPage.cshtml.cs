@@ -59,7 +59,7 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
                 var meetupId = await _meetupCommands.CreateMeetup(CreateMeetupModel, movieId);
                 await _attendanceCommands.InviteClubMembers(CreateMeetupModel.UserProfileId, CreateMeetupModel.ClubId, meetupId);
 
-                return RedirectToPage("/Home");
+                return RedirectToPage("/home", new { area = "Home" });
             }
 
             return Page();

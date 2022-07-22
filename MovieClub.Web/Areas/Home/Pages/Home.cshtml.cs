@@ -21,14 +21,8 @@ namespace MovieClub.Web.Areas.Home
         public ClubHomeModel? Clubs { get; set; }
         public MeetupHomeModel? Meetups { get; set; }
 
-        public List<ClubDTO>? SearchedClubs { get; set; }
-
         [BindProperty]
         public int ClubId { get; set; }
-
-        [BindProperty]
-        [Required]
-        public string? SearchValue { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -44,26 +38,6 @@ namespace MovieClub.Web.Areas.Home
         {
             var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
             await _membershipCommands.CancelMembership(ClubId, userProfileId);
-
-            return await OnGet();
-        }
-
-        public async Task<IActionResult> OnPostJoin()
-        {
-            var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-            await _membershipCommands.CreatePendingMembership(ClubId, userProfileId);
-
-            return await OnGet();
-        }
-
-        public async Task<IActionResult> OnPostSearch()
-        {
-            if (ModelState.IsValid)
-            {
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                SearchedClubs = await _clubQueries.ClubSearch(userProfileId, SearchValue!);
-                return Page();
-            }
 
             return await OnGet();
         }

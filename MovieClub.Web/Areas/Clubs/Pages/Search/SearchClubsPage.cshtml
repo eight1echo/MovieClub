@@ -1,0 +1,31 @@
+﻿@page
+@model SearchClubsPage
+@{
+}
+
+@if (Model.SearchedClubs is not null)
+{
+    @foreach (var club in Model.SearchedClubs) 
+    {
+        <div class="row">
+            <div class="col-3">
+                <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.Name" readonly />
+            </div>
+            <div class="col-1">
+                <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.Memberships.Count" readonly />
+            </div>
+            <div class="col-3">
+                <input class="form-control text-center bg-dark input-readonly" type="text" value="@club.ClubLeader" readonly />
+            </div>
+            <div class="col-2">
+                <input class="form-control text-center bg-dark input-readonly" type="text" value="" readonly />
+            </div>
+            <div class="col-3">
+                <form method="post">
+                    <input type="hidden" asp-for="ClubId" value="@club.Id" />
+                    <input asp-page-handler="Join" type="submit" value="Apply To Join" class="btn btn-success" />
+                </form>
+            </div>
+        </div>
+    }
+}

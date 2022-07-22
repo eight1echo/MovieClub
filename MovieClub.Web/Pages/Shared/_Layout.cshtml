@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/MovieClub.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container navigation">
@@ -17,17 +18,35 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Home" asp-page="/Home">Home</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Clubs" asp-page="/Create/CreateClubPage">Start a Club</a>
+                        </li>
+
+                        <li class="nav-item">
+                           <form class="row ms-auto" method="post">
+                              <div class="col">
+                                  <input type="text" class="form-control" placeholder="Search Clubs" name="searchvalue"/>              
+                              </div>
+                              <div class="col-auto">
+                                  <button asp-area="Clubs" asp-page="/Search/SearchClubsPage" asp-page-handler="Search" type="submit" class="btn btn-sm btn-primary mt-1">Search</button>
+                              </div>
+                            </form>
+                        </li>
                     </ul>
+                    
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
