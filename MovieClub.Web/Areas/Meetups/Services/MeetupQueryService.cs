@@ -18,11 +18,9 @@ public class MeetupQueryService : IMeetupQueryService
             .Select(m => new MeetupDTO
             {
                 Id = m.Id,
+                Club = new ClubDTO { Name = m.Club.Name },
                 Date = m.Date,
-                Movie = new MovieDTO
-                {
-                    Title = m.Movie.Title
-                }
+                Movie = new MovieDTO { Title = m.Movie.Title }
             }).ToListAsync();
 
         return new MeetupHomeModel() { UpcomingMeetups = meetups };

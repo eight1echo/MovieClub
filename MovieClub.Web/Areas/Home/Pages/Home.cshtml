@@ -185,10 +185,13 @@
                 @foreach (var m in Model.Meetups.UpcomingMeetups)
                 {
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-4">
+                            <input class="form-control text-center bg-dark input-readonly" type="text" value="@m.Club.Name" readonly />
+                        </div>
+                        <div class="col-4">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@m.Date" readonly />
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                             <input class="form-control text-center bg-dark input-readonly" type="text" value="@m.Movie.Title" readonly />
                         </div>
                     </div>

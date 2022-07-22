@@ -1,7 +1,7 @@
 ﻿namespace MovieClub.Domain;
 public class Attendance : BaseEntity
 {
-    public Attendance(int meetupId, int userId, AttendanceStatus status)
+    public Attendance(int userId, int meetupId, AttendanceStatus status)
     {
         MeetupId = meetupId;
         UserProfileId = userId;

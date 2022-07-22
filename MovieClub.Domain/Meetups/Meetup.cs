@@ -7,7 +7,7 @@ public class Meetup : BaseEntity
         MovieId = movieId;
         Date = date;
         MovieHidden = hidden;
-        _attendance = new List<Attendance>() { new Attendance(Id, userId, AttendanceStatus.Hosting) };
+        _attendance = new List<Attendance>() { new Attendance(userId, Id, AttendanceStatus.Hosting) };
     }
 
     public int ClubId { get; private set; }

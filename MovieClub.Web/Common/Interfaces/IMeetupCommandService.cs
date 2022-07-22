@@ -4,5 +4,5 @@ namespace MovieClub.Web.Common.Interfaces;
 
 public interface IMeetupCommandService
 {
-    Task CreateMeetup(CreateMeetupModel model);
+    Task<int> CreateMeetup(CreateMeetupModel model, int movieId);
 }

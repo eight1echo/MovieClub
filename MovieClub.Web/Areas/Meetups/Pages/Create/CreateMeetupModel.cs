@@ -9,7 +9,7 @@ public class CreateMeetupModel
     public int UserProfileId { get; set; }
 
     [Required]
-    public int MovieId { get; set; }
+    public int MovieTMDbId { get; set; }
     public bool MovieHidden { get; set; }
 
     [DateInTheFuture]

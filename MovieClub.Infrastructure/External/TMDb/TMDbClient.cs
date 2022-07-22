@@ -24,20 +24,15 @@ public class TMDbClient : ITMDbClient
 
     public async Task<List<TMDbSearchResult>> SearchMovies(string searchString)
     {
+        List<TMDbSearchResult> movies = new();
+
         string apiKey = "bf314a905cb9d77922a9e0fbf0b729c2";
         string url = $"https://api.themoviedb.org/3/search/movie?api_key={apiKey}&query={searchString}";
 
-        var movieResults = await _httpClient.GetFromJsonAsync<TMDbSearchResponse>(url);
+        var response = await _httpClient.GetFromJsonAsync<TMDbSearchResponse>(url);
 
-        List<TMDbSearchResult> movies = new();
-
-        if (movieResults is not null && movieResults.Results is not null)
-        {
-            foreach (var result in movieResults.Results)
-            {
-                movies.Add(result);
-            }
-        }
+        if (response is not null && response.Results is not null)
+            movies.AddRange(response.Results);
 
         return movies;
     }

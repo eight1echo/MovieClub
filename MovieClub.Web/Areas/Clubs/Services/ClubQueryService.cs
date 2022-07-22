@@ -1,4 +1,4 @@
-﻿using MovieClub.Web.Areas.Clubs.Pages.Index;
+﻿using MovieClub.Web.Areas.Clubs.Pages.Details;
 using MovieClub.Web.Areas.Home;
 
 namespace MovieClub.Web.Areas.Clubs.Services;
@@ -12,10 +12,49 @@ public class ClubQueryService : IClubQueryService
         _context = context;
     }
 
+    public async Task<ClubDetailsModel?> ClubDetails(int userProfileId, int clubId)
+    {
+        var club = await _context.Clubs
+            .Where(c => c.Id == clubId)
+            .Select(c => new ClubDetailsModel
+            {
+                UserRank = c.Memberships.First(m => m.UserProfileId == userProfileId).Rank,
+
+                ClubLeader = c.Memberships.First(m => m.Rank == MembershipRank.Leader).UserProfile.DisplayName,
+
+                ClubName = c.Name,
+
+                ClubMembers = c.Memberships.Select(m => new MembershipDTO
+                {
+                    Rank = m.Rank,
+                    UserProfile = new UserProfileDTO { DisplayName = m.UserProfile.DisplayName }
+                }).ToList(),
+
+                UpcomingMeetups = c.Meetups.Select(m => new MeetupDTO
+                {
+                    Date = m.Date,
+                    Movie = new MovieDTO { Title = m.Movie.Title }
+                }).ToList(),
+
+            }).FirstOrDefaultAsync();
+
+        if (club is not null)
+        {
+            if (club.UserRank is MembershipRank.Member || club.UserRank is MembershipRank.Leader)
+                return club;
+
+            // User is not a Member of this Club, return limited data.
+            else
+                return new ClubDetailsModel() { ClubLeader = club.ClubLeader, ClubName = club.ClubName, ClubMembers = club.ClubMembers };
+        }
+
+        // Club not found.
+        return null;
+    }
+
     public async Task<ClubHomeModel> ClubHomeQuery(int userProfileId)
     {
         // Returns all Clubs where the User has an existing Membership.
-
         var clubs = await _context.Clubs
             .Where(c => c.Memberships.Any(m => m.UserProfileId == userProfileId))
             .Select(c => new ClubDTO

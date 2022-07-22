@@ -2,20 +2,26 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
 {
     public class CreateMeetupPage : PageModel
     {
+        private readonly IAttendanceCommandService _attendanceCommands;
         private readonly IClubQueryService _clubQueries;
         private readonly IMeetupCommandService _meetupCommands;
+        private readonly IMovieCommandService _movieCommands;
         private readonly IMovieQueryService _movieQueries;
         private readonly ICurrentUserService _currentUser;
 
         public CreateMeetupPage(IClubQueryService clubQueries,
             ICurrentUserService currentUser,
             IMeetupCommandService meetupCommands,
-            IMovieQueryService movieQueries)
+            IMovieQueryService movieQueries,
+            IMovieCommandService movieCommands,
+            IAttendanceCommandService attendanceCommands)
         {
+            _attendanceCommands = attendanceCommands;
             _clubQueries = clubQueries;
             _currentUser = currentUser;
             _meetupCommands = meetupCommands;
             _movieQueries = movieQueries;
+            _movieCommands = movieCommands;
         }
 
         [BindProperty]
@@ -48,9 +54,12 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
             if (ModelState.IsValid)
             {
                 CreateMeetupModel.UserProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                await _meetupCommands.CreateMeetup(CreateMeetupModel);
 
-                return RedirectToPage("./Index");
+                var movieId = await _movieCommands.ImportMovie(CreateMeetupModel.MovieTMDbId);
+                var meetupId = await _meetupCommands.CreateMeetup(CreateMeetupModel, movieId);
+                await _attendanceCommands.InviteClubMembers(CreateMeetupModel.UserProfileId, CreateMeetupModel.ClubId, meetupId);
+
+                return RedirectToPage("/Home");
             }
 
             return Page();

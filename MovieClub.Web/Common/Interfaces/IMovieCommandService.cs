@@ -2,4 +2,5 @@
 
 public interface IMovieCommandService
 {
+    Task<int> ImportMovie(int tmdbId);
 }
