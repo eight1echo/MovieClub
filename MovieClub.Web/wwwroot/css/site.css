@@ -11,19 +11,20 @@ html {
 
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #E2E9F3;
-    background-color: #292929;
+    color: #EFF1F2;
+    background-color: #18191A;
     margin-bottom: 60px;
     max-width: 100%;
 }
 
 .container {
-    max-width: 90%;
+    max-width: 95%;
 }
 
 .navbar {
     width: 100%;
-    background-color: #E2E9F3;
+    background-color: #14181C !important;
+    border-bottom: 3px solid #202830;
 }
 
 .navigation {
@@ -35,19 +36,53 @@ body {
     padding-right: 20px;
 }
 
-.input {
-    background-color: #E2E9F3;
-    border: 1px solid black;
-    color: #292929 !important;
+.navbar-brand {
+    color: #E2E9F3;
 }
 
-.input-readonly {
-    background-color: #E2E9F3;
-    border: 1px solid black;
-    color: #E2E9F3 !important;
+.nav-link {
+    color: #E8EBED;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: “Impact”;
+}
+
+.sub-page {
+    background-color: #202224;
+    border-radius: 25px;
+    border: 2px solid #202830;
+    margin-top: 35px;
+    padding-bottom: 50px;
+}
+
+.sub-page-title {
+    color: #E8EBED;
+    font-size: 40px;
+    font-weight: 800;
 }
 
 .column-header {
+    color: #656565;
+    font-size: 34px;
+    font-weight: bold;
     text-align: center;
 }
 
+.column-input {
+    background-color: #E2E9F3;
+    border: 4px solid black;
+    color: #292929 !important;
+}
+
+.column-readonly {
+    background-color: #18191A !important;
+    border: 0.5px solid black;
+    color: #E2E9F3;
+}
+
+.column-link {
+    background-color: #18191A !important;
+    border: 1px solid #CACCCD;
+    color: #E2E9F3;
+    cursor: pointer;
+}

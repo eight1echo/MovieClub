@@ -20,6 +20,7 @@ public class MeetupQueryService : IMeetupQueryService
                 Id = m.Id,
                 Club = new ClubDTO { Name = m.Club.Name },
                 Date = m.Date,
+                Host = m.Attendance.First(a => a.Status == AttendanceStatus.Hosting).UserProfile.DisplayName,
                 Movie = new MovieDTO { Title = m.Movie.Title }
             }).ToListAsync();
 
