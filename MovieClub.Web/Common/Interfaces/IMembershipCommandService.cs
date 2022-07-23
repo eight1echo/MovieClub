@@ -2,6 +2,7 @@
 
 public interface IMembershipCommandService
 {
-    Task CancelMembership(int clubId, int userId);
-    Task CreatePendingMembership(int clubId, int userId);
+    Task Accept(int clubId, int userId);
+    Task Cancel(int clubId, int userId);
+    Task CreatePending(int clubId, int userId);
 }

@@ -28,15 +28,15 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Search
         public async Task<IActionResult> OnPostSearch()
         {
             var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-            SearchedClubs = await _clubQueries.ClubSearch(userProfileId, Request.Form["searchvalue"]);
 
+            SearchedClubs = await _clubQueries.ClubSearch(userProfileId, Request.Form["searchvalue"]);
             return Page();
         }
 
         public async Task<IActionResult> OnPostJoin()
         {
             var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-            await _membershipCommands.CreatePendingMembership(ClubId, userProfileId);
+            await _membershipCommands.CreatePending(ClubId, userProfileId);
 
             return RedirectToPage("/home", new { area = "Home" });
         }

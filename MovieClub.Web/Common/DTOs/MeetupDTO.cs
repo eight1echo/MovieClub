@@ -14,4 +14,6 @@ public class MeetupDTO
     public string? Host { get; set; }
 
     public DateTime Date { get; set; }
+
+    public AttendanceDTO? UserAttendance { get; set; }
 }

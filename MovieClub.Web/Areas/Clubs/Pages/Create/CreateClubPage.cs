@@ -24,9 +24,9 @@ public class CreateClubPage : PageModel
         if (ModelState.IsValid)
         {
             var userProfileId = await _userService.GetProfileIdFromSession(HttpContext, User);
-            await _clubCommands.CreateClub(userProfileId, CreateClubModel);
+            var clubId = await _clubCommands.Create(userProfileId, CreateClubModel);
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Home", new { area = "Home" });
         }
 
         return Page();

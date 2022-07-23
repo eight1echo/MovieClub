@@ -31,7 +31,7 @@ public class MovieCommandService : IMovieCommandService
                     Language = tmdbMovie.Original_Language,
                     LanguageTitle = tmdbMovie.Original_Title,
                     PosterURL = "https://image.tmdb.org/t/p/w500/" + tmdbMovie.Poster_Path,
-                    ReleaseDate = tmdbMovie.Release_Date,
+                    ReleaseDate = tmdbMovie.Release_Date ?? DateTime.MinValue,
                     Revenue = tmdbMovie.Revenue,
                     Runtime = tmdbMovie.Runtime,
                     Synopsis = tmdbMovie.Overview,
@@ -42,7 +42,7 @@ public class MovieCommandService : IMovieCommandService
                 if (tmdbMovie.Genres is not null)
                 {
                     var genres = tmdbMovie.Genres.Select(g => g.Name).ToArray();
-                    newMovie.Genres = string.Join(",", genres);
+                    newMovie.Genres = string.Join(", ", genres);
                 }
 
                 _context.Movies.Add(newMovie);

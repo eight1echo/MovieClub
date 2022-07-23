@@ -2,9 +2,20 @@
 
 public class ClubDetailsModel
 {
-    public MembershipRank? UserRank { get; set; }
-    public string? ClubLeader { get; set; }
+    public ClubDetailsModel()
+    {
+        UserMembership = new MembershipDTO() { Rank = MembershipRank.Visitor };
+    }
+
+    public int ClubId { get; set; }
+
+    public MembershipDTO UserMembership { get; set; } = null!;
+
+    public MembershipDTO? ClubLeader { get; set; }
     public string? ClubName { get; set; }
+
     public List<MembershipDTO> ClubMembers { get; set; } = new List<MembershipDTO>();
-    public List<MeetupDTO> UpcomingMeetups { get; set; } = new List<MeetupDTO>();
+    public List<MembershipDTO> PendingMemberships { get; set; } = new List<MembershipDTO>();
+
+    public MeetupDTO? NextMeetup { get; set; }
 }

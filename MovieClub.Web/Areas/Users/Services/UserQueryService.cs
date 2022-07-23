@@ -13,7 +13,7 @@ public class UserQueryService : IUserQueryService
     {
         var profile = await _context.UserProfiles
             .Where(up => up.UserAccountId == userAccountId)
-            .Select(up => new UserProfileDTO { Id = up.Id })
+            .Select(up => new UserProfileDTO { Id = up.Id, DisplayName = up.DisplayName })
             .FirstOrDefaultAsync();
 
         return profile;

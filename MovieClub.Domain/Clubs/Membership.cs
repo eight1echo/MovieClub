@@ -14,7 +14,14 @@ public class Membership : BaseEntity
     public int UserProfileId { get; private set; }
     public virtual UserProfile UserProfile { get; set; } = null!;
 
-    public MembershipRank Rank { get; set; }
+    public DateTime DateAccepted { get; private set; }
+    public MembershipRank Rank { get; private set; }
+
+    public void AcceptMembership()
+    {
+        DateAccepted = DateTime.Now;
+        Rank = MembershipRank.Member;
+    }
 
     // Required for EF
     private Membership() { }

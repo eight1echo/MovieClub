@@ -6,126 +6,146 @@
 
 <div class="row">
 
+    @*Your Clubs*@
+    <div class="col-5">
+
+        @if (Model.Clubs is not null)
+        {
+            <div class="sub-page">
+                @if (Model.Clubs.ClubsLeader.Any() || Model.Clubs.ClubsMember.Any() || Model.Clubs.ClubsPending.Any())
+                {
+                        <div class="row text-center">
+                            <div class="col-8">
+                                <div class="sub-page-title">Your Clubs:</div>
+                            </div>
+                            <div class="col-4 mt-3">
+                                <a class="btn btn-dark text-success" asp-area="Clubs" asp-page="/Create/CreateClubPage">Create Club</a>
+                            </div>
+                        </div>
+
+                        <div class="row pt-5">
+                            <div class="col-5 column-header">Club</div>
+                            <div class="col-3 column-header">Membership</div>
+                        </div>
+
+                        <hr />
+                }
+                else
+                {
+                    <div class="row text-center">
+                         <div class="sub-page-title">No Clubs</div>
+                         <div class="col-4 pt-4 offset-4">
+                            <a class="btn btn-dark text-success" asp-area="Clubs" asp-page="/Create/CreateClubPage">Create Club</a>
+                         </div>
+                    </div>
+                }
+
+                @foreach (var club in Model.Clubs.ClubsLeader) 
+                {
+                    <div class="row text-center mb-2 p-2">
+                        <div class="col-5">
+                            <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@club.Id" class="form-control column-link">@club.Name</a>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-control column-readonly">@club.UserRank </div>
+                        </div>
+                        <div class="col-4 gx-0">
+                            <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" asp-route-id="@club.Id" class="btn btn-dark text-success">Host Meetup</a>
+                        </div>
+                    </div>
+                }
+
+                @foreach (var club in Model.Clubs.ClubsMember) 
+                {
+                    <div class="row text-center mb-2 p-2">
+                        <div class="col-5">
+                            <a asp-area="Clubs" asp-page="Details/ClubDetailsPage" asp-route-id="@club.Id" class="form-control column-link">@club.Name</a>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-control column-readonly">@club.UserRank </div>
+                        </div>
+                        <div class="col-2 gx-0">
+                            <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" asp-route-id="@club.Id" class="btn btn-dark text-success">Host Meetup</a>
+                        </div>
+                        <div class="col-2 gx-0">
+                            <form method="post">
+                                <input type="hidden" asp-for="ClubId" value="@club.Id" />
+                                <input asp-page-handler="Cancel" type="submit" value="Quit Club" class="btn btn-dark text-danger" />
+                            </form>
+                        </div>
+                    </div>
+                }
+
+                @foreach (var club in Model.Clubs.ClubsPending) 
+                {
+                    <div class="row text-center mb-2 p-2">
+                        <div class="col-5">
+                            <a asp-area="Clubs" asp-page="Details/ClubDetailsPage" asp-route-id="@club.Id" class="form-control column-link">@club.Name</a>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-control column-readonly">@club.UserRank </div>
+                        </div>
+                        <div class="col-4">
+                            <form method="post">
+                                <input type="hidden" asp-for="ClubId" value="@club.Id" />
+                                <input asp-page-handler="Cancel" type="submit" value="Cancel Request" class="btn btn-dark text-danger" />
+                            </form>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+
     @*Upcoming Meetups*@
-    <div class="col-6 sub-page">
+    <div class="col-6 offset-1">
 
         @if (Model.Meetups is not null)
         {
             @if (Model.Meetups.UpcomingMeetups.Any())
             {
-                <div class="row pt-5 text-center">
-                    <div class="sub-page-title">Upcoming Meetups</div>
-                </div>
-
-                <div class="row pt-5 pb-3">
-                    <div class="col-4 column-header">Club</div>
-                    <div class="col-2 column-header">Date</div>
-                    <div class="col-2 column-header">Host</div>
-                    <div class="col-4 column-header">Movie</div>
-                </div>
-
-                @foreach (var m in Model.Meetups.UpcomingMeetups)
-                {
-                    <div class="row mb-2 p-2">
-                        <div class="col-4">
-                            <input class="form-control text-center column-readonly" type="text" value="@m.Club.Name" readonly />
-                        </div>
-                        <div class="col-2">
-                            <input class="form-control text-center column-readonly" type="text" value="@m.Date.ToShortDateString()" readonly />
-                        </div>
-                        <div class="col-2">
-                            <input class="form-control text-center column-readonly" type="text" value="@m.Host" readonly />
-                        </div>
-                        <div class="col-4">
-                            <input class="form-control text-center column-link" type="text" value="@m.Movie.Title" readonly />
-                        </div>
+                <div class="sub-page">
+                    <div class="row text-center">
+                        <div class="sub-page-title">Upcoming Meetups:</div>
                     </div>
-                }
+
+                    <div class="row pt-5">
+                        <div class="col-4 column-header">Club</div>
+                        <div class="col-2 column-header">Date</div>
+                        <div class="col-2 column-header">Host</div>
+                        <div class="col-4 column-header">Movie</div>
+                    </div>
+
+                    <hr />
+
+                    @foreach (var m in Model.Meetups.UpcomingMeetups)
+                    {
+                        <div class="row mb-2 p-2">
+                            <div class="col-4">
+                                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@m.Club.Id" class="form-control column-link">@m.Club.Name</a>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-control column-readonly">@m.Date.ToShortDateString() </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-control column-readonly">@m.Host </div>
+                            </div>
+                            <div class="col-4">
+                                <a asp-area="Movies" asp-page="/Details/MovieDetailsPage" asp-route-id="@m.Movie.Id" class="form-control column-link">@m.Movie.Title</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="row sub-page text-center">
+                    <div class="sub-page-title">No Upcoming Meetups</div>
+                </div>
             }
         }
     </div>
 
-    <div class="col-5 offset-1 sub-page">
-
-        @if (Model.Clubs is not null)
-        {
-            <div class="row pt-5 text-center">
-                <div class="col-8">
-                    <div class="sub-page-title">Your Clubs</div>
-                </div>
-                <div class="col-4">
-                    <button asp-area="Clubs" asp-page="/Create/CreateClubPage" type="submit" class="btn btn-success mt-1">New Club</button>
-                </div>
-            </div>
-
-            <div class="row pt-5 pb-3">
-                <div class="col-5 column-header">Club</div>
-                <div class="col-3 column-header">Membership</div>
-            </div>
-
-            @if (Model.Clubs.ClubsLeader.Any())
-            {
-                @foreach (var club in Model.Clubs.ClubsLeader) 
-                {
-                    <div class="row text-center mb-2 p-2">
-                        <div class="col-5">
-                            <input class="form-control text-center column-link" type="text" value="@club.Name" readonly />
-                        </div>
-                        <div class="col-3">
-                            <input class="form-control text-center column-readonly" type="text" value="@club.UserRank" readonly />
-                        </div>
-                        <div class="col-4">
-                            <a asp-area="Meetups" asp-page="Create/CreateMeetupPage" asp-route-id="@club.Id" class="btn btn-warning">Host Meetup</a>
-                        </div>
-                    </div>
-                }
-            }
-
-            @if (Model.Clubs.ClubsMember.Any())
-            {
-                @foreach (var club in Model.Clubs.ClubsMember) 
-                {
-                    <div class="row text-center mb-2 p-2">
-                        <div class="col-5">
-                            <input class="form-control text-center column-link" type="text" value="@club.Name" readonly />
-                        </div>
-                        <div class="col-3">
-                            <input class="form-control text-center column-readonly" type="text" value="@club.UserRank" readonly />
-                        </div>
-                        <div class="col-2">
-                            <a asp-area="Meetups" asp-page="Create" asp-route-id="@club.Id" class="btn btn-success">Host Meetup</a>
-                        </div>
-                        <div class="col-2">
-                            <form method="post">
-                                <input type="hidden" asp-for="ClubId" value="@club.Id" />
-                                <input asp-page-handler="Cancel" type="submit" value="Quit" class="btn btn-danger" />
-                            </form>
-                        </div>
-                    </div>
-                }
-            }
-
-            @if (Model.Clubs.ClubsPending.Any())
-            {
-                @foreach (var club in Model.Clubs.ClubsPending) 
-                {
-                    <div class="row text-center mb-2 p-2">
-                        <div class="col-5">
-                            <input class="form-control text-center column-link" type="text" value="@club.Name" readonly />
-                        </div>
-                        <div class="col-3">
-                            <input class="form-control text-center column-readonly" type="text" value="@club.UserRank" readonly />
-                        </div>
-                        <div class="col-4">
-                            <form method="post">
-                                <input type="hidden" asp-for="ClubId" value="@club.Id" />
-                                <input asp-page-handler="Cancel" type="submit" value="Cancel Membership" class="btn btn-danger" />
-                            </form>
-                        </div>
-                    </div>
-                }
-            }
-        }
-
-    </div>
 </div>

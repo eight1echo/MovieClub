@@ -37,7 +37,7 @@ namespace MovieClub.Web.Areas.Home
         public async Task<IActionResult> OnPostCancel()
         {
             var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-            await _membershipCommands.CancelMembership(ClubId, userProfileId);
+            await _membershipCommands.Cancel(ClubId, userProfileId);
 
             return await OnGet();
         }

@@ -4,5 +4,5 @@ public enum MembershipRank
     Leader,
     Member,
     Pending,
-    Denied
+    Visitor
 }

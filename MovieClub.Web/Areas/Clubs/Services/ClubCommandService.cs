@@ -11,7 +11,7 @@ public class ClubCommandService : IClubCommandService
         _context = context;
     }
 
-    public async Task<int> CreateClub(int userProfileId, CreateClubModel model)
+    public async Task<int> Create(int userProfileId, CreateClubModel model)
     {
         var newClub = new Club(userProfileId, model.Name!);
 
@@ -19,5 +19,16 @@ public class ClubCommandService : IClubCommandService
         await _context.SaveChangesAsync();
 
         return newClub.Id;
+    }
+
+    public async Task Delete(int clubId)
+    {
+        var club = await _context.Clubs.FirstOrDefaultAsync(c => c.Id == clubId);
+
+        if (club != null)
+        {
+            _context.Clubs.Remove(club);
+            await _context.SaveChangesAsync();
+        }
     }
 }

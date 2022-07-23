@@ -1,12 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<UserAccount> SignInManager
 @inject UserManager<UserAccount> UserManager
+@inject ICurrentUserService _currentUser
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a  class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
+        <a  class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@await _currentUser.GetDisplayNameFromSession(Context, User)</a>
     </li>
     <li class="nav-item">
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >

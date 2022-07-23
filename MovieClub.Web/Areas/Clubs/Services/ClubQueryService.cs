@@ -18,38 +18,87 @@ public class ClubQueryService : IClubQueryService
             .Where(c => c.Id == clubId)
             .Select(c => new ClubDetailsModel
             {
-                UserRank = c.Memberships.First(m => m.UserProfileId == userProfileId).Rank,
-
-                ClubLeader = c.Memberships.First(m => m.Rank == MembershipRank.Leader).UserProfile.DisplayName,
-
+                ClubId = c.Id,
                 ClubName = c.Name,
 
-                ClubMembers = c.Memberships.Select(m => new MembershipDTO
+                ClubLeader = c.Memberships
+                    .Where(m => m.Rank == MembershipRank.Leader)
+                    .Select(m => new MembershipDTO
+                    {
+                        Rank = m.Rank,
+                        UserProfile = new UserProfileDTO { Id = m.UserProfileId, DisplayName = m.UserProfile.DisplayName }
+                    }).First(),
+
+                ClubMembers = c.Memberships
+                    .Where(m => m.Rank == MembershipRank.Member)
+                    .Select(m => new MembershipDTO
+                    {
+                        Rank = m.Rank,
+                        UserProfile = new UserProfileDTO { Id = m.UserProfileId, DisplayName = m.UserProfile.DisplayName }
+                    }).ToList(),
+
+                NextMeetup = c.Meetups
+                    .Where(m => m.Date > DateTime.Now)
+                    .OrderBy(m => m.Date)
+                    .Select(m => new MeetupDTO
+                    {
+                        Date = m.Date,
+                        Host = m.Attendance
+                            .SingleOrDefault(a => a.Status == AttendanceStatus.Hosting)!.UserProfile.DisplayName,
+
+                        Movie = new MovieDTO
+                        {
+                            Genres = m.Movie.Genres,
+                            PosterURL = m.Movie.PosterURL,
+                            ReleaseDate = m.Movie.ReleaseDate,
+                            Synopsis = m.Movie.Synopsis,
+                            Tagline = m.Movie.Tagline,
+                            Title = m.Movie.Title
+                        },
+
+                        UserAttendance = m.Attendance
+                            .Where(a => a.UserProfileId == userProfileId)
+                            .Select(a => new AttendanceDTO
+                            {
+                                Id = a.Id,
+                                Status = a.Status
+                            }).FirstOrDefault()
+
+                    }).FirstOrDefault(),
+
+                PendingMemberships = c.Memberships
+                .Where(m => m.Rank == MembershipRank.Pending)
+                .Select(m => new MembershipDTO
                 {
                     Rank = m.Rank,
-                    UserProfile = new UserProfileDTO { DisplayName = m.UserProfile.DisplayName }
+                    UserProfile = new UserProfileDTO { Id = m.UserProfileId, DisplayName = m.UserProfile.DisplayName }
                 }).ToList(),
 
-                UpcomingMeetups = c.Meetups.Select(m => new MeetupDTO
+                UserMembership = c.Memberships
+                .Where(m => m.UserProfileId == userProfileId)
+                .Select(m => new MembershipDTO
                 {
-                    Date = m.Date,
-                    Movie = new MovieDTO { Title = m.Movie.Title }
-                }).ToList(),
+                    Rank = m.Rank,
+                    UserProfile = new UserProfileDTO { Id = m.UserProfileId, DisplayName = m.UserProfile.DisplayName }
+                }).FirstOrDefault() ?? new MembershipDTO() { Rank = MembershipRank.Visitor },
 
             }).FirstOrDefaultAsync();
 
-        if (club is not null)
-        {
-            if (club.UserRank is MembershipRank.Member || club.UserRank is MembershipRank.Leader)
-                return club;
+        if (club is null)
+            // Club not found
+            return null;
 
+        if (club.UserMembership.Rank is MembershipRank.Visitor)
             // User is not a Member of this Club, return limited data.
-            else
-                return new ClubDetailsModel() { ClubLeader = club.ClubLeader, ClubName = club.ClubName, ClubMembers = club.ClubMembers };
-        }
+            return new ClubDetailsModel() 
+            { 
+                ClubId = club.ClubId,
+                ClubLeader = club.ClubLeader, 
+                ClubName = club.ClubName, 
+            };
 
-        // Club not found.
-        return null;
+        return club;
+
     }
 
     public async Task<ClubHomeModel> ClubHomeQuery(int userProfileId)
@@ -105,6 +154,11 @@ public class ClubQueryService : IClubQueryService
     public async Task<List<ClubDTO>> ClubSearch(int userProfileId, string searchValue)
     {
         // Returns existing Clubs where the User has no Membership.
+
+        if (searchValue == string.Empty)
+        {
+            return new List<ClubDTO>();
+        }
 
         var clubs = await _context.Clubs
             .Where(c => EF.Functions.Like(c.Name, $"%{searchValue}%") && !c.Memberships.Any(m => m.UserProfileId == userProfileId))

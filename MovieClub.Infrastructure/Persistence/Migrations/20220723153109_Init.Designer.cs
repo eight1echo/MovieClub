@@ -12,8 +12,8 @@ using MovieClub.Infrastructure.Persistence;
 namespace MovieClub.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220722012054_MovieGenres")]
-    partial class MovieGenres
+    [Migration("20220723153109_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -315,6 +315,9 @@ namespace MovieClub.Infrastructure.Persistence.Migrations
                     b.Property<int>("ClubId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DateAccepted")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Rank")
                         .HasColumnType("int");
 
@@ -359,7 +362,7 @@ namespace MovieClub.Infrastructure.Persistence.Migrations
                     b.Property<string>("PosterURL")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ReleaseDate")
+                    b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("Revenue")
