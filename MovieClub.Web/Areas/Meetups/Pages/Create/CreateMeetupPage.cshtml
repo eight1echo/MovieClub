@@ -1,65 +1,87 @@
-﻿@page
+﻿@page "/meetups/create"
 @model MovieClub.Web.Areas.Meetups.Pages.Create.CreateMeetupPage
 @{
 }
 
 <form method="post" id="Search"></form>
 
-<div class="row pt-5">
+<div class="row">
 
     <div class="col-6 offset-3">
 
-        <div class="row">
-            <div class="col-9 offset-1 text-center">
-                <input type="text" asp-for="MovieSearchValue" class="form-control" form="Search" placeholder="Search Movies"/>
+        <div class="row text-center">
+            <div class="page-title">Create Meetup:</div>
+        </div>
+
+        <div class="row mt-5 sub-page">
+
+            <div class="row text-center">
+                <div class="sub-page-title">Search for a Movie:</div>
             </div>
 
-            <div class="col-2">
-                <input type="hidden" asp-for="ClubId" value="@Model.ClubId" form="Search"/>
-                <input asp-page-handler="SearchMovies" type="submit" value="Search" class="btn btn-primary" form="Search"/>
+            <div class="row pt-5 text-center">
+                <div class="col-8 offset-2 text-center">
+                    <input type="text" asp-for="MovieSearchValue" class="form-control" form="Search" placeholder="Search"/>
+                </div>
+
+                <div class="col-2">
+                    <input type="hidden" asp-for="ClubId" value="@Model.ClubId" form="Search"/>
+                    <input asp-page-handler="SearchMovies" type="submit" value="Search" class="btn btn-primary invisible" form="Search"/>
+                </div>
             </div>
+
         </div>
 
 
-        <div class="row text-center p-4">
-            <h4>New Meetup:</h4>
-        </div>
-
-        <form method="post">
-
-            @if(Model.MovieSelect != null)
+            @if(Model.MovieSelect.Any())
             {
-                <div class="row">
-                    <div class="col-6 offset-2 text-center form-group">
-                        <select asp-for="CreateMeetupModel.MovieTMDbId" asp-items="@Model.MovieSelect">
-                            <option>Select Movie: </option>
-                        </select>
+            <div class="row">
+                <form method="post">
+                    <div class="sub-page">
+                        <div class="row pt-5 ">
+
+                            <div class="col-4 sub-heading">Select Movie: </div>
+
+                            <div class="col-8 text-center form-group">
+                                <select class="form-control" asp-for="CreateMeetupModel.MovieTMDbId" asp-items="@Model.MovieSelect">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row pt-5">
+                            <div class="col-4 sub-heading">Date & Time: </div>
+
+                            <div class="col-8 form-group">
+                                <input asp-for="CreateMeetupModel.Date" type="datetime-local" class="form-control" value="@DateTime.Now" min="@DateTime.Now"/>
+                                <span asp-validation-for="CreateMeetupModel.Date" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="row pt-5">
+                            <div class="col-4 sub-heading">Location: </div>
+
+                            <div class="col-8 form-group">
+                                <input type="text" asp-for="CreateMeetupModel.Location" class="form-control" />
+                                <span asp-validation-for="CreateMeetupModel.Location" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row pt-5">
+                            <div class="col-2 offset-4 form-group">
+                                <input type="hidden" asp-for="CreateMeetupModel.ClubId" value="@Model.ClubId" />
+                                <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-success" />
+                            </div>
+                        </div>
                     </div>
-                </div>
-            }
-                
-            <div class="row pt-5">
-                <div class="col-5 offset-3 text-center"><h6>Hide Movie Selection?</h6></div>
-                <div class="col-1 form-group">
-                    <input type="checkbox" asp-for="CreateMeetupModel.MovieHidden" />
-                </div>
+                </form>
             </div>
-
-            <div class="row pt-5">
-                <div class="col-8 offset-2 form-group">
-                    <input asp-for="CreateMeetupModel.Date" class="form-control" value="@DateTime.Today"/>
-                    <span asp-validation-for="CreateMeetupModel.Date" class="text-danger"></span>
-                </div>
-                </div>
-
-                <div class="row pt-5">
-                    <div class="col-2 offset-4 form-group">
-                    <input type="hidden" asp-for="CreateMeetupModel.ClubId" value="@Model.ClubId" />
-                    <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-success" />
-                </div>
-                </div>
-
-            </form>
-
+            }
+            else
+            {
+            <div class="row mt-5 text-center">
+                <div class="page-title">No Movies Found.</div>
+            </div>
+            }
     </div>
 </div>

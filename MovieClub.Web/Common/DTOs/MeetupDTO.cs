@@ -12,8 +12,9 @@ public class MeetupDTO
     public bool MovieHidden { get; set; }
 
     public string? Host { get; set; }
+    public string? Location { get; set; }
 
     public DateTime Date { get; set; }
 
-    public AttendanceDTO? UserAttendance { get; set; }
+    public AttendanceDTO? UserAttendance { get; set; } = new AttendanceDTO();
 }

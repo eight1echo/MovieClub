@@ -17,5 +17,5 @@ public class ClubDetailsModel
     public List<MembershipDTO> ClubMembers { get; set; } = new List<MembershipDTO>();
     public List<MembershipDTO> PendingMemberships { get; set; } = new List<MembershipDTO>();
 
-    public MeetupDTO? NextMeetup { get; set; }
+    public MeetupDTO? NextMeetup { get; set; } = new MeetupDTO();
 }

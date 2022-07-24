@@ -32,7 +32,7 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
 
         [BindProperty]
         public string? MovieSearchValue { get; set; }
-        public List<SelectListItem>? MovieSelect { get; set; }
+        public List<SelectListItem> MovieSelect { get; set; } = new List<SelectListItem>();
 
         public IActionResult OnGet(int id)
         {  

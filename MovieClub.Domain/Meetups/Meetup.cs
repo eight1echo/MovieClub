@@ -1,12 +1,12 @@
 ﻿namespace MovieClub.Domain;
 public class Meetup : BaseEntity
 {
-    public Meetup(int userId, int clubId, int movieId, DateTime date, bool hidden)
+    public Meetup(int userId, int clubId, int movieId, DateTime date, string location)
     {
         ClubId = clubId;
         MovieId = movieId;
         Date = date;
-        MovieHidden = hidden;
+        Location = location;
         _attendance = new List<Attendance>() { new Attendance(userId, Id, AttendanceStatus.Hosting) };
     }
 
@@ -20,9 +20,17 @@ public class Meetup : BaseEntity
 
     public DateTime Date { get; private set; }
 
+    public string? Location { get; set; }
+
 
     private readonly List<Attendance> _attendance;
     public virtual IReadOnlyCollection<Attendance> Attendance => _attendance;
+
+    public void InviteMember(int userId, int meetupId)
+    {
+        _attendance.Add(new Attendance(userId, meetupId, AttendanceStatus.Invited));
+    }
+
 
     // Required for EF
     #nullable disable

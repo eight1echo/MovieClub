@@ -45,6 +45,7 @@ public class ClubQueryService : IClubQueryService
                         Date = m.Date,
                         Host = m.Attendance
                             .SingleOrDefault(a => a.Status == AttendanceStatus.Hosting)!.UserProfile.DisplayName,
+                        Location = m.Location,
 
                         Movie = new MovieDTO
                         {

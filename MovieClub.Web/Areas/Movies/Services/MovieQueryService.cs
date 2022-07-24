@@ -19,7 +19,7 @@ public class MovieQueryService : IMovieQueryService
         {
             Value = m.Id.ToString(),
             Text = $"{m.Title} ({m.Release_Date})"
-        }).ToList();
+        }).ToList() ?? new List<SelectListItem>();
 
         return movieSelect;
     }

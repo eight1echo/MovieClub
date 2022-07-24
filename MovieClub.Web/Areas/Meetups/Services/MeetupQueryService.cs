@@ -23,6 +23,7 @@ public class MeetupQueryService : IMeetupQueryService
                 Club = new ClubDTO { Id = m.Club.Id, Name = m.Club.Name },
                 Date = m.Date,
                 Host = m.Attendance.First(a => a.Status == AttendanceStatus.Hosting).UserProfile.DisplayName,
+                Location = m.Location,
                 Movie = new MovieDTO { Title = m.Movie.Title }
             }).ToListAsync();
 
@@ -46,6 +47,7 @@ public class MeetupQueryService : IMeetupQueryService
                         Club = new ClubDTO { Id = m.Club.Id, Name = m.Club.Name },
                         Date = m.Date,
                         Host = m.Attendance.First(a => a.Status == AttendanceStatus.Hosting).UserProfile.DisplayName,
+                        Location = m.Location,
                         Movie = new MovieDTO { Title = m.Movie.Title }
                     }).ToList()
 
@@ -73,6 +75,7 @@ public class MeetupQueryService : IMeetupQueryService
                         Club = new ClubDTO { Id = m.Club.Id, Name = m.Club.Name },
                         Date = m.Date,
                         Host = m.Attendance.First(a => a.Status == AttendanceStatus.Hosting).UserProfile.DisplayName,
+                        Location = m.Location,
                         Movie = new MovieDTO { Title = m.Movie.Title }
                     }).ToList()
 

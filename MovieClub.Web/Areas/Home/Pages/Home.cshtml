@@ -1,13 +1,13 @@
-﻿@page "/home"
+﻿@page "/"
 @model HomePage
 @{
-    ViewData["Title"] = "Home";
+
 }
 
 <div class="row">
 
     @*Your Clubs*@
-    <div class="col-5">
+    <div class="col-4">
 
         @if (Model.Clubs is not null)
         {
@@ -100,7 +100,7 @@
     </div>
 
     @*Upcoming Meetups*@
-    <div class="col-6 offset-1">
+    <div class="col-7 offset-1">
 
         @if (Model.Meetups is not null)
         {

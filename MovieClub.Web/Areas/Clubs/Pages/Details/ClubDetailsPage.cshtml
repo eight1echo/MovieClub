@@ -1,4 +1,4 @@
-﻿@page "/clubs/details/{id}"
+﻿@page "/clubs/{id}"
 @model ClubDetailsPage
 @{
 
@@ -17,60 +17,70 @@
     default:
     <div class="row">
 
-        <div class="col-4">
-            <div class="row pt-5 text-center">
-                <div class="page-title">
-                    @Model.ClubDetails.ClubName
+        <div class="col-4 mt-4">
+            @*Club Name*@
+            <div class="row">
+                <div class="col-1">
+                    <div class="row">
+                        @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
+                        {
+                            <div class="col-auto text-end">
+                                <a asp-area="Clubs" asp-page="/Edit/EditClubPage" asp-route-id="@Model.ClubDetails.ClubId"><i class="fa fa-pencil edit-icon"></i></a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-11 page-title">
+                    <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav-title">@Model.ClubDetails.ClubName</a>
                 </div>
             </div>
 
-            <div class="row text-center">
-                <div class="col-3 mt-3 offset-3">
-                    <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" asp-route-id="@Model.ClubDetails.ClubId" class="btn btn-dark text-success">Host Meetup</a>
-                </div>
-                <div class="col-3 mt-3">
-                    @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
-                    {
-                        <form method="post">
-                            <input type="hidden" asp-for="@Model.ClubDetails.UserMembership.Rank" value="@Model.ClubDetails.UserMembership.Rank" />
-                            <input type="hidden" asp-for="@Model.ClubDetails.ClubId" value="@Model.ClubDetails.ClubId" />
-                            <button asp-page-handler="DeleteClub" type="submit" class="btn btn-dark text-danger">Delete Club</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <button asp-area="" asp-page="" asp-route-id="@Model.ClubDetails.ClubId" type="submit" class="btn btn-dark text-danger">Quit Club</button>
-                    }
+            <div class="row">
+                <div class="col-10 mt-5 sub-page">
+                    <div class="row pt-3 text-center">
+                        <div class="col-4">
+                            <div class="sub-page-title">Leader:</div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-control mt-2 column-readonly">@Model.ClubDetails.ClubLeader.UserProfile.DisplayName </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             @*Club Members*@
-            <div class="sub-page">
             @if (Model.ClubDetails.ClubMembers.Any())
             {
-                <div class="row text-center">
-                    <div class="sub-page-title">Club Members:</div>
-                </div>
+            <div class="row">
+                <div class="col-10 mt-5 sub-page">
+                    <div class="row pb-2 text-center">
+                        <div class="sub-page-title">Club Members:</div>
+                    </div>
                    
-                <div class="row pt-3 pb-3">
-                    <div class="col-4 column-header">User</div>
-                    <div class="col-4 column-header">Rank</div>
-                </div>
+                    @foreach (var m in Model.ClubDetails.ClubMembers)
+                    {
+                    <div class="row mt-3 text-center">
 
-                @foreach (var m in Model.ClubDetails.ClubMembers)
-                {
-                    <div class="row mb-2 p-2">
-                        <div class="col-4">
+                        <div class="col-9">
                             <div class="form-control column-readonly">@m.UserProfile.DisplayName</div>
                         </div>
-                        <div class="col-4">
-                            <div class="form-control column-readonly">@m.Rank.ToString() </div>
+
+                        <div class="col-3">
+                            @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
+                            {
+                                <form method="post">
+                                    <input type="hidden" asp-for="@Model.ClubDetails.UserMembership.Rank" value="@Model.ClubDetails.UserMembership.Rank" />
+                                    <input type="hidden" asp-for="ClubDetails.ClubId" value="@Model.ClubDetails.ClubId" />
+                                    <input type="hidden" asp-for="MembershipUserId" value="@m.UserProfile.Id" />
+                                    <input asp-page-handler="RemoveMembership" type="submit" value="Kick" class="btn btn-dark text-danger" />
+                                </form>  
+                            }
                         </div>
-                        <div class="col-4">
-                                
-                        </div>
+
                     </div>
-                }
+                    }
+                </div>
+            </div>
             }
             else
             {
@@ -78,24 +88,22 @@
                     <div class="sub-page-title">No Club Members</div>
                 </div>
             }
-            </div>
 
-            
+            @*Pending Members*@
             @if (Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
             {
-                @*Pending Members*@
-                <div class="row">
+                <div class="row mt-3">
                     @if (Model.ClubDetails.PendingMemberships.Any())
                     {
-                        <div class="col-8 offset-2 sub-page">
+                        <div class="col-10 sub-page">
 
-                            <div class="row pb-4 text-center">
-                                <div class="sub-page-title">Requests:</div>
+                            <div class="row pb-2 text-center">
+                                <div class="sub-page-title">Membership Requests:</div>
                             </div>
 
                             @foreach (var m in Model.ClubDetails.PendingMemberships)
                             {
-                                <div class="row mb-2 p-2 text-center">
+                                <div class="row mt-3 text-center">
                                     <div class="col-8">
                                         <div class="form-control column-readonly">@m.UserProfile.DisplayName</div>
                                     </div>
@@ -108,8 +116,14 @@
                                             <button asp-page-handler="AcceptMembership" type="submit" class="btn btn-outline-success">&#10004;</button>
                                         </form>
                                     </div>
+
                                     <div class="col-2">
-                                        <button asp-area="" asp-page="" asp-route-id="@Model.ClubDetails.ClubId" type="submit" class="btn btn-outline-danger">&#10006;</button>
+                                        <form method="post">
+                                            <input type="hidden" asp-for="@Model.ClubDetails.UserMembership.Rank" value="@Model.ClubDetails.UserMembership.Rank" />
+                                            <input type="hidden" asp-for="MembershipUserId" value="@m.UserProfile.Id" />
+                                            <input type="hidden" asp-for="@Model.ClubDetails.ClubId" value="@Model.ClubDetails.ClubId" />
+                                            <button asp-page-handler="RemoveMembership" type="submit" class="btn btn-outline-danger">&#10006;</button>
+                                        </form>
                                     </div>
                                 </div>
                             }
@@ -117,22 +131,57 @@
                     }
                 </div>
             }
-
         </div>
 
-        <div class="col-7 offset-1">
+        @*Page Navigation*@
+        <div class="col-8">
+
+            <div class="row pt-3 text-center">
+
+                <div class="col-2 offset-2">
+                    <a asp-area="Meetups" asp-page="/ClubMeetups/PreviousClubMeetupsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav">&#8592; Previous Meetups</a>
+                </div>
+
+                <div class="col-4">
+                    <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav-success">HOST A MEETUP</a>
+                </div>
+
+                <div class="col-2">
+                    <a asp-area="Meetups" asp-page="/ClubMeetups/UpcomingClubMeetupsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav">Future Meetups &#8594;</a>
+                </div>
+            </div>
 
             @*Next Meetup*@
             @if (@Model.ClubDetails.NextMeetup is not null)
             {
-                <div class="row sub-page">
+                <div class="sub-page">
+
+                    <div class="row mt-3">
+
+                        <div class="col-4 offset-1">
+                            <div class="sub-page-title">Next Meetup:</div>
+                        </div>
+
+                        <div class="col-2 offset-2">
+                            <img src="~/images/imdb-logo.png" class="movie-social-logo" alt="My image" />
+                        </div>
+                        <div class="col-2">
+                            <img src="~/images/letterboxd-logo.png" class="movie-social-logo" alt="My image" />
+                        </div>
+
+                        @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
+                        {
+                            <div class="col-1 text-end">
+                                <a asp-area="Meetups" asp-page="/Edit/EditMeetupPage" asp-route-id="@Model.ClubDetails.NextMeetup.Id"><i class="fa fa-pencil edit-icon"></i></a>
+                            </div>   
+                        }
+
+                    </div>
 
                     <div class="row">
-
-                        <div class="col-5 text-center">
-                            <div class="sub-page-title pb-3">Next Pick:</div>
+                        <div class="col-5 pt-4 text-center">
                             <div>
-                                <img class="movie-poster pt-3" src="@Model.ClubDetails.NextMeetup.Movie.PosterURL" />
+                                <img class="movie-poster" src="@Model.ClubDetails.NextMeetup.Movie.PosterURL" />
                             </div>
                         
                         </div>
@@ -143,16 +192,16 @@
                                 <div class="movie-title">@Model.ClubDetails.NextMeetup.Movie.Title (@Model.ClubDetails.NextMeetup.Movie.ReleaseDate.Year)</div>
                             </div>
 
-                            <div class="row mb-4 text-center">
+                            <div class="row text-center">
                                 <h4 class="movie-tagline">" @Model.ClubDetails.NextMeetup.Movie.Tagline "</h4>
                             </div>
 
-                            <div class="row m-3 text-center">
+                            <div class="row pt-3 text-center">
                                 <h5 class="movie-genres">@Model.ClubDetails.NextMeetup.Movie.Genres</h5>
                             </div>
 
-                            <div class="row m-3">
-                                <p class="movie-synopsis">@Model.ClubDetails.NextMeetup.Movie.Synopsis</p>
+                            <div class="row p-3">
+                                <p class="col-10 offset-1 movie-synopsis">@Model.ClubDetails.NextMeetup.Movie.Synopsis</p>
                             </div>
 
                             <div class="row">
@@ -167,16 +216,47 @@
 
                             </div>
 
-                            <div class="row">
+                            <div class="row pt-3">
+
+                                <div class="col-4 column-header">
+                                    <div>Location: </div>
+                                </div>
+
+                                <div class="col-7">
+                                    <div class="form-control column-readonly">@Model.ClubDetails.NextMeetup.Location </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row pt-3">
 
                                 <div class="col-4 column-header">
                                     <div>Chosen By: </div>
                                 </div>
 
                                 <div class="col-7">
-                                    <div class="form-control column-readonly mt-2">@Model.ClubDetails.NextMeetup.Host </div>
+                                    <div class="form-control column-readonly">@Model.ClubDetails.NextMeetup.Host </div>
                                 </div>
 
+                            </div>
+
+                            <div class="row pt-3">
+
+                                <div class="col-4 column-header">
+                                    <div>RSVP Status: </div>
+                                </div>
+
+                                <div class="col-7">
+                                    <div class="form-control column-readonly">@Model.ClubDetails.NextMeetup.UserAttendance.Status.ToString() </div>
+                                </div>
+
+                                @if (@Model.ClubDetails.NextMeetup.UserAttendance.Status is not AttendanceStatus.Hosting)
+                                {
+                                <div class="col-1">
+                                    <a asp-area="Meetups" asp-page="/Attendance/StatusPage" asp-route-id="@Model.ClubDetails.NextMeetup.UserAttendance.Id"><i class="fa fa-pencil text-warning edit-icon"></i></a>
+                                </div>
+                                }
+                                
                             </div>
 
                         </div>
@@ -191,21 +271,9 @@
                 </div>
             }
 
-
-            <div class="row mt-5 text-center">
-
-                <div class="col-4 offset-2">
-                    <a asp-area="Meetups" asp-page="/ClubMeetups/PreviousClubMeetupsPage" asp-route-id="@Model.ClubDetails.ClubId" class="btn btn-dark">&#8592; Previous Meetups</a>
-                </div>
-
-                <div class="col-4">
-                    <a asp-area="Meetups" asp-page="/ClubMeetups/UpcomingClubMeetupsPage" asp-route-id="@Model.ClubDetails.ClubId" class="btn btn-dark">Upcoming Meetups &#8594;</a>
-                </div>
-
-            </div>
-
-
         </div>
+
     </div>
+
         break;
 }

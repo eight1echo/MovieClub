@@ -12,6 +12,9 @@ public class CreateMeetupModel
     public int MovieTMDbId { get; set; }
     public bool MovieHidden { get; set; }
 
+    [Required]
+    public string? Location { get; set; }
+
     [DateInTheFuture]
-    public DateTime Date { get; set; }
+    public DateTime Date { get; set; } = DateTime.Now;
 }

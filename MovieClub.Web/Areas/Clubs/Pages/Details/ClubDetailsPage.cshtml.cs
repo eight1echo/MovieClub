@@ -31,15 +31,16 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
             ClubDetails = await _clubQueries.ClubDetails(userProfileId, id);
 
             if (ClubDetails is null)
-            {
                 return RedirectToPage("/Error");
-            }
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostCreateMembership()
         {
+            if (ClubDetails is null)
+                return RedirectToPage("/Error");
+
             var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
             await _membershipCommands.CreatePending(ClubDetails.ClubId, userProfileId);
 
@@ -48,6 +49,9 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
 
         public async Task<IActionResult> OnPostCancelMembership()
         {
+            if (ClubDetails is null)
+                return RedirectToPage("/Error");
+
             var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
             await _membershipCommands.Cancel(ClubDetails.ClubId, userProfileId);
 
@@ -67,7 +71,7 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
             return await OnGet(ClubDetails.ClubId);
         }
 
-        public async Task<IActionResult> OnPostDenyMembership()
+        public async Task<IActionResult> OnPostRemoveMembership()
         {
             if (ClubDetails is null)
                 return RedirectToPage("/Error");

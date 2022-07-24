@@ -18,6 +18,17 @@ public class MembershipCommandService : IMembershipCommandService
         if (membership is not null)
         {
             membership.AcceptMembership();
+
+            var upcomingMeetups = await _context.Meetups
+                .Include(m => m.Attendance)
+                .Where(m => m.ClubId == clubId && m.Date > DateTime.Now)
+                .ToListAsync();
+
+            foreach (var meetup in upcomingMeetups)
+            {
+                meetup.InviteMember(userId, meetup.Id);
+            }
+
             await _context.SaveChangesAsync();
         }
     }

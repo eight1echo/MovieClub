@@ -17,7 +17,7 @@ public class MeetupCommandService : IMeetupCommandService
 
     public async Task<int> CreateMeetup(CreateMeetupModel model, int movieId)
     {
-        var meetup = new Meetup(model.UserProfileId, model.ClubId, movieId, model.Date, model.MovieHidden);
+        var meetup = new Meetup(model.UserProfileId, model.ClubId, movieId, model.Date, model.Location);
 
         _context.Meetups.Add(meetup);
         await _context.SaveChangesAsync();
