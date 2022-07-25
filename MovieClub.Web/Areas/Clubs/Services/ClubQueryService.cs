@@ -12,6 +12,19 @@ public class ClubQueryService : IClubQueryService
         _context = context;
     }
 
+    public async Task<List<SelectListItem>> GetClubSelectList(int userProfileId)
+    {
+        var clubSelect = await _context.Clubs
+            .Where(c => c.Memberships.Any(m => m.UserProfileId == userProfileId))
+            .Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = $"{c.Name}"
+            }).ToListAsync();
+
+        return clubSelect;
+    }
+
     public async Task<ClubDetailsModel?> ClubDetails(int userProfileId, int clubId)
     {
         var club = await _context.Clubs

@@ -25,25 +25,34 @@
                 </div>
 
                 <div class="col-2">
-                    <input type="hidden" asp-for="ClubId" value="@Model.ClubId" form="Search"/>
                     <input asp-page-handler="SearchMovies" type="submit" value="Search" class="btn btn-primary invisible" form="Search"/>
                 </div>
             </div>
 
         </div>
 
-
+        @if (Model.MovieSearchValue is not null)
+        {
             @if(Model.MovieSelect.Any())
             {
             <div class="row">
                 <form method="post">
                     <div class="sub-page">
-                        <div class="row pt-5 ">
 
+                        <div class="row pt-5 ">
                             <div class="col-4 sub-heading">Select Movie: </div>
 
                             <div class="col-8 text-center form-group">
                                 <select class="form-control" asp-for="CreateMeetupModel.MovieTMDbId" asp-items="@Model.MovieSelect">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row pt-5 ">
+                            <div class="col-4 sub-heading">Select Club: </div>
+
+                            <div class="col-8 text-center form-group">
+                                <select class="form-control" asp-for="CreateMeetupModel.ClubId" asp-items="@Model.ClubSelect">
                                 </select>
                             </div>
                         </div>
@@ -69,7 +78,6 @@
 
                         <div class="row pt-5">
                             <div class="col-2 offset-4 form-group">
-                                <input type="hidden" asp-for="CreateMeetupModel.ClubId" value="@Model.ClubId" />
                                 <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-success" />
                             </div>
                         </div>
@@ -83,5 +91,6 @@
                 <div class="page-title">No Movies Found.</div>
             </div>
             }
+        }
     </div>
 </div>

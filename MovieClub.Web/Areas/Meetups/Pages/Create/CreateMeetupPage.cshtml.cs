@@ -32,19 +32,24 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
 
         [BindProperty]
         public string? MovieSearchValue { get; set; }
+
+        public List<SelectListItem> ClubSelect { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> MovieSelect { get; set; } = new List<SelectListItem>();
 
-        public IActionResult OnGet(int id)
-        {  
-            ClubId = id;
-
+        public IActionResult OnGet()
+        {
             return Page();
         }
 
         public async Task<IActionResult> OnPostSearchMovies()
         {
             if (MovieSearchValue is not null)
+            {
                 MovieSelect = await _movieQueries.MovieSelectQuery(MovieSearchValue);
+
+                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                ClubSelect = await _clubQueries.GetClubSelectList(userProfileId);
+            }
 
             return Page();
         }

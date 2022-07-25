@@ -4,11 +4,11 @@
 }
 <div class="row">
 
-    <div class="col-4 mt-4">
+    <div class="col-4">
         @*Club Name*@
         <div class="row">
-            <div class="col-11 offset-1 page-title">
-                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@Model.ClubMeetups.ClubId" class="page-nav-title">@Model.ClubMeetups.ClubName</a>
+            <div class="col-10 offset-1 mt-3 page-title">
+                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@Model.ClubMeetups.ClubId" class="page-nav-title p-4">@Model.ClubMeetups.ClubName</a>
             </div>
         </div>
     </div>
@@ -18,7 +18,7 @@
         @*Page Navigation*@
         <div class="row pt-3 text-center">
 
-            <div class="col-4">
+            <div class="col-2 offset-2">
                 <a asp-area="Meetups" asp-page="/ClubMeetups/PreviousClubMeetupsPage" asp-route-id="@Model.ClubMeetups.ClubId" class="page-nav">&#8592; Previous Meetups</a>
             </div>
 
@@ -26,7 +26,7 @@
                 <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" asp-route-id="@Model.ClubMeetups.ClubId" class="page-nav-success">HOST A MEETUP</a>
             </div>
 
-            <div class="col-4">
+            <div class="col-2">
                 <a asp-area="Meetups" asp-page="/ClubMeetups/UpcomingClubMeetupsPage" asp-route-id="@Model.ClubMeetups.ClubId" class="page-nav">Future Meetups &#8594;</a>
             </div>
         </div>

@@ -11,14 +11,18 @@ html {
 
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #DDEEFF;
+    color: #F8FFF4;
     background-color: #18191A;
     margin-bottom: 60px;
     max-width: 100%;
 }
 
+hr {
+    color: #445566;
+}
+
 .container {
-    max-width: 90%;
+    max-width: 95%;
 }
 
 a:hover {
@@ -41,7 +45,8 @@ a:hover {
 }
 
 .navbar-brand {
-    color: #445566;
+    color: #BBE5ED;
+    font-size: 27px;
 }
 
 .nav-link {
@@ -55,6 +60,7 @@ a:hover {
         color: #445566;
     }
 
+
 .page-title {
     font-size: 36px;
     color: #445566;
@@ -63,12 +69,11 @@ a:hover {
 
 .edit-icon {
     font-size: 28px;
-    color: darkgrey;
 }
 
-.delete-icon {
+.kick-icon {
     font-size: 28px;
-    color: red;
+    color: #8F0005;
 }
 
 .sub-page {
@@ -80,22 +85,22 @@ a:hover {
 }
 
 .page-nav {
-    color: #656565;
+    color: #BBE5ED;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
 }
 
 .page-nav-success {
-    color: green;
+    color: #63A375;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
 }
 
 .page-nav-title {
-    color: #445566;
-    font-size: 36px;
+    color: #DDEEFF;
+    font-size: 42px;
     font-weight: 800;
     text-decoration: none;
 }
@@ -108,33 +113,41 @@ a:hover {
 }
 
 .sub-page-title {
-    color: #E8EBED;
-    font-size: 30px;
+    color: #627A93;
+    font-size: 24px;
     font-weight: 800;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 .btn-dark {
     background-color: #18191A;
 }
 
-.column-header {
-    color: #656565;
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
+.btn-success {
+    background-color: #18191A;
+    color: #63A375;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #18191A;
+    color: #8F0005;
+    border: none;
 }
 
 .column-input {
+    border-radius: 12px;
     background-color: #E2E9F3;
     border: 4px solid black;
-    color: #292929 !important;
+    color: #627A93 !important;
     text-align: center;
 }
 
 .column-readonly {
     background-color: #18191A !important;
     border: 0.5px solid black;
-    color: #E2E9F3;
+    color: #F8FFF4;
     text-align: center;
 }
 
@@ -147,18 +160,55 @@ a:hover {
     text-decoration: none;
 }
 
+
+
+
+
+.clubdetails-leader {
+    color: #D2D4C4;
+    text-align: center;
+    font-size: 24px;
+}
+
+.clubdetails-member {
+    color: #D2D4C4;
+    text-align: center;
+    font-size: 24px;
+}
+
+
+
+
+.movie-info-label {
+    color: #BBE5ED;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: end;
+}
+
+.movie-info-value {
+    color: #D2D4C4;
+    text-align: center;
+    font-size: 24px;
+}
+
 .movie-genres {
     font-size: 24px;
-    color: #E8EBED;
+    color: #627A93;
 }
 
 .movie-poster {
-    width: 350px;
-    height: 525px;
+    width: 425px;
+    height: 625px;
 }
 
-.movie-social-logo {
-    width: 120px;
+.movie-imdb {
+    width: 90px;
+    height: 30px;
+}
+
+.movie-letterboxd {
+    width: 130px;
     height: 30px;
 }
 
@@ -172,7 +222,7 @@ a:hover {
 }
 
 .movie-title {
-    font-size: 30px;
+    font-size: 34px;
     font-weight: 800;
-    color: #445566;
+    color: #DDEEFF;
 }
