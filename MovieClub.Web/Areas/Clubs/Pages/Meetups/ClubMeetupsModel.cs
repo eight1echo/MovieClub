@@ -1,4 +1,4 @@
-﻿namespace MovieClub.Web.Areas.Meetups.Pages.ClubMeetups;
+﻿namespace MovieClub.Web.Areas.Clubs.Pages.Meetups;
 
 public class ClubMeetupsModel
 {

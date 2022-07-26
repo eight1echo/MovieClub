@@ -1,5 +1,5 @@
-﻿using MovieClub.Web.Areas.Home;
-using MovieClub.Web.Areas.Meetups.Pages.ClubMeetups;
+﻿using MovieClub.Web.Areas.Clubs.Pages.Meetups;
+using MovieClub.Web.Areas.Home;
 
 namespace MovieClub.Web.Areas.Meetups.Services;
 
@@ -30,7 +30,7 @@ public class MeetupQueryService : IMeetupQueryService
         return new MeetupHomeModel() { UpcomingMeetups = meetups };
     }
 
-    public async Task<ClubMeetupsModel?> PreviousClubMeetups(int clubId)
+    public async Task<ClubMeetupsModel?> PastClubMeetups(int clubId)
     {
         var model = await _context.Clubs
             .Where(c => c.Id == clubId)

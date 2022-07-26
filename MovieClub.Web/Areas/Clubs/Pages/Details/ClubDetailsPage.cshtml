@@ -17,26 +17,55 @@
     default:
     <div class="row mt-4">
 
-        <div class="col-4">
+        <div class="col-3">
             @*Club Name*@
             <div class="row">
-                <div class="mt-3 page-title">
-                    <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav-title p-4">@Model.ClubDetails.ClubName</a>
+                <div class="col-12 mt-3 page-title">
+                    <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav-title">@Model.ClubDetails.ClubName</a>
                 </div>
             </div>
 
-            <div class="row mt-4">
-                <div class="col-1 offset-1">
-                @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
-                {
-                    <a asp-area="Clubs" asp-page="/Edit/EditClubPage" asp-route-id="@Model.ClubDetails.ClubId"><i class="fa fa-pencil edit-icon text-warning"></i></a>
-                }
+            <div class="row mt-2">
+
+                <div class="col-5">
+                    @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
+                    {
+                        <div class="row mt-4">
+                            <div class="col-9 offset-3 text-start">
+                                <a asp-area="Meetups" asp-page="/Delete/DeleteMeetupPage" class="page-nav-warning">OPTIONS</a>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-9 offset-3 text-start">
+                                <a asp-area="Meetups" asp-page="/Delete/DeleteMeetupPage" class="page-nav-danger">DELETE CLUB</a>
+                            </div>
+                        </div>
+                    }
+                    @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Member)
+                    {
+                        <div class="row mt-5">
+                            <div class="col-9 offset-3 text-start">
+                                <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" class="page-nav-danger">LEAVE CLUB</a>
+                            </div>
+                        </div>
+                    }
                 </div>
-                <div class="col-2 text-center">
-                    <div class="sub-page-title">LEADER:</div>
-                </div>
-                <div class="col-7 offset-1">
-                    <div class="clubdetails-leader text-start">@Model.ClubDetails.ClubLeader.UserProfile.DisplayName </div>
+                <div class="col-6 text-center">
+                    <div class="row mt-2">
+                        <div class="col-10 text-end">
+                            <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" class="page-nav-success">Host Meetup</a>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-10 text-end">
+                            <a asp-area="Clubs" asp-page="/Meetups/UpcomingMeetupsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav text-end">Upcoming Meetups</a>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-10 text-end">
+                            <a asp-area="Clubs" asp-page="/Meetups/PastMeetupsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav text-end">Past Meetups</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -44,9 +73,17 @@
             @if (Model.ClubDetails.ClubMembers.Any())
             {
             <div class="row">
-                <div class="col-8 offset-1 mt-5 sub-page">
-                    <div class="row pt-1">
-                        <div class="sub-page-title">CLUB MEMBERS</div>
+
+                <div class="row mt-3">
+                    <div class="col-11 offset-1">
+                        <div class="sub-page-title">MEMBERS:</div>
+                    </div>
+                </div>
+
+                <div class="col-9 offset-1 mt-4 pt-3 pb-3 sub-page">
+
+                    <div class="row">
+                        <div class="clubdetails-member">@Model.ClubDetails.ClubLeader.UserProfile.DisplayName</div>
                     </div>
 
                     <hr>
@@ -54,36 +91,27 @@
                     @foreach (var m in Model.ClubDetails.ClubMembers)
                     {
                     <div class="row mt-3 text-center">
-                        @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader || m.UserProfile.Id == @Model.ClubDetails.UserMembership.UserProfile.Id)
+                        @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader) 
                         {
-                            <div class="col-9 offset-1">
+                            <div class="col-10">
                                 <div class="clubdetails-member">@m.UserProfile.DisplayName</div>
                             </div>
 
-                            @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader) 
-                            {
-                                <div class="col-2">
-                                    <a asp-area="Clubs" asp-page="/Memberships/RemoveMembershipPage" asp-route-id="@m.Id"><i class="fa fa-ban kick-icon" aria-hidden="true"></i></a>
-                                </div>
-                            }
-
-                            @if (m.UserProfile.Id == @Model.ClubDetails.UserMembership.UserProfile.Id)
-                            {
-                                <div class="col-2">
-                                    <form method="post">
-                                        <input type="hidden" asp-for="ClubDetails.ClubId" value="@Model.ClubDetails.ClubId" />
-                                        <input asp-page-handler="CancelMembership" type="submit" value="Quit Club" class="btn btn-danger" />
-                                    </form>  
-                                </div>
-                            }
+                            <div class="col-1">
+                                <form asp-page-handler="RemoveMembership" method="post">
+                                    <input type="hidden" asp-for="@Model.ClubDetails.UserMembership.Rank" value="@Model.ClubDetails.UserMembership.Rank" />
+                                    <input type="hidden" asp-for="MembershipUserId" value="@m.UserProfile.Id" />
+                                    <input type="hidden" asp-for="@Model.ClubDetails.ClubId" value="@Model.ClubDetails.ClubId" />
+                                    <button class="btn-icon" type="submit"><i class="fa fa-ban kick-icon" aria-hidden="true"></i></button>
+                                </form>
+                            </div>
                         }
                         else
                         {
-                              <div class="col-12">
-                                <div class="form-control column-readonly">@m.UserProfile.DisplayName</div>
-                            </div>          
+                            <div class="col-12">
+                                <div class="clubdetails-member">@m.UserProfile.DisplayName</div>
+                            </div>
                         }
-
                     </div>
                     }
                 </div>
@@ -91,33 +119,33 @@
             }
             else
             {
-                <div class="row">
-                    <div class="col-8 offset-1 mt-5 sub-page sub-page-title">No Club Members</div>
+                <div class="row text-center">
+                    <div class="col-6 offset-2 mt-4 p-4 sub-page">
+                        <div class="sub-page-title">No Club Members</div>
+                    </div>
                 </div>
             }
 
             @*Pending Members*@
             @if (Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
             {
-                <div class="row mt-3">
-                    @if (Model.ClubDetails.PendingMemberships.Any())
-                    {
-                        <div class="col-8 offset-1 sub-page">
+                @if (Model.ClubDetails.PendingMemberships.Any())
+                {
+                    <div class="row mt-5">
+                        <div class="col-10 offset-1">
+                            <div class="sub-page-title">Membership Requests:</div>
+                        </div>
+                    </div>
 
-                            <div class="row text-center">
-                                <div class="sub-page-title">Membership Requests</div>
-                            </div>
-
-                            <hr>
-
+                    <div class="row mt-3">
+                        <div class="col-9 offset-1 mt-2 pt-3 pb-3 sub-page">
                             @foreach (var m in Model.ClubDetails.PendingMemberships)
                             {
-                                <div class="row mt-3 text-center">
+                                <div class="row text-center">
                                     <div class="col-9">
                                         <div class="clubdetails-member">@m.UserProfile.DisplayName</div>
                                     </div>
                                     <div class="col-1">
-
                                         <form method="post">
                                             <input type="hidden" asp-for="@Model.ClubDetails.UserMembership.Rank" value="@Model.ClubDetails.UserMembership.Rank" />
                                             <input type="hidden" asp-for="MembershipUserId" value="@m.UserProfile.Id" />
@@ -137,69 +165,35 @@
                                 </div>
                             }
                         </div>
-                    }
-                </div>
+                    </div>
+                }
             }
         </div>
 
-        @*Page Navigation*@
-        <div class="col-8">
+        <div class="col-9 mt-3">
 
-            <div class="row pt-3 text-center">
-
-                <div class="col-2 offset-2">
-                    <a asp-area="Meetups" asp-page="/ClubMeetups/PreviousClubMeetupsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav">&#8592; Previous Meetups</a>
-                </div>
-
-                <div class="col-4">
-                    <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" class="page-nav-success">HOST A MEETUP</a>
-                </div>
-
-                <div class="col-2">
-                    <a asp-area="Meetups" asp-page="/ClubMeetups/UpcomingClubMeetupsPage" asp-route-id="@Model.ClubDetails.ClubId" class="page-nav">Future Meetups &#8594;</a>
-                </div>
+            <div class="row mb-3">
+                <div class="col-10 offset-1 sub-page-title">Next Meetup:</div>
             </div>
 
             @*Next Meetup*@
             @if (@Model.ClubDetails.NextMeetup is not null)
             {
-                <div class="sub-page">
-
-                    <div class="row mt-3">
-
-                        <div class="col-5 text-center">
-                            <div class="sub-page-title">NEXT MEETUP</div>
-                        </div>
-
-                        <div class="col-2 offset-2">
-                            <img src="~/images/imdb-logo.png" class="movie-imdb" alt="My image" />
-                        </div>
-                        <div class="col-2">
-                            <img src="~/images/letterboxd-logo.png" class="movie-letterboxd" alt="My image" />
-                        </div>
-
-                        @if (@Model.ClubDetails.UserMembership.Rank == MembershipRank.Leader)
-                        {
-                            <div class="col-1 text-end">
-                                <a asp-area="Meetups" asp-page="/Edit/EditMeetupPage" asp-route-id="@Model.ClubDetails.NextMeetup.Id"><i class="fa fa-pencil edit-icon text-warning"></i></a>
-                            </div>   
-                        }
-
-                    </div>
+                <div class="sub-page next-meetup">
 
                     <div class="row">
 
+                        <div class="col-4 text-center">
 
-                        <div class="col-5 pt-4 text-center">
-                            <div>
+                            <div class="row">
                                 <img class="movie-poster" src="@Model.ClubDetails.NextMeetup.Movie.PosterURL" />
                             </div>
-                        
+
                         </div>
 
-                        <div class="col-7">
+                        <div class="col-8">
 
-                            <div class="row mt-5 text-center">
+                            <div class="row mt-3 text-center">
                                 <div class="movie-title">@Model.ClubDetails.NextMeetup.Movie.Title (@Model.ClubDetails.NextMeetup.Movie.ReleaseDate.Year)</div>
                             </div>
 
@@ -211,13 +205,22 @@
                                 <h5 class="movie-genres">@Model.ClubDetails.NextMeetup.Movie.Genres</h5>
                             </div>
 
-                            <div class="row p-3 text-center">
+                            <div class="row pt-3 text-center">
                                 <p class="col-10 offset-1 movie-synopsis">@Model.ClubDetails.NextMeetup.Movie.Synopsis</p>
                             </div>
 
-                            <div class="row p-2">
+                            <div class="row p-2 text-center">
+                                <div class="col-3 offset-3">
+                                    <img class="col-6 movie-imdb" src="/images/imdb-logo.png" />
+                                </div>
+                                <div class="col-3">
+                                    <img class="col-6 movie-letterboxd" src="/images/letterboxd-logo.png" />
+                                </div>
+                            </div>
 
-                                <div class="col-3 offset-1 text-end movie-info-label">
+                            <div class="row p-2 mt-5">
+
+                                <div class="col-3 offset-2 text-end movie-info-label">
                                     <div>HOST : </div>
                                 </div>
 
@@ -229,7 +232,7 @@
 
                             <div class="row p-2">
 
-                                <div class="col-3 offset-1 text-end movie-info-label">
+                                <div class="col-3 offset-2 text-end movie-info-label">
                                     <div>WHEN : </div>
                                 </div>
 
@@ -241,7 +244,7 @@
 
                             <div class="row p-2">
 
-                                <div class="col-3 offset-1 text-end movie-info-label">
+                                <div class="col-3 offset-2 text-end movie-info-label">
                                     <div>WHERE : </div>
                                 </div>
 
@@ -254,16 +257,26 @@
 
                             <div class="row p-2">
 
-                                <div class="col-3 offset-1 movie-info-label">
+                                <div class="col-3 offset-2 movie-info-label">
                                     <div>RSVP : </div>
                                 </div>
                                 @if (@Model.ClubDetails.NextMeetup.UserAttendance.Status is not AttendanceStatus.Hosting)
                                 {
-                                    <div class="col-3">
-                                        <div class="mt-1 movie-info-value text-end">@Model.ClubDetails.NextMeetup.UserAttendance.Status.ToString() </div>
-                                    </div>
-                                    <div class="col-1">
-                                        <a asp-area="Meetups" asp-page="/Attendance/StatusPage" asp-route-id="@Model.ClubDetails.NextMeetup.UserAttendance.Id"><i class="fa fa-pencil text-warning edit-icon"></i></a>
+
+                                    <div class="col-7">
+                                            <form asp-page-handler="UpdateAttendance" method="post">
+                                        <div class="row">
+                                                <div class="col-4 offset-2">
+                                                    <select class="form-control" asp-for="@Model.ClubDetails.NextMeetup.UserAttendance.Status" asp-items="@Model.StatusSelectList"></select>
+
+                                                </div>
+                                                <div class="col-1">
+                                                    <input type="hidden" asp-for="@Model.ClubDetails.ClubId" value="@Model.ClubDetails.ClubId" />
+                                                    <input type="hidden" asp-for="@Model.ClubDetails.NextMeetup.UserAttendance.Id" value="@Model.ClubDetails.NextMeetup.UserAttendance.Id" />
+                                                    <button class="form-control btn-icon" type="submit"><i class="fa fa-pencil text-warning edit-icon"></i></button>
+                                                </div>
+                                        </div>
+                                            </form>
                                     </div>
                                 }
                                 else
@@ -273,22 +286,21 @@
                                     </div>
                                 }
                             </div>
-
                         </div>
                     </div>
-
                 </div>
             }
             else
             {
-                <div class="row sub-page text-center">
-                    <div class="sub-page-title">No Upcoming Meetups</div>
+                <div class="row text-center">
+                    <div class="col-6 offset-3 p-4 sub-page">
+                        <div class="sub-page-title">No Upcoming Meetups</div>
+                    </div>
                 </div>
             }
 
         </div>
 
     </div>
-
-        break;
+    break;
 }

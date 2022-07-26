@@ -15,6 +15,11 @@ public class Attendance : BaseEntity
 
     public AttendanceStatus Status { get; private set; }
 
+    public void SetStatus(AttendanceStatus newStatus)
+    {
+        Status = newStatus;
+    }
+
     // Required for EF
     private Attendance() { }
 }

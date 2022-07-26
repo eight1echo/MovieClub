@@ -26,4 +26,15 @@ public class AttendanceCommandService : IAttendanceCommandService
         _context.AddRange(attendance);
         await _context.SaveChangesAsync();
     }
+
+    public async Task UpdateStatus(int attendanceId, AttendanceStatus newStatus)
+    {
+        var attendance = await _context.Attendance.FirstOrDefaultAsync(a => a.Id == attendanceId);
+
+        if (attendance is not null)
+        {
+            attendance.SetStatus(newStatus);
+            await _context.SaveChangesAsync();
+        }
+    }
 }

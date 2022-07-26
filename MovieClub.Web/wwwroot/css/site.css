@@ -53,7 +53,6 @@ a:hover {
     color: #E8EBED;
     font-size: 22px;
     font-weight: bold;
-    font-family: “Impact”;
 }
 
     .nav-link:hover {
@@ -65,23 +64,22 @@ a:hover {
     font-size: 36px;
     color: #445566;
     font-weight: 800;
-}
-
-.edit-icon {
-    font-size: 28px;
+    text-align: center;
 }
 
 .kick-icon {
     font-size: 28px;
-    color: #8F0005;
+    color: #F50008;
 }
 
 .sub-page {
     background-color: #202224;
     border-radius: 25px;
     border: 2px solid #202830;
-    margin-top: 20px;
-    padding: 10px 20px 35px 20px;
+}
+
+.next-meetup {
+    padding: 10px 40px 40px 40px;
 }
 
 .page-nav {
@@ -93,6 +91,20 @@ a:hover {
 
 .page-nav-success {
     color: #63A375;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.page-nav-warning {
+    color: #ffc107;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.page-nav-danger {
+    color: #FF474E;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
@@ -117,11 +129,15 @@ a:hover {
     font-size: 24px;
     font-weight: 800;
     text-transform: uppercase;
-    text-align: center;
 }
 
 .btn-dark {
     background-color: #18191A;
+}
+
+.btn-icon {
+    background-color: #202224;
+    border: none;
 }
 
 .btn-success {
@@ -132,7 +148,7 @@ a:hover {
 
 .btn-danger {
     background-color: #18191A;
-    color: #8F0005;
+    color: #F50008;
     border: none;
 }
 
@@ -180,7 +196,7 @@ a:hover {
 
 
 .movie-info-label {
-    color: #BBE5ED;
+    color: #BCAB79;
     font-size: 28px;
     font-weight: bold;
     text-align: end;
@@ -198,8 +214,7 @@ a:hover {
 }
 
 .movie-poster {
-    width: 425px;
-    height: 625px;
+    padding: 25px 0px 25px 50px;
 }
 
 .movie-imdb {
@@ -214,6 +229,7 @@ a:hover {
 
 .movie-synopsis {
     font-size: 20px;
+    padding: 0px 60px 0px 60px;
 }
 
 .movie-tagline {

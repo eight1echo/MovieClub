@@ -2,20 +2,26 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
 {
     public class ClubDetailsPage : PageModel
     {
+        private readonly IAttendanceCommandService _attendanceCommands;
+        private readonly IAttendanceQueryService _attendanceQueries;
         private readonly IClubQueryService _clubQueries;
         private readonly IClubCommandService _clubCommands;
         private readonly IMembershipCommandService _membershipCommands;
         private readonly ICurrentUserService _currentUser;
 
-        public ClubDetailsPage(IClubQueryService clubQueries, 
-            ICurrentUserService userService, 
-            IMembershipCommandService membershipCommands, 
-            IClubCommandService clubCommmands)
+        public ClubDetailsPage(IClubQueryService clubQueries,
+            ICurrentUserService userService,
+            IMembershipCommandService membershipCommands,
+            IClubCommandService clubCommmands,
+            IAttendanceQueryService attendanceQueries,
+            IAttendanceCommandService attendanceCommands)
         {
             _clubQueries = clubQueries;
             _currentUser = userService;
             _membershipCommands = membershipCommands;
             _clubCommands = clubCommmands;
+            _attendanceQueries = attendanceQueries;
+            _attendanceCommands = attendanceCommands;
         }
 
         [BindProperty]
@@ -24,9 +30,14 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
         [BindProperty]
         public int MembershipUserId { get; set; }
 
+        [BindProperty]
+        public int SelectedStatus { get; set; }
+        public List<SelectListItem>? StatusSelectList { get; set; }
+
         public async Task<IActionResult> OnGet(int id)
         {
             var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+            StatusSelectList = _attendanceQueries.StatusSelect();
 
             ClubDetails = await _clubQueries.ClubDetails(userProfileId, id);
 
@@ -34,6 +45,13 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
                 return RedirectToPage("/Error");
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostUpdateAttendance()
+        {
+            await _attendanceCommands.UpdateStatus(ClubDetails.NextMeetup.UserAttendance.Id, ClubDetails.NextMeetup.UserAttendance.Status);
+
+            return await OnGet(ClubDetails.ClubId);
         }
 
         public async Task<IActionResult> OnPostCreateMembership()

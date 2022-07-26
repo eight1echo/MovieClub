@@ -1,10 +1,10 @@
-namespace MovieClub.Web.Areas.Meetups.Pages.ClubMeetups
+namespace MovieClub.Web.Areas.Clubs.Pages.Meetups
 {
-    public class PreviousClubMeetupsPage : PageModel
+    public class UpcomingMeetupsPage : PageModel
     {
         private readonly IMeetupQueryService _meetupQueries;
 
-        public PreviousClubMeetupsPage(IMeetupQueryService meetupQueries)
+        public UpcomingMeetupsPage(IMeetupQueryService meetupQueries)
         {
             _meetupQueries = meetupQueries;
         }
@@ -13,7 +13,7 @@ namespace MovieClub.Web.Areas.Meetups.Pages.ClubMeetups
 
         public async Task<IActionResult> OnGet(int id)
         {
-            ClubMeetups = await _meetupQueries.PreviousClubMeetups(id);
+            ClubMeetups = await _meetupQueries.UpcomingClubMeetups(id);
 
             return Page();
         }
