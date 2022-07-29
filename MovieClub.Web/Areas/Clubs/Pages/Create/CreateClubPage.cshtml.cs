@@ -26,7 +26,7 @@ public class CreateClubPage : PageModel
             var userProfileId = await _userService.GetProfileIdFromSession(HttpContext, User);
             var clubId = await _clubCommands.Create(userProfileId, CreateClubModel);
 
-            return RedirectToPage("/Home", new { area = "Home" });
+            return RedirectToPage("/Home/UserHomePage", new { area = "Users" });
         }
 
         return Page();

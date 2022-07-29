@@ -9,13 +9,20 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Meetups
             _meetupQueries = meetupQueries;
         }
 
-        public ClubMeetupsModel? ClubMeetups { get; set; }
+        public ClubMeetupsModel? PageData { get; set; }
 
         public async Task<IActionResult> OnGet(int id)
         {
-            ClubMeetups = await _meetupQueries.PastClubMeetups(id);
-
-            return Page();
+            try
+            {
+                PageData = await _meetupQueries.UpcomingClubMeetups(id);
+                return Page();
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+                throw;
+            }
         }
     }
 }

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Movie Club</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MovieClub.Web.styles.css" asp-append-version="true" />
@@ -14,18 +14,19 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
             <div class="container navigation">
-                <a class="navbar-brand" asp-area="Home" asp-page="/Home">MOVIE CLUB</a>
+                <a class="navbar-brand" asp-area="Users" asp-page="/Home/UserHomePage">MOVIE CLUB</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                            <form class="row ms-auto mt-1" method="post">
                               <div class="col">
-                                  <input type="text" class="form-control column-input" placeholder="Search Clubs" name="searchvalue"/>              
+                                  <input type="text" class="form-control user-input" placeholder="Search Clubs" name="searchvalue"/>              
                               </div>
                               <div class="col-auto">
                                   <button asp-area="Clubs" asp-page="/Search/SearchClubsPage" asp-page-handler="Search" type="submit" class="invisible">Search</button>

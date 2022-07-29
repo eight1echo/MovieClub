@@ -7,7 +7,7 @@ public class MeetupDTO
     public ClubDTO? Club { get; set; }
 
     public int MovieId { get; set; }
-    public MovieDTO? Movie { get; set; }
+    public MovieDTO Movie { get; set; } = new MovieDTO();
 
     public bool MovieHidden { get; set; }
 
@@ -16,5 +16,5 @@ public class MeetupDTO
 
     public DateTime Date { get; set; }
 
-    public AttendanceDTO? UserAttendance { get; set; } = new AttendanceDTO();
+    public AttendanceDTO UserAttendance { get; set; } = new AttendanceDTO();
 }

@@ -5,14 +5,10 @@ namespace MovieClub.Web.Areas.Meetups.Services;
 public class MeetupCommandService : IMeetupCommandService
 {
     private readonly ApplicationDbContext _context;
-    private readonly IAttendanceCommandService _attendanceCommands;
-    private readonly IMovieCommandService _movieCommands;
 
-    public MeetupCommandService(ApplicationDbContext context, IAttendanceCommandService attendanceCommands, IMovieCommandService movieCommands)
+    public MeetupCommandService(ApplicationDbContext context)
     {
         _context = context;
-        _attendanceCommands = attendanceCommands;
-        _movieCommands = movieCommands;
     }
 
     public async Task<int> CreateMeetup(CreateMeetupModel model, int movieId)

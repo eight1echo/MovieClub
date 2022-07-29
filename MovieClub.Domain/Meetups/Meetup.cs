@@ -1,12 +1,12 @@
 ﻿namespace MovieClub.Domain;
 public class Meetup : BaseEntity
 {
-    public Meetup(int userId, int clubId, int movieId, DateTime date, string location)
+    public Meetup(int userId, int clubId, int movieId, DateTime date, string? location)
     {
         ClubId = clubId;
         MovieId = movieId;
         Date = date;
-        Location = location;
+        Location = location ?? "";
         _attendance = new List<Attendance>() { new Attendance(userId, Id, AttendanceStatus.Hosting) };
     }
 

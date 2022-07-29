@@ -38,7 +38,7 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Search
             var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
             await _membershipCommands.CreatePending(ClubId, userProfileId);
 
-            return RedirectToPage("/home", new { area = "Home" });
+            return RedirectToPage("/Home/UserHomePage", new { area = "Users" });
         }
     }
 }

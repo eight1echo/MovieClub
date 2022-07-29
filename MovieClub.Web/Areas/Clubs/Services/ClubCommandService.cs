@@ -21,7 +21,7 @@ public class ClubCommandService : IClubCommandService
         return newClub.Id;
     }
 
-    public async Task Delete(int clubId)
+    public async Task DeleteClub(int clubId)
     {
         var club = await _context.Clubs.FirstOrDefaultAsync(c => c.Id == clubId);
 

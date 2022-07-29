@@ -14,6 +14,8 @@ public class ClubDTO
 
     public MembershipRank UserRank { get; set; }
 
+    public MembershipDTO UserMembership { get; set; }
+
     public ICollection<MeetupDTO> Meetups { get; set; } = new List<MeetupDTO>();
     public ICollection<MembershipDTO> Memberships { get; set; } = new List<MembershipDTO>();
 }

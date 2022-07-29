@@ -1,5 +1,4 @@
 ﻿using MovieClub.Web.Areas.Clubs.Pages.Details;
-using MovieClub.Web.Areas.Home;
 
 namespace MovieClub.Web.Areas.Clubs.Services;
 
@@ -25,7 +24,7 @@ public class ClubQueryService : IClubQueryService
         return clubSelect;
     }
 
-    public async Task<ClubDetailsModel?> ClubDetails(int userProfileId, int clubId)
+    public async Task<ClubDetailsModel> ClubDetails(int userProfileId, int clubId)
     {
         var club = await _context.Clubs
             .Where(c => c.Id == clubId)
@@ -40,15 +39,16 @@ public class ClubQueryService : IClubQueryService
                     {
                         Rank = m.Rank,
                         UserProfile = new UserProfileDTO { Id = m.UserProfileId, DisplayName = m.UserProfile.DisplayName }
-                    }).First(),
+                    }).FirstOrDefault() ?? new MembershipDTO(),
 
                 ClubMembers = c.Memberships
                     .Where(m => m.Rank == MembershipRank.Member)
                     .Select(m => new MembershipDTO
                     {
+                        Id = m.Id,
                         Rank = m.Rank,
                         UserProfile = new UserProfileDTO { Id = m.UserProfileId, DisplayName = m.UserProfile.DisplayName }
-                    }).ToList(),
+                    }).ToList() ?? new List<MembershipDTO>(),
 
                 NextMeetup = c.Meetups
                     .Where(m => m.Date > DateTime.Now)
@@ -56,8 +56,7 @@ public class ClubQueryService : IClubQueryService
                     .Select(m => new MeetupDTO
                     {
                         Date = m.Date,
-                        Host = m.Attendance
-                            .SingleOrDefault(a => a.Status == AttendanceStatus.Hosting)!.UserProfile.DisplayName,
+                        Host = m.Attendance.FirstOrDefault(a => a.Status == AttendanceStatus.Hosting)!.UserProfile.DisplayName,
                         Location = m.Location,
 
                         Movie = new MovieDTO
@@ -76,9 +75,9 @@ public class ClubQueryService : IClubQueryService
                             {
                                 Id = a.Id,
                                 Status = a.Status
-                            }).FirstOrDefault()
+                            }).FirstOrDefault() ?? new AttendanceDTO()
 
-                    }).FirstOrDefault(),
+                    }).FirstOrDefault() ?? new MeetupDTO(),
 
                 PendingMemberships = c.Memberships
                 .Where(m => m.Rank == MembershipRank.Pending)
@@ -92,6 +91,7 @@ public class ClubQueryService : IClubQueryService
                 .Where(m => m.UserProfileId == userProfileId)
                 .Select(m => new MembershipDTO
                 {
+                    Id = m.Id,
                     Rank = m.Rank,
                     UserProfile = new UserProfileDTO { Id = m.UserProfileId, DisplayName = m.UserProfile.DisplayName }
                 }).FirstOrDefault() ?? new MembershipDTO() { Rank = MembershipRank.Visitor },
@@ -99,8 +99,7 @@ public class ClubQueryService : IClubQueryService
             }).FirstOrDefaultAsync();
 
         if (club is null)
-            // Club not found
-            return null;
+            throw new Exception();
 
         if (club.UserMembership.Rank is MembershipRank.Visitor)
             // User is not a Member of this Club, return limited data.
@@ -113,56 +112,6 @@ public class ClubQueryService : IClubQueryService
 
         return club;
 
-    }
-
-    public async Task<ClubHomeModel> ClubHomeQuery(int userProfileId)
-    {
-        // Returns all Clubs where the User has an existing Membership.
-        var clubs = await _context.Clubs
-            .Where(c => c.Memberships.Any(m => m.UserProfileId == userProfileId))
-            .Select(c => new ClubDTO
-            {
-                Id = c.Id,
-                Name = c.Name,
-
-                UserRank = c.Memberships
-                    .Where(m => m.UserProfileId == userProfileId)
-                    .Select(m => new MembershipDTO { Rank = m.Rank })
-                    .First().Rank,
-
-                Memberships = c.Memberships.Select(m => new MembershipDTO
-                {
-                    Rank = m.Rank,
-                    UserProfile = new UserProfileDTO
-                    {
-                        Id = m.UserProfile.Id,
-                        DisplayName = m.UserProfile.DisplayName
-                    }
-                }).ToList()
-
-            }).ToListAsync();
-
-        var model = new ClubHomeModel();
-
-        foreach (var club in clubs)
-        {
-            switch (club.UserRank)
-            {
-                case MembershipRank.Leader:
-                    model.ClubsLeader.Add(club);
-                    break;
-                case MembershipRank.Member:
-                    model.ClubsMember.Add(club);
-                    break;
-                case MembershipRank.Pending:
-                    model.ClubsPending.Add(club);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return model;
     }
 
     public async Task<List<ClubDTO>> ClubSearch(int userProfileId, string searchValue)

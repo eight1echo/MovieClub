@@ -1,0 +1,195 @@
+﻿@page "/"
+@model UserHomePage
+@{
+}
+
+<div class="row mt-4">
+
+    <div class="col-3">
+
+        <div class="col-12 page-nav-border">
+            <div class="row">
+                <div class="col-12 mt-3 text-center">
+                    <a asp-area="Users" asp-page="/Details/ProfileDetailsPage" asp-route-id="@Model.PageData.UserProfile.Id" class="page-nav-title">@Model.PageData!.UserProfile!.DisplayName</a>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+
+                <div class="col-5">
+                    <div class="row mt-5">
+                        <div class="col-3 offset-7 text-start">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 text-center">
+                    <div class="row mt-2">
+                        <div class="col-12 text-end">
+                            <a asp-area="Clubs" asp-page="/Create/CreateClubPage" class="page-nav-success">New Club</a>
+                        </div>
+                    </div>
+
+                    @if (Model.PageData.ClubsLeader.Any() || Model.PageData.ClubsMember.Any())
+                    {
+                        <div class="row mt-2">
+                            <div class="col-12 text-end">
+                                <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" class="page-nav-success">Host Meetup</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model.PageData.ClubsLeader.Any())
+        {
+            <div class="row">
+                <div class="row mt-4">
+                    <div class="col-11 offset-1">
+                        <div class="sub-page-title">Your Clubs:</div>
+                    </div>
+                </div>
+
+                <div class="col-9 offset-1 mt-3 pb-3 sub-page-left">
+
+                    @foreach (var m in Model.PageData.ClubsLeader)
+                    {
+                        <div class="row mt-3 text-center">
+                            <div class="col-10">
+                                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@m.Id" class="page-nav">@m.Name</a>
+                            </div>
+                            <div class="col-1 text-center">
+                                <a asp-area="Clubs" asp-page="/Edit/EditClubPage" asp-route-id="@m.Id" class="page-nav"><i class="fa fa-pencil"></i></a>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.PageData.ClubsMember.Any())
+        {
+            <div class="row">
+                <div class="row mt-4">
+                    <div class="col-11 offset-1">
+                        <div class="sub-page-title">Memberships:</div>
+                    </div>
+                </div>
+
+                <div class="col-9 offset-1 mt-3 pb-3 sub-page-left">
+                    @foreach (var m in Model.PageData.ClubsMember)
+                    {
+                        <div class="row mt-3 text-center">
+                            <div class="col-10">
+                                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@m.Id" class="page-nav">@m.Name</a>
+                            </div>
+                            <div class="col-1 text-center">
+                                <a asp-area="Clubs" asp-page="/Edit/EditClubPage" asp-route-id="@m.Id" class="page-nav"><i class="fa fa-times"></i></a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.PageData.ClubsPending.Any())
+        {
+            <div class="row">
+                <div class="row mt-4">
+                    <div class="col-11 offset-1">
+                        <div class="sub-page-title">Pending:</div>
+                    </div>
+                </div>
+
+                <div class="col-9 offset-1 mt-3 pb-3 sub-page-left">
+                    @foreach (var m in Model.PageData.ClubsPending)
+                    {
+                        <div class="row mt-3 text-center">
+                            <div class="col-10">
+                                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@m.Id" class="page-nav">@m.Name</a>
+                            </div>
+                            <div class="col-1 text-center">
+                                <form method="post">
+                                    <input type="hidden" asp-for="@Model.UserMembershipId" value="@m.UserMembership.Id" />
+                                    <button asp-page-handler="DeleteMembership" asp-route-userId="@m.UserMembership.UserProfile.Id" type="submit" value="Cancel Request" class="btn btn-icon"><i class="fa fa-ban"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+
+    </div>
+
+    <div class="col-9 mt-3">
+
+        <div class="row mb-3">
+            <div class="col-10 offset-1 sub-page-title">Upcoming Meetups:</div>
+        </div>
+
+        @if (@Model.PageData.UpcomingMeetups.Any())
+        {
+            <div class="sub-page-right">
+
+                <div class="row">
+                    <div class="col-12 p-4 pt-2">
+
+                        <div class="row">
+                            <div class="col-3 sub-heading">CLUB</div>
+                            <div class="col-3 sub-heading">MOVIE</div>
+                            <div class="col-3 sub-heading">WHEN</div>
+                            <div class="col-2 sub-heading">RSVP</div>
+
+                            <hr />
+                        </div>
+
+                        @foreach (var m in Model.PageData.UpcomingMeetups)
+                        {
+                            <div class="row mt-4">
+                                <div class="col-3 user-input">
+                                    <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@m.Club.Id" class="user-input-link">@m.Club.Name</a>
+                                </div>
+                                <div class="col-3">
+                                    <div class="user-input">@m.Movie.Title</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="user-input">@m.Date</div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="user-input">@m.UserAttendance.Status</div>
+                                </div>
+                                @if (@m.UserAttendance.Status == AttendanceStatus.Hosting)
+                                {
+                                    <div class="col-1 text-center">
+                                        <a asp-area="Meetups" asp-page="/Edit/EditMeetupPage" asp-route-id="@m.Id" class="page-nav"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-1 text-center">
+                                        <a asp-area="Meetups" asp-page="/Details/MeetupDetailsPage" asp-route-id="@m.Id" class="page-nav"><i class="fa fa-id-card"></i></a>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+               
+            </div>
+        }
+        else
+        {
+            <div class="row mb-3">
+                <div class="col-8 offset-2 text-center">
+                    <div class="sub-page-right sub-page-title">No Meetups</div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+</div>

@@ -9,7 +9,7 @@ public class MembershipCommandService : IMembershipCommandService
         _context = context;
     }
 
-    public async Task Accept(int clubId, int userId)
+    public async Task AcceptMembership(int clubId, int userId)
     {
         var membership = await _context.Memberships
             .Where(m => m.ClubId == clubId && m.UserProfileId == userId)
@@ -33,14 +33,20 @@ public class MembershipCommandService : IMembershipCommandService
         }
     }
 
-    public async Task Cancel(int clubId, int userId)
+    public async Task DeleteMembership(int membershipId)
     {
         var membership = await _context.Memberships
-            .Where(m => m.ClubId == clubId && m.UserProfileId == userId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(m => m.Id == membershipId);
 
         if (membership is not null)
         {
+            var attendance = await _context.Attendance
+            .Where(a => a.UserProfileId == membership.UserProfileId && a.Meetup.ClubId == membership.ClubId)
+            .ToListAsync();
+
+            if (attendance.Any())
+                _context.Attendance.RemoveRange(attendance);
+
             _context.Memberships.Remove(membership);
             await _context.SaveChangesAsync();
         }

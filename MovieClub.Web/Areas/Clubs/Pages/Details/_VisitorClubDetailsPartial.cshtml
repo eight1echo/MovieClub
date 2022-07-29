@@ -1,31 +1,30 @@
 ﻿@model ClubDetailsPage
 
-<div class="row ">
-
-    <div class="sub-page col-6 offset-3">
-
-        <div class="row p-4 text-center">
-            <div class="page-title">
-                @Model.ClubDetails!.ClubName
-            </div>
-        </div>
-
-        <div class="row p-4 sub-heading">
-            <div class="col-4 offset-2 column-header">
-                <div>Club Leader: </div>
+<div class="row">
+    <div class="col-6 offset-3 mt-3">
+        <div class="sub-page-right">
+            <div class="row mt-3 text-center">
+                <div class="page-nav-title text-center">
+                    @Model.PageData!.ClubName
+                </div>
             </div>
 
-            <div class="col-4">
-                <div class="form-control column-readonly mt-2">@Model.ClubDetails.ClubLeader.UserProfile.DisplayName </div>
+            <div class="row p-4">
+                <div class="col-3 offset-3 sub-heading">
+                    <div>Club Leader: </div>
+                </div>
+
+                <div class="col-3 text-center">
+                    <div class="clubdetails-member">@Model.PageData.ClubLeader.UserProfile.DisplayName </div>
+                </div>
+            </div>
+
+            <div class="row mt-3 text-center">
+                <form method="post">
+                    <input type="hidden" asp-for="PageData.ClubId" value="@Model.PageData.ClubId" />
+                    <input asp-page-handler="ApplyToJoin" type="submit" value="Apply To Join" class="btn btn-success" />
+                </form>
             </div>
         </div>
-
-        <div class="row p-4 text-center">
-            <form method="post">
-                <input type="hidden" asp-for="ClubDetails.ClubId" value="@Model.ClubDetails.ClubId" />
-                <input asp-page-handler="CreateMembership" type="submit" value="Apply To Join" class="btn btn-dark text-success" />
-            </form>
-        </div>
-
     </div>
 </div>

@@ -11,11 +11,11 @@ public class ClubDetailsModel
 
     public MembershipDTO UserMembership { get; set; } = null!;
 
-    public MembershipDTO? ClubLeader { get; set; }
+    public MembershipDTO ClubLeader { get; set; } = new MembershipDTO();
     public string? ClubName { get; set; }
 
     public List<MembershipDTO> ClubMembers { get; set; } = new List<MembershipDTO>();
     public List<MembershipDTO> PendingMemberships { get; set; } = new List<MembershipDTO>();
 
-    public MeetupDTO? NextMeetup { get; set; } = new MeetupDTO();
+    public MeetupDTO NextMeetup { get; set; } = new MeetupDTO()!;
 }
