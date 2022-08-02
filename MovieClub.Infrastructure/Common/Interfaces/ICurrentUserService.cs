@@ -1,4 +1,7 @@
-﻿namespace MovieClub.Web.Common.Interfaces;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+
+namespace MovieClub.Infrastructure.Common.Interfaces;
 
 public interface ICurrentUserService
 {

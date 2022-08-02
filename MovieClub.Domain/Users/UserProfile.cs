@@ -18,4 +18,10 @@ public class UserProfile : BaseEntity
 
     private readonly List<Membership> _memberships;
     public virtual IReadOnlyCollection<Membership> Memberships => _memberships;
+
+
+    public void SetName(string newName)
+    {
+        DisplayName = newName;
+    }
 }

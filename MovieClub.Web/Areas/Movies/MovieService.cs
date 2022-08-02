@@ -1,17 +1,15 @@
-﻿namespace MovieClub.Web.Areas.Movies.Services;
+﻿namespace MovieClub.Web.Areas.Movies;
 
-public class MovieQueryService : IMovieQueryService
+public class MovieService : IMovieService
 {
-    private readonly ApplicationDbContext _context;
     private readonly ITMDbClient _tmdb;
 
-    public MovieQueryService(ApplicationDbContext context, ITMDbClient tmdb)
+    public MovieService(ITMDbClient tmdb)
     {
-        _context = context;
         _tmdb = tmdb;
     }
 
-    public async Task<List<SelectListItem>> MovieSelectQuery(string searchValue)
+    public async Task<List<SelectListItem>> GetSelectList(string searchValue)
     {
         var movies = await _tmdb.SearchMovies(searchValue);
 

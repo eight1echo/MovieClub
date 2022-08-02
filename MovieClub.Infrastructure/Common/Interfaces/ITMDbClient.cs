@@ -1,6 +1,6 @@
 ﻿using MovieClub.Infrastructure.External.TMDb.Models;
 
-namespace MovieClub.Infrastructure.External;
+namespace MovieClub.Infrastructure.Common.Interfaces;
 
 public interface ITMDbClient
 {

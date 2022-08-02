@@ -1,4 +1,5 @@
-﻿using MovieClub.Infrastructure.External.TMDb.Models;
+﻿using MovieClub.Infrastructure.Common.Interfaces;
+using MovieClub.Infrastructure.External.TMDb.Models;
 
 namespace MovieClub.Infrastructure.External.TMDb;
 public class TMDbClient : ITMDbClient

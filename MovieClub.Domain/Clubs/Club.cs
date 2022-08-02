@@ -16,6 +16,11 @@ public class Club : BaseEntity
     private readonly List<Meetup> _meetups;
     public virtual IReadOnlyCollection<Meetup> Meetups => _meetups;
 
+    public void SetName(string name)
+    {
+        Name = name;
+    }
+
     // Required for EF
     #nullable disable
     private Club() { }

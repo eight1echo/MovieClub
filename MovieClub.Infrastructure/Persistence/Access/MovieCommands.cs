@@ -1,13 +1,11 @@
-﻿using MovieClub.Infrastructure.External.TMDb.Models;
+﻿namespace MovieClub.Infrastructure.Persistence.Access;
 
-namespace MovieClub.Web.Areas.Movies.Services;
-
-public class MovieCommandService : IMovieCommandService
+public class MovieCommands : IMovieCommands
 {
     private readonly ApplicationDbContext _context;
     private readonly ITMDbClient _tmdb;
 
-    public MovieCommandService(ApplicationDbContext context, ITMDbClient tmdb)
+    public MovieCommands(ApplicationDbContext context, ITMDbClient tmdb)
     {
         _context = context;
         _tmdb = tmdb;

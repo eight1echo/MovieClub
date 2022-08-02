@@ -1,10 +1,10 @@
-﻿namespace MovieClub.Web.Areas.Clubs.Services;
+﻿namespace MovieClub.Web.Areas.Clubs;
 
-public class MembershipCommandService : IMembershipCommandService
+public class MembershipCommands : IMembershipCommands
 {
     private readonly ApplicationDbContext _context;
 
-    public MembershipCommandService(ApplicationDbContext context)
+    public MembershipCommands(ApplicationDbContext context)
     {
         _context = context;
     }
@@ -31,6 +31,8 @@ public class MembershipCommandService : IMembershipCommandService
 
             await _context.SaveChangesAsync();
         }
+        else
+            throw new Exception("Membership could not be found.");
     }
 
     public async Task DeleteMembership(int membershipId)
@@ -50,13 +52,24 @@ public class MembershipCommandService : IMembershipCommandService
             _context.Memberships.Remove(membership);
             await _context.SaveChangesAsync();
         }
+        else
+            throw new Exception("Membership could not be found.");
     }
 
-    public async Task CreatePending(int clubId, int userId)
+    public async Task CreatePendingMembership(int clubId, int userId)
     {
-        var membership = new Membership(clubId, userId, MembershipRank.Pending);
+        var membership = await _context.Memberships
+            .Where(m => m.ClubId == clubId && m.UserProfileId == userId)
+            .FirstOrDefaultAsync();
 
-        await _context.Memberships.AddAsync(membership);
-        await _context.SaveChangesAsync();
+        if (membership is null)
+        {
+            var newMembership = new Membership(clubId, userId, MembershipRank.Pending);
+
+            await _context.Memberships.AddAsync(newMembership);
+            await _context.SaveChangesAsync();
+        }
+        else
+            throw new Exception("User already has a membership.");
     }
 }

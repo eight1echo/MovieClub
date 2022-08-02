@@ -1,18 +1,16 @@
-﻿namespace MovieClub.Web.Areas.Meetups.Services;
-
-public class AttendanceCommandService : IAttendanceCommandService
+﻿namespace MovieClub.Infrastructure.Persistence.Access;
+public class AttendanceCommands : IAttendanceCommands
 {
     private readonly ApplicationDbContext _context;
 
-    public AttendanceCommandService(ApplicationDbContext context)
+    public AttendanceCommands(ApplicationDbContext context)
     {
         _context = context;
     }
 
     public async Task InviteClubMembers(int userProfileId, int clubId, int meetupId)
     {
-        // Creates Pending Attendance for all Club Members except for the current user.
-
+        // Creates Pending Attendance for all Club Members except the Host.
         var clubMembers = await _context.Memberships
             .Where(m => m.ClubId == clubId && m.Rank != MembershipRank.Pending && m.UserProfileId != userProfileId)
             .ToListAsync();
@@ -20,7 +18,7 @@ public class AttendanceCommandService : IAttendanceCommandService
         var attendance = new List<Attendance>();
         foreach (var member in clubMembers)
         {
-            attendance.Add(new Attendance(userProfileId, meetupId, AttendanceStatus.Invited));
+            attendance.Add(new Attendance(member.UserProfileId, meetupId, AttendanceStatus.Invited));
         }
 
         _context.AddRange(attendance);

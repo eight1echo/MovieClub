@@ -1,6 +1,6 @@
-﻿namespace MovieClub.Web.Common.Interfaces;
+﻿namespace MovieClub.Infrastructure.Common.Interfaces;
 
-public interface IAttendanceCommandService
+public interface IAttendanceCommands
 {
     Task InviteClubMembers(int userProfileId, int clubId, int meetupId);
     Task UpdateStatus(int attendanceId, AttendanceStatus newStatus);

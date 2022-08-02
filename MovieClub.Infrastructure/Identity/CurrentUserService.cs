@@ -1,14 +1,17 @@
-﻿namespace MovieClub.Web.Areas.Users.Services;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using MovieClub.Infrastructure.Common.Interfaces;
 
+namespace MovieClub.Infrastructure.Identity;
 public class CurrentUserService : ICurrentUserService
 {
-    private readonly IUserQueryService _userQueries;
+    private readonly ApplicationDbContext _context;
     private readonly UserManager<UserAccount> _userManager;
 
-    public CurrentUserService(UserManager<UserAccount> userManager, IUserQueryService userQueries)
+    public CurrentUserService(UserManager<UserAccount> userManager, ApplicationDbContext context)
     {
         _userManager = userManager;
-        _userQueries = userQueries;
+        _context = context;
     }
 
     public async Task<UserAccount> GetCurrentUser(ClaimsPrincipal user)
@@ -25,10 +28,12 @@ public class CurrentUserService : ICurrentUserService
         if (userProfileId is null)
         {
             var userAccount = await GetCurrentUser(user);
-            var userProfile = await _userQueries.GetUserProfile(userAccount.Id);
+            var userProfile = await _context.UserProfiles
+                .Where(up => up.UserAccountId == userAccount.Id)
+                .FirstOrDefaultAsync();
 
             if (userProfile is null)
-                throw new Exception("User Profile does not exist.");
+                return 0;
 
             httpContext.Session.SetInt32("UserProfileId", userProfile.Id);
             userProfileId = userProfile.Id;
@@ -44,7 +49,9 @@ public class CurrentUserService : ICurrentUserService
         if (userDisplayName is null)
         {
             var userAccount = await GetCurrentUser(user);
-            var userProfile = await _userQueries.GetUserProfile(userAccount.Id);
+            var userProfile = await _context.UserProfiles
+                .Where(up => up.UserAccountId == userAccount.Id)
+                .FirstOrDefaultAsync();
 
             if (userProfile is null || userProfile.DisplayName is null)
                 throw new Exception("User Profile does not exist.");
