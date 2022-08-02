@@ -24,7 +24,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly IUserCommandService _userProfileService;
+        private readonly IUserCommands _userCommands;
 
         private readonly SignInManager<UserAccount> _signInManager;
         private readonly UserManager<UserAccount> _userManager;
@@ -39,7 +39,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
             SignInManager<UserAccount> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IUserCommandService userProfileService)
+            IUserCommands userCommands)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -47,7 +47,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _userProfileService = userProfileService;
+            _userCommands = userCommands;
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
                 var user = CreateUser();
 
                 // Create User Profile
-                var profileId = await _userProfileService.CreateUserProfile(user.Id, Input.DisplayName);
+                var profileId = await _userCommands.CreateProfile(user.Id, Input.DisplayName);
                 user.SetProfileId(profileId);
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -164,7 +164,7 @@ namespace MovieClub.Web.Areas.Identity.Pages.Account
                 }
 
                 // Delete UserProfile if User was not created successfully.
-                await _userProfileService.RemoveUserProfile(user.Id);
+                await _userCommands.RemoveUserProfile(user.Id);
             }
 
             // If we got this far, something failed, redisplay form

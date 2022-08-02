@@ -3,66 +3,57 @@
 @{
 }
 
-@if (Model.SearchedClubs is not null)
-{
-    <div class="row">
+<div class="row">
         
-            <div class="row text-center">
-                <div class="col-6 offset-3 mt-3">
-                <div class="sub-page-title">Search Results: </div>
+    <div class="row text-center">
+        <div class="col-6 offset-3 mt-3">
+        <div class="sub-page-title">Search Results: </div>
+        </div>
+    </div>
+
+    @if (Model.SearchedClubs.Any())
+    {
+        <div class="col-6 offset-3 mt-3">
+            <div class=" sub-page-right">
+
+                <div class="row pt-3 pb-3">
+                    <div class="col-6 offset-1 sub-heading">Club</div>
+                </div>
+
+                @foreach (var club in Model.SearchedClubs) 
+                {
+                    <div class="row mb-2 p-2">
+                        <div class="col-6 offset-1">
+                            <div class="row">
+                                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@club.Id" class="user-input-link">@club.Name</a>
+                            </div>
+                        </div>
+                        <div class="col-4 mt-1 text-center">
+                            <form method="post">
+                                <input type="hidden" asp-for="ClubId" value="@club.Id" />
+                                <input asp-page-handler="Join" type="submit" value="Apply To Join" class="btn btn-outline-success" />
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row pt-5 pb-3">
+            <div class="col-4 offset-4 ">
+                <div class="row sub-page-right">
+                    <div class="mt-3 sub-heading">No Results</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 text-center pt-4 offset-4">
+                        <a class="btn btn-success" asp-area="Clubs" asp-page="/Create/CreateClubPage">Create Club</a>
+                    </div>
                 </div>
             </div>
+        </div>
+    }
 
-            @if (Model.SearchedClubs.Any())
-            {
-                <div class="col-8 offset-2 mt-3">
-                    <div class=" sub-page-right">
-
-                        <div class="row pt-5 pb-3">
-                            <div class="col-4 sub-heading">Club</div>
-                            <div class="col-2 sub-heading">Members</div>
-                            <div class="col-3 sub-heading">Leader</div>
-                        </div>
-
-                        @foreach (var club in Model.SearchedClubs) 
-                        {
-                            <div class="row mb-2 p-2">
-                                <div class="col-4">
-                                    <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@club.Id" class="form-control user-input-link">@club.Name</a>
-                                </div>
-                                <div class="col-2">
-                                    <input class="form-control user-input" type="text" value="@club.Memberships.Count" readonly />
-                                </div>
-                                <div class="col-3">
-                                    <input class="form-control user-input" type="text" value="@club.ClubLeader" readonly />
-                                </div>
-                                <div class="col-2 offset-1 text-center">
-                                    <form method="post">
-                                        <input type="hidden" asp-for="ClubId" value="@club.Id" />
-                                        <input asp-page-handler="Join" type="submit" value="Apply To Join" class="btn btn-outline-success" />
-                                    </form>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="row pt-5 pb-3">
-                    <div class="col-4 offset-4 sub-page-right">
-                        <div class="row">
-                            <div class="col-4 offset-4 mt-3 sub-heading">No Results</div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-4 text-center pt-4 offset-4">
-                                <a class="btn btn-success" asp-area="Clubs" asp-page="/Create/CreateClubPage">Create Club</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-
-    </div>
-}
+</div>

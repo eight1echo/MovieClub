@@ -1,0 +1,113 @@
+﻿@model MeetupDetailsPage
+
+<div class="row">
+    <div class="col-7">
+        <div class="row text-center">
+            <a asp-area="Meetups" asp-page="/Details/MeetupDetailsPage" asp-route-id="@Model.PageData.Meetup.Id" class="movie-title">
+                @Model.PageData.Meetup.Movie.Title (@Model.PageData.Meetup.Movie.ReleaseDate.Year)
+            </a>
+        </div>
+
+        <div class="row mt-1 text-center">
+            <h4 class="movie-tagline">" @Model.PageData.Meetup.Movie.Tagline "</h4>
+        </div>
+
+        <div class="row pt-3 text-center">
+            <h5 class="movie-genres">@Model.PageData.Meetup.Movie.Genres</h5>
+        </div>
+
+        <div class="row pt-3 text-center">
+            <p class="col-10 offset-1 movie-synopsis">@Model.PageData.Meetup.Movie.Synopsis</p>
+        </div>
+
+        <div class="row p-2 text-center">
+            <div class="col-3 offset-3">
+                <img class="col-6 movie-imdb" src="/images/imdb-logo.png" />
+            </div>
+            <div class="col-3">
+                <img class="col-6 movie-letterboxd" src="/images/letterboxd-logo.png" />
+            </div>
+        </div>
+
+        <div class="row mt-5 p-2">
+            <div class="col-3 offset-1 sub-heading text-end mt-1">
+                <div>HOST : </div>
+            </div>
+
+            <div class="col-4 offset-1">
+                <div class="row"><a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-id="@Model.PageData.Meetup.Host.Id" class="user-input-link">@Model.PageData.Meetup.Host.DisplayName </a></div>
+            </div>
+        </div>
+
+        <div class="row p-2">
+            <div class="col-3 offset-1 sub-heading text-end mt-1">
+                <div>WHEN : </div>
+            </div>
+
+            <div class="col-4 offset-1 user-input-readonly">
+                <div>@Model.PageData.Meetup.Date </div>
+            </div>
+        </div>
+
+        <div class="row p-2">
+            <div class="col-3 offset-1 sub-heading text-end mt-1">
+                <div>WHERE : </div>
+            </div>
+
+            <div class="col-4 offset-1 user-input-readonly">
+                <div>@Model.PageData.Meetup.Location </div>
+            </div>
+        </div>
+
+        <div class="row p-2">
+            <div class="col-3 offset-1 sub-heading text-end mt-1">
+                <div>RSVP : </div>
+            </div>
+            @if (@Model.PageData.UserAttendance.Status is not AttendanceStatus.Hosting)
+            {
+                <div class="col-4 offset-1">
+                    <form asp-page-handler="UpdateAttendance" method="post" >
+                        <div class="row">
+                            <div class="col-9">
+                                @if (@Model.PageData.UserAttendance.Status is AttendanceStatus.Attending)
+                                {
+                                    <select class="form-select user-input user-input-select rsvp-attending" asp-for="@Model.PageData.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(@Model.PageData.UserAttendance.Status)"></select>                                    
+                                }
+                                @if (@Model.PageData.UserAttendance.Status is AttendanceStatus.Invited)
+                                {
+                                    <select class="form-select user-input user-input-select" asp-for="@Model.PageData.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(@Model.PageData.UserAttendance.Status)"></select>                                    
+                                }
+                                @if (@Model.PageData.UserAttendance.Status is AttendanceStatus.Declined)
+                                {
+                                    <select class="form-select user-input user-input-select rsvp-declined" asp-for="@Model.PageData.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(@Model.PageData.UserAttendance.Status)"></select>                                    
+                                }                            
+                            </div>
+                            <div class="col-3">
+                                <input type="hidden" asp-for="@Model.PageData.UserAttendance.Id" value="@Model.PageData.UserAttendance.Id" />
+                                <button class="btn btn-success" type="submit"><i class="fa fa-check mt-1" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="col-4 offset-1">
+                    <div class="row">
+                        <div class="col-9 user-input-readonly rsvp-hosting">@Model.PageData.UserAttendance.Status.ToString()</div>
+                        <div class="col-3 mt-1 text-center">
+                            <a asp-area="Meetups" asp-page="/Edit/EditMeetupPage" asp-route-id="@Model.PageData.Meetup.Id"><i class="fa fa-pencil"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="row mt-4">
+            <img class="movie-poster" src="@Model.PageData.Meetup.Movie.PosterURL" />
+        </div>
+    </div>
+
+</div>

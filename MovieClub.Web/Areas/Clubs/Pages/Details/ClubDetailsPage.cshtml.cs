@@ -2,25 +2,19 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
 {
     public class ClubDetailsPage : PageModel
     {
-        private readonly IAttendanceCommandService _attendanceCommands;
-        private readonly IAttendanceQueryService _attendanceQueries;
-        private readonly IClubQueryService _clubQueries;
-        private readonly IClubCommandService _clubCommands;
-        private readonly IMembershipCommandService _membershipCommands;
+        private readonly IAttendanceCommands _attendanceCommands;
+        private readonly IClubService _clubPages;
+        private readonly IMembershipCommands _membershipCommands;
         private readonly ICurrentUserService _currentUser;
 
-        public ClubDetailsPage(IClubQueryService clubQueries,
+        public ClubDetailsPage(IClubService clubPages,
             ICurrentUserService userService,
-            IMembershipCommandService membershipCommands,
-            IClubCommandService clubCommmands,
-            IAttendanceQueryService attendanceQueries,
-            IAttendanceCommandService attendanceCommands)
+            IMembershipCommands membershipCommands,
+            IAttendanceCommands attendanceCommands)
         {
-            _clubQueries = clubQueries;
+            _clubPages = clubPages;
             _currentUser = userService;
             _membershipCommands = membershipCommands;
-            _clubCommands = clubCommmands;
-            _attendanceQueries = attendanceQueries;
             _attendanceCommands = attendanceCommands;
         }
 
@@ -30,70 +24,99 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
         [BindProperty]
         public int MembershipUserId { get; set; }
 
-        public List<SelectListItem>? StatusSelectList { get; set; }
-
         public async Task<IActionResult> OnGet(int id)
         {
             try
             {
                 var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                PageData = await _clubQueries.ClubDetails(userProfileId, id);
-                StatusSelectList = _attendanceQueries.StatusSelect();
+                PageData = await _clubPages.DetailsPage(userProfileId, id);
+
+                if (PageData is not null)
+                    return Page();
+
+                return RedirectToPage("/NotFound");
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }            
+        }
+
+        public async Task<IActionResult> OnPostDeleteMembership()
+        {
+            try
+            {
+                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                if (PageData.UserMembership.Rank == MembershipRank.Leader || PageData.UserMembership.UserProfile.Id == userProfileId)
+                {
+                    await _membershipCommands.DeleteMembership(PageData.UserMembership.Id);
+                    return await OnGet(PageData.Club.Id);
+                }
+
+                return RedirectToPage("/AccessDenied");
             }
             catch (Exception)
             {
                 return RedirectToPage("/Error");
             }
-
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostDeleteClub()
-        {
-            if (PageData.UserMembership.Rank == MembershipRank.Leader)
-            {
-                await _clubCommands.DeleteClub(PageData.ClubId);
-                return RedirectToPage("/Home/UserHomePage", new { area = "Users" });
-            }
-                
-            return RedirectToPage("/AccessDenied");
-        }
-
-        public async Task<IActionResult> OnPostDeleteMembership()
-        {
-            var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-            if (PageData.UserMembership.Rank == MembershipRank.Leader || PageData.UserMembership.UserProfile.Id == userProfileId)
-            {
-                await _membershipCommands.DeleteMembership(PageData.UserMembership.Id);
-                return await OnGet(PageData.ClubId);
-            }
-
-            return RedirectToPage("/AccessDenied");
         }
 
         public async Task<IActionResult> OnPostUpdateAttendance()
         {
-            await _attendanceCommands.UpdateStatus(PageData.NextMeetup.UserAttendance.Id, PageData.NextMeetup.UserAttendance.Status);
+            try
+            {
+                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                if (PageData.NextMeetup!.UserAttendance is not null)
+                {
+                    if (PageData.UserMembership.UserProfile.Id == userProfileId)
+                    {
+                        await _attendanceCommands.UpdateStatus(PageData.NextMeetup.UserAttendance.Id, PageData.NextMeetup.UserAttendance.Status);
 
-            return await OnGet(PageData.ClubId);
+                        return await OnGet(PageData.Club.Id);
+                    }
+
+                    return RedirectToPage("/AccessDenied");
+                }
+
+                return RedirectToPage("/NotFound");
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
 
         public async Task<IActionResult> OnPostApplyToJoin()
         {
-            var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-            await _membershipCommands.CreatePending(PageData.ClubId, userProfileId);
+            try
+            {
+                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                await _membershipCommands.CreatePendingMembership(PageData.Club.Id, userProfileId);
 
-            return RedirectToPage("/Home/UserHomePage", new { area = "Users" });
+                return RedirectToPage("/profile/UserProfilePage", new { area = "Users" });
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }            
         }
 
         public async Task<IActionResult> OnPostAcceptMembership()
         {
-            if (PageData.UserMembership.Rank is not MembershipRank.Leader)
+            try
+            {
+                if (PageData.UserMembership.Rank is MembershipRank.Leader)
+                {
+                    await _membershipCommands.AcceptMembership(PageData.Club.Id, MembershipUserId);
+                    return await OnGet(PageData.Club.Id);
+                }
+
                 return RedirectToPage("/AccessDenied");
-
-            await _membershipCommands.AcceptMembership(PageData.ClubId, MembershipUserId);
-
-            return await OnGet(PageData.ClubId);
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
         }
     }
 }

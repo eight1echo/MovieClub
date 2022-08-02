@@ -34,7 +34,6 @@ a:hover {
     color: #445566;
 }
 
-
 /* Navigation Header */
 .navigation {
     width: 80%;
@@ -43,7 +42,7 @@ a:hover {
 .navbar {
     width: 100%;
     background-color: #14181C;
-    border-bottom: 3px solid #202830;
+    border-bottom: 3px solid #31525E;
 }
 
 .nav-item {
@@ -63,8 +62,15 @@ a:hover {
 }
 
 /* Page Navigation */
-.page-nav {
-    color: #BBE5ED;
+.page-nav-label {
+    color: #656565;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.page-nav-link {
+    color: #ABB8C4;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
@@ -72,82 +78,94 @@ a:hover {
 
 .page-nav-title {
     color: #DDEEFF;
-    font-size: 36px;
-    font-weight: 800;
+    font-size: 28px;
+    font-weight: bold;
     text-decoration: none;
-    text-align: end;
 }
 
 .page-nav-icon {
     background-color: #202224;
     border: none;
-    color: #FF474E;
-}
-
-.page-nav-success {
-    color: #63A375;
+    color: #BBE5ED;
     font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-    background-color: #18191A;
-}
-
-.page-nav-warning {
-    color: #ffc107;
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-    background-color: #18191A;
-    border: none;
-    margin-left: 5px;
-}
-
-.page-nav-danger {
-    color: #FF474E;
-    font-size: 14px;
-    font-weight: bold;
-    text-decoration: none;
-    background-color: #18191A;
-    border: none;
 }
 
 .page-nav-border {
     border-right: 4px solid #202830;
     border-bottom: 6px solid #202830;
-    padding: 0 30px 10px 0;
+    padding: 0 10px 10px 0;
 }
 
-/* Sub-Pages */
+/* Sub-Page-Left */
 .sub-page-left {
-    background-color: #202224;
+    background-color: #1D1F20;
     border-radius: 25px;
     border: 2px solid #202830;
 }
 
+.sub-page-title {
+    color: #C2CCD6;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.sub-page-list-item {
+    color: #BBE5ED;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.list-item-icon {
+    background-color: #1D1F20;
+    border: none;
+    font-size: 22px;
+}
+
+/* Sub-Page-Right */
 .sub-page-right {
     background-color: #202224;
     border-radius: 25px;
-    border: 2px solid #202830;
-    padding: 10px 0px 40px 10px;
-    width: 90%;
+    border: 4px solid #202830;
+    padding: 10px 10px 20px 10px;
+    width: 95%;
     margin: auto;
 }
 
-.details-icon {
-    font-size: 28px;
+.sub-page-right-list {
+    background-color: #202224;
+    border-radius: 25px;
+    border: 4px solid #202830;
+    padding: 10px 10px 10px 0px;
+    font-size: 22px;
+    width: 98%;
+    margin: auto;
 }
 
-.edit-icon {
-    font-size: 28px;
-    color: #ffc107;
+.sub-page-right-list-header {
+    width: 98%;
+    margin: auto;
 }
 
+.sub-page-right-list-date {
+    font-size: 18px;
+}
 
-.sub-page-title {
-    color: #627A93;
-    font-size: 24px;
+.sub-page-right-list-select {
+    border-radius: 12px;
+    background-color: #ABB8C4;
+    border: 1px solid #14181C;
+    color: black;
+    font-size: 16px;
+    text-align: center;
+    padding: 6px;
+}
+
+.page-title {
+    color: #91A3B6;
+    font-size: 36px;
     font-weight: 800;
-    text-transform: uppercase;
 }
 
 .sub-heading {
@@ -159,22 +177,45 @@ a:hover {
 
 .user-input {
     border-radius: 12px;
-    background-color: #ABB8C4;
-    border: 1px solid black;
+    background-color: #E8EBED;
+    border: 1px solid #14181C;
     color: black;
     font-size: 18px;
     text-align: center;
-    padding: 8px;
+    padding: 6px;
+}
+
+.club-logo {
+    margin: auto;
+    border: 1px solid white;
+    width: 110px;
+    height: 100px;
+}
+
+.user-input-readonly {
+    border-radius: 12px;
+    background-color: #ABB8C4;
+    border: 1px solid #14181C;
+    color: black;
+    font-size: 18px;
+    text-align: center;
+    padding: 6px;
 }
 
 .user-input-select {
-    background-color: #DDEEFF;
+    background-color: white;
 }
 
 .user-input-link {
+    border-radius: 12px;
+    background-color: #ABB8C4;
+    border: 1px solid #14181C;
+    font-size: 18px;
+    text-align: center;
+    padding: 6px;
     text-decoration: none;
     font-weight: bold;
-    color: #2A4D5D;
+    color: #18191A;
 }
 
 .user-input-success {
@@ -185,13 +226,6 @@ a:hover {
     background-color: #202224;
     border: none;
     margin-top: 4px;
-}
-
-.club-logo {
-    margin: auto;
-    border: 1px solid white;
-    width: 115px;
-    height: 100px;
 }
 
 .clubdetails-member {
@@ -246,16 +280,31 @@ a:hover {
     font-size: 34px;
     font-weight: 800;
     color: #DDEEFF;
+    text-decoration: none;
 }
+
+.rsvp-hosting {
+    background-color: #FFE085;
+}
+
+.rsvp-attending {
+    background-color: #98C3A4 !important;
+}
+
+.rsvp-declined {
+    background-color: #FF999C;
+}
+
+
+.logo-tmdb {
+    width: 200px;
+    height: 80px;
+}
+
 
 /* Bootstrap Overrides */
 .btn-dark {
     background-color: #18191A;
-}
-
-.btn-icon {
-    background-color: #202224;
-    border: none;
 }
 
 .btn-success {
@@ -274,29 +323,27 @@ a:hover {
     background-color: #E2E9F3;
 }
 
-.fa {
-    font-size: 22px;
-}
+
 
 .fa-ban {
     color: #F50008;
 }
 
 .fa-camera {
-    padding: 35px;
+    padding: 28px;
+    font-size: 30px;
 }
 
 .fa-times {
     color: #F50008;
-    font-size: 30px;
 }
 
 .fa-id-card {
-    font-size: 40px;
     color: #BBE5ED;
+    font-size: 32px;
 }
 
 .fa-pencil {
-    font-size: 28px;
     color: #ffc107;
+    font-size: 25px;
 }

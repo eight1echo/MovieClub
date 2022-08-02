@@ -2,7 +2,7 @@
 
 public class ClubMeetupsModel
 {
-    public int ClubId { get; set; }
-    public string? ClubName { get; set; }
-    public List<MeetupDTO> Meetups { get; set; } = new List<MeetupDTO>();
+    public ClubDTO Club { get; set; } = new ClubDTO();
+
+    public List<AttendanceDTO> Attendance { get; set; } = new List<AttendanceDTO>();
 }

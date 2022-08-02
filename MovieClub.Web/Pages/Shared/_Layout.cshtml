@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
             <div class="container navigation">
-                <a class="navbar-brand" asp-area="Users" asp-page="/Home/UserHomePage">MOVIE CLUB</a>
+                <a class="navbar-brand" asp-page="/Index">MOVIE CLUB</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -26,7 +26,7 @@
                         <li class="nav-item">
                            <form class="row ms-auto mt-1" method="post">
                               <div class="col">
-                                  <input type="text" class="form-control user-input" placeholder="Search Clubs" name="searchvalue"/>              
+                                  <input type="text" class="form-control user-input" placeholder="Search Clubs" name="searchvalue" maxlength="22"/>              
                               </div>
                               <div class="col-auto">
                                   <button asp-area="Clubs" asp-page="/Search/SearchClubsPage" asp-page-handler="Search" type="submit" class="invisible">Search</button>
@@ -52,7 +52,21 @@
 
     <footer class="footer text-muted">
         <div class="container">
-            &copy; 2022 - eight1echo
+            <div class="row">
+                <div class="col-1">
+                    &copy; 2022 - eight1echo
+                </div>
+                <div class="col-6 offset-5">
+                    <div class="row">
+                        <div class="col-3 offset-6 text-end">
+                            <div style="font-size: 12px">Movie Data Provided by </div>
+                        </div>
+                        <div class="col-3">
+                            <img class="logo-tmdb" src="~/images/tmdb.svg" />
+                        </div>
+                    </div>                    
+                </div>
+            </div>                        
         </div>
     </footer>
 

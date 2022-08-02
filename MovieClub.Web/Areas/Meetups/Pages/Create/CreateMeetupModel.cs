@@ -13,6 +13,7 @@ public class CreateMeetupModel
     public bool MovieHidden { get; set; }
 
     [Required]
+    [MaxLength(25)]
     public string? Location { get; set; }
 
     [DateInTheFuture]

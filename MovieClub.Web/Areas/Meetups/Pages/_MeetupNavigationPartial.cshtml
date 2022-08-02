@@ -1,0 +1,61 @@
+﻿@model ClubDTO
+
+<div class="col-12 page-nav-border">
+    <div class="row">
+        <div class="row">
+            <div class="col-3 mt-3 text-end page-nav-label">
+                club :
+            </div>
+            <div class="col-9">
+                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@Model.Id" class="page-nav-title">@Model.Name</a>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-7 mt-1 mb-3 text-center">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <a asp-area="Users" asp-page="/Mailbox/MailboxIndexPage" asp-route-id="@Model.Id" class="page-nav-icon"><i class="fa fa-envelope"></i></a>
+                            </div>
+                            <div class="col-6">
+                                <a asp-area="Users" asp-page="/Mailbox/MailboxIndexPage" asp-route-id="@Model.Id" class="page-nav-icon"><i class="fa fa-comment"></i></a>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <a asp-area="Clubs" asp-page="/Edit/EditClubPage" asp-route-id="@Model.Id" class="page-nav-icon"><i class="fa fa-gear"></i></a>
+                            </div>
+                            <div class="col-6">
+                                <a asp-area="Users" asp-page="/Meetups/MeetupHistory" asp-route-id="@Model.Id" class="page-nav-icon"><i class="fa fa-calendar"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 offset-1">
+                        <div class="row mt-2">
+                            <div class="col-12 club-logo">
+                                <i class="fa fa-camera" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-5 mb-2 text-center">
+                <div class="row">
+                    <div class="col-12 mt-3 text-end">
+                        <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" class="page-nav-link">Host Meetup</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mt-3 text-end">
+                        <a asp-area="Clubs" asp-page="/Meetups/MeetupSchedulePage" asp-route-id="@Model.Id" class="page-nav-link">Meetup Schedule</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div> 

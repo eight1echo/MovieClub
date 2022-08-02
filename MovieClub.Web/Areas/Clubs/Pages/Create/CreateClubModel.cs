@@ -3,6 +3,6 @@
 public class CreateClubModel
 {
     [Required]
-    [MaxLength(22)]
+    [MaxLength(23)]
     public string? Name { get; set; }
 }

@@ -6,25 +6,23 @@
 <div class="row">
     <div class="col-6 offset-3 mt-4">
 
-         <div class="sub-page-right">
+        <div class="row">
+            <div class="col-4 page-nav-title text-center">Create Club:</div>
+        </div>
 
-            <div class="row text-center">
-                <div class="sub-page-title">Create Club:</div>
-            </div>
+         <div class="sub-page-right mt-4">
 
-            <form method="post">
-                <div class="row mt-5">
-                    <div class="col-2 sub-heading">
-                        <label asp-for="CreateClubModel.Name" class="control-label"></label>
-                    </div>
+            <form asp-page-handler="CreateClub" method="post">
+                <div class="row mt-2">
+                    <div class="col-2 offset-1 sub-heading">Name:</div>
 
-                    <div class="col-6 form-group">
-                        <input asp-for="CreateClubModel.Name" class="form-control" />
-                        <span asp-validation-for="CreateClubModel.Name" class="text-danger"></span>
+                    <div class="col-5 form-group">
+                        <input asp-for="PageData.Name" class="form-control user-input" />
+                        <span asp-validation-for="PageData.Name" class="text-danger"></span>
                     </div>
 
                     <div class="col-2 offset-1 text-center form-group">
-                        <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-success" />
+                        <input type="submit" value="Create" class="btn btn-success" />
                     </div>
                 </div>
             </form>
@@ -32,5 +30,4 @@
         </div>
 
     </div>
-
 </div>

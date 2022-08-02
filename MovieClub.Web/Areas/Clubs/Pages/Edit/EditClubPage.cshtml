@@ -1,0 +1,59 @@
+﻿@page "/clubs/{id}/edit"
+@model EditClubPage
+@{
+}
+<div class="row">
+
+    <div class="col-3">
+        @await Html.PartialAsync("./_ClubNavigationPartial", Model.PageData!.Club)    
+
+        <div class="row text-center">
+            <div class="col-10 offset-1 mt-4 p-4 sub-page-left border-danger">
+                <div class="row text-center"> 
+                    <div class="col-8 offset-1">
+                        <div class="sub-heading">Delete Club</div>
+                    </div>   
+                    <div class="col-2">
+                        <form asp-page-handler="DeleteClub" method="post" onclick="return confirm('Really delete Club ?')">
+                            <input type="hidden" asp-for="@Model.PageData.Club.Id" value="@Model.PageData.Club.Id" />
+                            <input type="hidden" asp-for="@Model.PageData.UserMembership.Rank" value="@Model.PageData.UserMembership.Rank" />
+                            <button class="list-item-icon" type="submit"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </form>        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-9">
+
+        <div class="row mb-3">
+            <div class="col-6 page-title text-center">Edit Club:</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-10 offset-1">
+                <form asp-page-handler="UpdateClub" method="post">
+                    <div class="row p-3 sub-page-right">
+
+                        <div class="col-2 offset-1 sub-heading">Name:</div>
+
+                        <div class="col-5 form-group">
+                            <input asp-for="@Model.PageData.NewName" class="form-control user-input" />
+                            <span asp-validation-for="@Model.PageData.NewName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-2 offset-1 text-center form-group">
+                            <input type="hidden" asp-for="@Model.PageData.Club.Id"/>
+                            <input type="hidden" asp-for="@Model.PageData.UserMembership.Rank" value="@Model.PageData.UserMembership.Rank" />
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+                
+    </div>
+</div>

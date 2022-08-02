@@ -5,7 +5,7 @@
         <div class="sub-page-right">
             <div class="row mt-3 text-center">
                 <div class="page-nav-title text-center">
-                    @Model.PageData!.ClubName
+                    @Model.PageData!.Club.Name
                 </div>
             </div>
 
@@ -15,13 +15,13 @@
                 </div>
 
                 <div class="col-3 text-center">
-                    <div class="clubdetails-member">@Model.PageData.ClubLeader.UserProfile.DisplayName </div>
+                    <div class="clubdetails-member">@Model.PageData.Club.ClubLeader.DisplayName </div>
                 </div>
             </div>
 
             <div class="row mt-3 text-center">
                 <form method="post">
-                    <input type="hidden" asp-for="@Model.PageData.ClubId" value="@Model.PageData.ClubId" />
+                    <input type="hidden" asp-for="@Model.PageData.Club.Id" value="@Model.PageData.Club.Id" />
                     <input type="hidden" asp-for="@Model.PageData.UserMembership.Id" value="@Model.PageData.UserMembership.Id" />
                     <input type="hidden" asp-for="@Model.PageData.UserMembership.UserProfile.Id" value="@Model.PageData.UserMembership.UserProfile.Id" />
                     <input type="hidden" asp-for="@Model.PageData.UserMembership.Rank" value="@Model.PageData.UserMembership.Rank" />

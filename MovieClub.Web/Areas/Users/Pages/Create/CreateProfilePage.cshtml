@@ -1,0 +1,33 @@
+﻿@page
+@model CreateProfilePage
+@{
+}
+
+<div class="row">
+    <div class="col-6 offset-3 mt-4">
+
+        <div class="row">
+            <div class="col-4 page-nav-title text-center">Create Profile:</div>
+        </div>
+
+         <div class="sub-page-right mt-4">
+
+            <form asp-page-handler="CreateProfile" method="post">
+                <div class="row mt-2">
+                    <div class="col-3 offset-1 sub-heading">Display Name:</div>
+
+                    <div class="col-5 form-group">
+                        <input asp-for="PageData.DisplayName" class="form-control user-input" />
+                        <span asp-validation-for="PageData.DisplayName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-2 text-center form-group">
+                        <button type="submit" class="btn btn-success">Create</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>

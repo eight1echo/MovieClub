@@ -2,33 +2,40 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Create;
 
 public class CreateClubPage : PageModel
 {
-    private readonly IClubCommandService _clubCommands;
-    private readonly ICurrentUserService _userService;
+    private readonly IClubCommands _clubCommands;
+    private readonly ICurrentUserService _currentUser;
 
-    public CreateClubPage(IClubCommandService clubCommandService, ICurrentUserService userService)
+    public CreateClubPage(IClubCommands clubCommands, ICurrentUserService userService)
     {
-        _clubCommands = clubCommandService;
-        _userService = userService;
+        _clubCommands = clubCommands;
+        _currentUser = userService;
     }
 
     [BindProperty]
-    public CreateClubModel CreateClubModel { get; set; } = new CreateClubModel();
+    public CreateClubModel PageData { get; set; } = new CreateClubModel();
 
     public IActionResult OnGetAsync()
     {
         return Page();
     }
 
-    public async Task<IActionResult> OnPostCreateAsync()
+    public async Task<IActionResult> OnPostCreateClub()
     {
-        if (ModelState.IsValid)
+        try
         {
-            var userProfileId = await _userService.GetProfileIdFromSession(HttpContext, User);
-            var clubId = await _clubCommands.Create(userProfileId, CreateClubModel);
+            if (ModelState.IsValid)
+            {
+                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                var clubId = await _clubCommands.Create(userProfileId, PageData.Name!);
 
-            return RedirectToPage("/Home/UserHomePage", new { area = "Users" });
+                return RedirectToPage("/details/ClubDetailsPage", new { id = clubId, area = "Clubs" });
+            }
+
+            return Page();
         }
-
-        return Page();
+        catch (Exception)
+        {
+            return RedirectToPage("/Error");
+        }
     }
 }

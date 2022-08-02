@@ -2,26 +2,29 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
 {
     public class CreateMeetupPage : PageModel
     {
-        private readonly IAttendanceCommandService _attendanceCommands;
-        private readonly IClubQueryService _clubQueries;
-        private readonly IMeetupCommandService _meetupCommands;
-        private readonly IMovieCommandService _movieCommands;
-        private readonly IMovieQueryService _movieQueries;
+        private readonly IAttendanceCommands _attendanceCommands;
+        private readonly IMeetupCommands _meetupCommands;
+        private readonly IMovieCommands _movieCommands;
+        private readonly IClubService _clubPages;
+        private readonly IMovieService _movieService;
         private readonly ICurrentUserService _currentUser;
 
-        public CreateMeetupPage(IClubQueryService clubQueries,
-            ICurrentUserService currentUser,
-            IMeetupCommandService meetupCommands,
-            IMovieQueryService movieQueries,
-            IMovieCommandService movieCommands,
-            IAttendanceCommandService attendanceCommands)
+        public CreateMeetupPage
+        (
+            IAttendanceCommands attendanceCommands,
+            IMeetupCommands meetupCommands,
+            IMovieCommands movieCommands,
+            IClubService clubPages,
+            IMovieService movieService,
+            ICurrentUserService currentUser
+        )
         {
             _attendanceCommands = attendanceCommands;
-            _clubQueries = clubQueries;
-            _currentUser = currentUser;
             _meetupCommands = meetupCommands;
-            _movieQueries = movieQueries;
             _movieCommands = movieCommands;
+            _clubPages = clubPages;
+            _movieService = movieService;
+            _currentUser = currentUser;
         }
 
         [BindProperty]
@@ -45,10 +48,17 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
         {
             if (MovieSearchValue is not null)
             {
-                MovieSelect = await _movieQueries.MovieSelectQuery(MovieSearchValue);
+                try
+                {
+                    MovieSelect = await _movieService.GetSelectList(MovieSearchValue);
 
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                ClubSelect = await _clubQueries.GetClubSelectList(userProfileId);
+                    var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                    ClubSelect = await _clubPages.GetSelectList(userProfileId);
+                }
+                catch (Exception)
+                {
+                    return RedirectToPage("/Error");
+                }                
             }
 
             return Page();
@@ -58,13 +68,20 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
         {
             if (ModelState.IsValid)
             {
-                CreateMeetupModel.UserProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                try
+                {
+                    CreateMeetupModel.UserProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
 
-                var movieId = await _movieCommands.ImportMovie(CreateMeetupModel.MovieTMDbId);
-                var meetupId = await _meetupCommands.CreateMeetup(CreateMeetupModel, movieId);
-                await _attendanceCommands.InviteClubMembers(CreateMeetupModel.UserProfileId, CreateMeetupModel.ClubId, meetupId);
+                    var movieId = await _movieCommands.ImportMovie(CreateMeetupModel.MovieTMDbId);
+                    var meetupId = await _meetupCommands.CreateMeetup(CreateMeetupModel.UserProfileId, CreateMeetupModel.ClubId, movieId, CreateMeetupModel.Date, CreateMeetupModel.Location);
+                    await _attendanceCommands.InviteClubMembers(CreateMeetupModel.UserProfileId, CreateMeetupModel.ClubId, meetupId);
 
-                return RedirectToPage("/home/UserHomePage", new { area = "Users" });
+                    return RedirectToPage($"/Details/MeetupDetailsPage", new { id = meetupId, area = "Meetups" });
+                }
+                catch (Exception)
+                {
+                    return RedirectToPage("/Error"); ;
+                }                
             }
 
             return Page();

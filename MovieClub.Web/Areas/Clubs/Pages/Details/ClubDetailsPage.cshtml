@@ -15,301 +15,38 @@
         break;
 
     default:
-    <div class="row mt-4">
+    <div class="row">
 
         <div class="col-3">
-            @*Club Name*@
 
-            <div class="col-12 page-nav-border">
-
-                <div class="row">
-                    <div class="col-12 mb-2 text-center">
-                        <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@Model.PageData.ClubId" class="page-nav-title">@Model.PageData.ClubName</a>
-                    </div>
-                </div>
-
-                <div class="row mt-2 mb-2">
-
-                    <div class="col-2 text-end">
-                        <div class="row mt-2">
-                            <div class="col-12">
-                                <a asp-area="Meetups" asp-page="/Edit/EditMeetupPage" asp-route-id="@Model.PageData.ClubId" class="page-nav"><i class="fa fa-pencil"></i></a>
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <a asp-area="Meetups" asp-page="/Edit/EditMeetupPage" asp-route-id="@Model.PageData.ClubId" class="page-nav"><i class="fa fa-times"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-4 offset-1 club-logo">
-                        <i class="fa fa-camera" aria-hidden="true"></i>
-                    </div>
-
-                    <div class="col-5 text-center">
-                        <div class="row">
-                            <div class="col-12 text-end">
-                                <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" class="page-nav-success">Host Meetup</a>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-12 text-end">
-                                <a asp-area="Clubs" asp-page="/Meetups/UpcomingMeetupsPage" asp-route-id="@Model.PageData.ClubId" class="page-nav text-end">Upcoming Meetups</a>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-12 text-end">
-                                <a asp-area="Clubs" asp-page="/Meetups/PastMeetupsPage" asp-route-id="@Model.PageData.ClubId" class="page-nav text-end">Past Meetups</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>            
+            @*Page Navigation*@
+            @await Html.PartialAsync("./_ClubNavigationPartial", Model.PageData.Club)       
 
             @*Club Members*@
-            @if (Model.PageData.ClubMembers.Any())
-            {
-            <div class="row">
-
-                <div class="row mt-3">
-                    <div class="col-11 offset-1">
-                        <div class="sub-page-title">MEMBERS:</div>
-                    </div>
-                </div>
-
-                <div class="col-9 offset-1 mt-3 pt-3 pb-3 sub-page-left">
-
-                    <div class="row">
-                        <div class="clubdetails-member">@Model.PageData.ClubLeader.UserProfile.DisplayName</div>
-                    </div>
-
-                    <hr>
-                   
-                    @foreach (var m in Model.PageData.ClubMembers)
-                    {
-                        <div class="row mt-3 text-center">
-                            @if (@Model.PageData.UserMembership.Rank == MembershipRank.Leader) 
-                            {
-                                <div class="col-10">
-                                    <div class="clubdetails-member">@m.UserProfile.DisplayName</div>
-                                </div>
-
-                                <div class="col-1 mt-1">
-                                    <form asp-page-handler="DeleteMembership" method="post" onclick="return confirm('Really kick @m.UserProfile.DisplayName ?')">
-                                        <input type="hidden" asp-for="@Model.PageData.ClubId" value="@Model.PageData.ClubId" />
-                                        <input type="hidden" asp-for="@Model.PageData.UserMembership.Rank" value="@Model.PageData.UserMembership.Rank" />
-                                        <input type="hidden" asp-for="@Model.PageData.UserMembership.Id" value="@m.Id" />
-                                        <button class="page-nav-icon" type="submit"><i class="fa fa-ban" aria-hidden="true"></i></button>
-                                    </form>
-                                </div>
-                            }
-                            else
-                            {
-                                @if (@Model.PageData.UserMembership.Id == m.Id)
-                                {
-                                    <div class="col-10">
-                                        <div class="clubdetails-member">@m.UserProfile.DisplayName</div>
-                                    </div>
-
-                                    <div class="col-2">
-                                        <form asp-page-handler="DeleteMembership" method="post" onclick="return confirm('Are you sure you want to leave the Club?')">
-                                            <input type="hidden" asp-for="@Model.PageData.ClubId" value="@Model.PageData.ClubId" />
-                                            <input type="hidden" asp-for="@Model.PageData.UserMembership.UserProfile.Id" value="@Model.PageData.UserMembership.UserProfile.Id" />
-                                            <input type="hidden" asp-for="@Model.PageData.UserMembership.Id" value="@Model.PageData.UserMembership.Id" />
-                                            <button class="page-nav-icon" type="submit"><i class="fa fa-ban" aria-hidden="true"></i></button>
-                                        </form>
-                                    </div>                                    
-                                }
-                                else
-                                {
-                                    <div class="col-10">
-                                        <div class="clubdetails-member">@m.UserProfile.DisplayName</div>
-                                    </div>
-                                }
-                            }
-                        </div>
-                    }
-
-                </div>
-            </div>
-            }
-            else
-            {
-                <div class="row text-center">
-                    <div class="col-10 offset-1 mt-4 p-4 sub-page-left">
-                        <div class="sub-page-title">No Club Members</div>
-                    </div>
-                </div>
-            }
-
-            @*Pending Members*@
-            @if (Model.PageData.UserMembership.Rank == MembershipRank.Leader)
-            {
-                @if (Model.PageData.PendingMemberships.Any())
-                {
-                    <div class="row mt-4">
-                        <div class="col-10 offset-1">
-                            <div class="sub-page-title">Membership Requests:</div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-10 offset-1 pb-2 sub-page-left">
-                            @foreach (var m in Model.PageData.PendingMemberships)
-                            {
-                                <div class="row mt-3 text-center">
-                                    <div class="col-9">
-                                        <div class="clubdetails-member">@m.UserProfile.DisplayName</div>
-                                    </div>
-                                    <div class="col-1 g-0">
-                                        <form method="post" onclick="return confirm('Accept request from @m.UserProfile.DisplayName ?')">
-                                            <input type="hidden" asp-for="@Model.PageData.UserMembership.Rank" value="@Model.PageData.UserMembership.Rank" />
-                                            <input type="hidden" asp-for="MembershipUserId" value="@m.UserProfile.Id" />
-                                            <input type="hidden" asp-for="@Model.PageData.ClubId" value="@Model.PageData.ClubId" />
-                                            <button asp-page-handler="AcceptMembership" type="submit" class="btn btn-success">&#10004;</button>
-                                        </form>
-                                    </div>
-
-                                    <div class="col-1">
-                                        <form method="post" onclick="return confirm('Reject request from @m.UserProfile.DisplayName ?')">
-                                            <input type="hidden" asp-for="@Model.PageData.UserMembership.Rank" value="@Model.PageData.UserMembership.Rank" />
-                                            <input type="hidden" asp-for="MembershipUserId" value="@m.UserProfile.Id" />
-                                            <input type="hidden" asp-for="@Model.PageData.ClubId" value="@Model.PageData.ClubId" />
-                                            <button asp-page-handler="RemoveMembership" type="submit" class="btn btn-danger">&#10006;</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
-            }
+            <partial name="_ClubMemberListPartial" />
+            
         </div>
 
-        <div class="col-9 mt-3">
+        <div class="col-9">
 
             <div class="row mb-3">
-                <div class="col-10 offset-1 sub-page-title">Next Meetup:</div>
+                <div class="col-6 page-title text-center">Next Meetup:</div>
             </div>
 
             @*Next Meetup*@
-            @if (@Model.PageData.NextMeetup!.Date > DateTime.Now)
+            @if (@Model.PageData.NextMeetup is not null)
             {
-
                 <div class="sub-page-right">
-                    <div class="row">
-
-                        <div class="col-7">
-                            <div class="row mt-3 text-center">
-                                <div class="movie-title">@Model.PageData.NextMeetup.Movie.Title (@Model.PageData.NextMeetup.Movie.ReleaseDate.Year)</div>
-                            </div>
-
-                            <div class="row mt-1 text-center">
-                                <h4 class="movie-tagline">" @Model.PageData.NextMeetup.Movie.Tagline "</h4>
-                            </div>
-
-                            <div class="row pt-3 text-center">
-                                <h5 class="movie-genres">@Model.PageData.NextMeetup.Movie.Genres</h5>
-                            </div>
-
-                            <div class="row pt-3 text-center">
-                                <p class="col-10 offset-1 movie-synopsis">@Model.PageData.NextMeetup.Movie.Synopsis</p>
-                            </div>
-
-                            <div class="row p-2 text-center">
-                                <div class="col-3 offset-3">
-                                    <img class="col-6 movie-imdb" src="/images/imdb-logo.png" />
-                                </div>
-                                <div class="col-3">
-                                    <img class="col-6 movie-letterboxd" src="/images/letterboxd-logo.png" />
-                                </div>
-                            </div>
-
-                            <div class="row p-2 mt-5">
-
-                                <div class="col-3 offset-1 sub-heading text-end mt-1">
-                                    <div>HOST : </div>
-                                </div>
-
-                                <div class="col-4 offset-1 user-input">
-                                    <div class="mt-1">@Model.PageData.NextMeetup.Host </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row p-2">
-
-                                <div class="col-3 offset-1 sub-heading text-end mt-1">
-                                    <div>WHEN : </div>
-                                </div>
-
-                                <div class="col-4 offset-1 user-input">
-                                    <div class="mt-1">@Model.PageData.NextMeetup.Date </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row p-2">
-
-                                <div class="col-3 offset-1 sub-heading text-end mt-1">
-                                    <div>WHERE : </div>
-                                </div>
-
-                                <div class="col-4 offset-1 user-input">
-                                    <div class="mt-1">@Model.PageData.NextMeetup.Location </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row p-2">
-
-                                <div class="col-3 offset-1 sub-heading text-end mt-1">
-                                    <div>RSVP : </div>
-                                </div>
-                                @if (@Model.PageData.NextMeetup.UserAttendance.Status is not AttendanceStatus.Hosting)
-                                {
-                                    <div class="col-4 offset-1">
-                                        <form asp-page-handler="UpdateAttendance" method="post">
-                                            <div class="row">
-                                                <div class="col-8 text-center">
-                                                    <select class="form-select text-center user-input user-input-select" asp-for="@Model.PageData.NextMeetup.UserAttendance.Status" asp-items="@Model.StatusSelectList"></select>
-                                                </div>
-                                                <div class="col-3">
-                                                    <input type="hidden" asp-for="@Model.PageData.ClubId" value="@Model.PageData.ClubId" />
-                                                    <input type="hidden" asp-for="@Model.PageData.NextMeetup.UserAttendance.Id" value="@Model.PageData.NextMeetup.UserAttendance.Id" />
-                                                    <button class="btn btn-success mt-1" type="submit">Save</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="col-4 offset-1 user-input">
-                                        <div class="mt-1">@Model.PageData.NextMeetup.UserAttendance.Status.ToString() </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-
-                        <div class="col-4">
-
-                            <div class="row mt-3">
-                                <img class="movie-poster" src="@Model.PageData.NextMeetup.Movie.PosterURL" />
-                            </div>
-
-                        </div>
-                    </div>
+                    <partial name="_ClubNextMeetupPartial" />
                 </div>
             }
             else
             {
-                <div class="row text-center">
-                    <div class="col-6 offset-3 p-4 sub-page-right">
-                        <div class="sub-page-title">No Upcoming Meetups</div>
+                <div class="row">
+                    <div class="col-4 offset-4 text-center">
+                        <div class="sub-page-right-list">
+                            <div class="sub-page-title">No Meetups</div>
+                        </div>
                     </div>
                 </div>
             }

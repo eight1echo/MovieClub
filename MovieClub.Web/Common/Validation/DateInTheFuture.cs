@@ -1,5 +1,4 @@
 ﻿namespace MovieClub.Web.Common.Validation;
-
 public class DateInTheFuture : ValidationAttribute
 {
     public override string FormatErrorMessage(string name)

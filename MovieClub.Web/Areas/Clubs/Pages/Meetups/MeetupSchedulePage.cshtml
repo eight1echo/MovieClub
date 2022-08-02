@@ -1,0 +1,36 @@
+﻿@page "/clubs/{id}/meetups/upcoming"
+@model MeetupSchedulePage
+
+<div class="row">
+
+    <div class="col-3">
+         @await Html.PartialAsync("./_ClubNavigationPartial", Model.PageData!.Club)
+
+         <div class="row">
+             <div class="col-6">
+                 <form asp-page-handler="ShowPastMeetups" asp-route-id="@Model.PageData.Club.Id" method="post">
+                     <button type="submit">Past</button>
+                 </form>
+             </div>
+             <div class="col-6">
+                 <form asp-page-handler="ShowFutureMeetups" asp-route-id="@Model.PageData.Club.Id" method="post">
+                     <button type="submit">Future</button>
+                 </form>
+             </div>
+         </div>
+    </div>
+
+    <div class="col-9">
+
+        @if (@Model.filterMeetupsPast)
+        {
+            <partial name="_MeetupsPastPartial" />
+        }
+
+        @if (@Model.filterMeetupsFuture)
+        {
+            <partial name="_MeetupsFuturePartial" />
+        }
+
+    </div>
+</div>

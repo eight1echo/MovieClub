@@ -1,0 +1,85 @@
+﻿@model UpcomingMeetupsPage
+
+<div class="row mb-3">
+    <div class="col-6 page-title text-center">Upcoming Meetups:</div>
+</div>
+
+@if (@Model.PageData.Attendance.Any())
+{
+    <div class="row sub-page-right-list-header">
+        <div class="col-3 offset-1 sub-heading">CLUB</div>
+        <div class="col-4 sub-heading">MOVIE</div>
+        <div class="col-2 sub-heading">WHEN</div>
+        <div class="col-2 sub-heading">RSVP</div>
+    </div>
+
+    @foreach (var a in Model.PageData.Attendance)
+    {                
+        <div class="row mt-3 sub-page-right-list text-center">
+            <div class="col-1 mt-1 text-center">
+                <a asp-area="Meetups" asp-page="/Details/MeetupDetailsPage" asp-route-id="@a.Meetup.Id"><i class="fa fa-id-card"></i></a>
+            </div>
+            <div class="col-3 mt-1">
+                <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-id="@a.Meetup.Club.Id" class="sub-page-list-item">
+                        @a.Meetup.Club.Name
+                </a>
+            </div>
+                    
+            <div class="col-4 mt-1">@a.Meetup.Movie.Title</div>
+            <div class="col-2 mt-1 sub-page-right-list-date">
+                <div class="row">
+                    <div class="col-6">@a.Meetup.Date.ToShortDateString()</div>
+                    <div class="col-6">@a.Meetup.Date.ToShortTimeString()</div>
+                </div>
+            </div>
+            <div class="col-2">
+                @if (a.Status == AttendanceStatus.Hosting)
+                {
+                    <div class="row">
+                        <div class="col-8 offset-1 sub-page-right-list-select rsvp-hosting" style="width: 60%">@a.Status</div>
+                        <div class="col-1 offset-1 text-center">
+                            <a asp-area="Meetups" asp-page="/Edit/EditMeetupPage" asp-route-id="@a.Meetup.Id"><i class="fa fa-pencil" style="margin-left: 5px"></i></a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <form asp-page-handler="UpdateAttendance" method="post">
+                        <div class="row">
+                            <div class="col-9">
+                                @if (@a.Status is AttendanceStatus.Attending)
+                                {
+                                    <select class="form-select sub-page-right-list-select rsvp-attending" asp-for="@Model.AttendanceStatus" asp-items="@GetSelectList.AttendanceSelect(a.Status)"></select>                                    
+                                }
+                                @if (@a.Status is AttendanceStatus.Invited)
+                                {
+                                    <select class="form-select sub-page-right-list-select rsvp-invited" asp-for="@Model.AttendanceStatus" asp-items="@GetSelectList.AttendanceSelect(a.Status)"></select>                                  
+                                }
+                                @if (@a.Status is AttendanceStatus.Declined)
+                                {
+                                    <select class="form-select sub-page-right-list-select rsvp-declined" asp-for="@Model.AttendanceStatus" asp-items="@GetSelectList.AttendanceSelect(a.Status)"></select>                               
+                                }  
+                                
+                            </div>
+                            <div class="col-3">
+                                <input type="hidden" asp-for="@Model.AttendanceId" value="@a.Id" />
+                                <input type="hidden" asp-for="@Model.PageData.UserProfile.Id" value="@Model.PageData.UserProfile.Id" />
+                                <button class="btn btn-success" type="submit"><i class="fa fa-check mt-1" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                }                        
+            </div>
+        </div>
+    }                                
+}
+else
+{
+    <div class="row">
+        <div class="col-4 offset-4 text-center">
+            <div class="sub-page-right-list">
+                <div class="sub-page-title">No Meetups</div>
+            </div>
+        </div>
+    </div>
+}
