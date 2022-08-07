@@ -17,7 +17,7 @@ public class TMDbClient : ITMDbClient
     public async Task<TMDbMovie?> GetMovie(int id)
     {
         string apiKey = "bf314a905cb9d77922a9e0fbf0b729c2";
-        string url = $"movie/{id}?api_key={apiKey}";
+        string url = $"movie/{id}?api_key={apiKey}&append_to_response=credits";
 
         var tmdbMovie = await _httpClient.GetFromJsonAsync<TMDbMovie>(url);
         return tmdbMovie;

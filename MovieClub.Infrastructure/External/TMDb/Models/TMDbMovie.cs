@@ -18,6 +18,8 @@ public class TMDbMovie
     public long? Budget { get; set; }
     public long? Revenue { get; set; }
 
+    public TMDbCredit Credits { get; set; }
+
     public ICollection<TMDbGenre>? Genres { get; set; }
 }
 

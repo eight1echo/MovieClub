@@ -5,6 +5,12 @@ public class MovieDTO
     public DateTime ReleaseDate { get; set; }
     public int? Runtime { get; set; }
 
+    public string? Director { get; set; }
+
+    public string? Screenwriter { get; set; }
+
+    public string? Cast { get; set; }
+
     public string? Synopsis { get; set; }
 
     public string? Tagline { get; set; }
