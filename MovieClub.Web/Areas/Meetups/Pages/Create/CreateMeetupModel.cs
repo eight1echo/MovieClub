@@ -10,12 +10,12 @@ public class CreateMeetupModel
 
     [Required]
     public int MovieTMDbId { get; set; }
-    public bool MovieHidden { get; set; }
 
-    [Required]
-    [MaxLength(25)]
-    public string? Location { get; set; }
+    [Required(ErrorMessage = "A Location is required.")]
+    [MaxLength(25, ErrorMessage = "Location must be less than 25 characters.")]
+    public string Location { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "A Date and Time is required.")]
     [DateInTheFuture]
-    public DateTime Date { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; } = DateTime.Now.Date.AddDays(1);
 }

@@ -3,10 +3,17 @@ public class GetSelectList
 {
     public static List<SelectListItem> AttendanceSelect(AttendanceStatus status)
     {
-        List<SelectListItem> list = new()
+        List<SelectListItem> list = new();
+
+        switch (status)
         {
-            new SelectListItem { Selected = true, Text = status.ToString(), Value = ((int)status).ToString() }
-        };
+            case AttendanceStatus.Declined:
+                list.Add(new SelectListItem { Selected = true, Text = "Can't Attend", Value = ((int)status).ToString() });
+                break;
+            default:
+                list.Add(new SelectListItem { Selected = true, Text = status.ToString(), Value = ((int)status).ToString() });
+                break;
+        }
 
         if (status is not AttendanceStatus.Attending)
         {

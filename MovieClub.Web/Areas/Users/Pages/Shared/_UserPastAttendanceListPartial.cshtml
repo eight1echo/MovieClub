@@ -1,0 +1,50 @@
+﻿@model UserAttendanceModel
+
+@if (@Model.PastAttendance.Any())
+{
+    <div class="row mt-4">
+        <div class="col-2 sub-page-title pt-1 text-center">Past Meetups :</div>
+        <div class="col-3 sub-page-title offset-7 text-center">
+            <a asp-area="Users" asp-page="/Home/UserHomePage" class="page-nav-border-inactive">Future Meetups</a>
+        </div>
+    </div>
+
+    <div class="row sub-page-right-list pt-2 pb-2">
+        @foreach (var a in Model.PastAttendance)
+        {                
+            @if (a.Meetup is not null)
+            {
+                <div class="row sub-page-right-item mt-2 text-center">
+                    @if (a.Meetup.Movie is not null)
+                    {
+                        <div class="col-4 divide-border-right mt-1">
+                            <a asp-area="Meetups" asp-page="/Details/MeetupDetailsPage" asp-route-meetupId="@a.Meetup.Id" class="sub-page-link">@a.Meetup.Movie.Title</a>
+                        </div>
+                    }
+
+                    @if (a.Meetup.Club is not null)
+                    {
+                        <div class="col-3 divide-border-right mt-1">
+                            <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-clubId="@a.Meetup.Club.Id" class="sub-page-link">@a.Meetup.Club.Name</a>
+                        </div>
+                    }
+
+                    <div class="col-3 mt-1 sub-page-right-list-date">
+                        <div class="row">
+                            <div class="col-6">@a.Meetup.Date.ToShortDateString()</div>
+                            <div class="col-6">@a.Meetup.Date.ToShortTimeString()</div>
+                        </div>
+                    </div>
+
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="col-10 offset-1">
+                                <a asp-area="Meetups" asp-page="/Edit/EditMeetupPage" asp-route-meetupId="@a.Meetup.Id" class="form-control user-input-select">@a.Status</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }    
+    </div>                          
+}

@@ -1,8 +1,4 @@
-﻿using MovieClub.Web.Areas.Users.Pages.Edit;
-using MovieClub.Web.Areas.Users.Pages.Meetups;
-using MovieClub.Web.Areas.Users.Pages.Profile;
-
-namespace MovieClub.Web.Areas.Users;
+﻿namespace MovieClub.Web.Areas.Users;
 
 public class UserService : IUserService
 {
@@ -13,37 +9,14 @@ public class UserService : IUserService
         _context = context;
     }
 
-    public async Task<EditUserProfileModel?> EditPage(int userProfileId)
+    public async Task<UserMembershipsModel?> GetUserMemberships(int userProfileId)
     {
-        var model = await _context.UserProfiles
-            .Where(up => up.Id == userProfileId)
-            .Select(up => new EditUserProfileModel
-            {
-                NewDisplayName = up.DisplayName,
+        var memberships = await _context.UserProfiles.Where(up => up.Id == userProfileId).Select(up => new UserMembershipsModel
+        {
+            UserProfileId = up.Id,
+            UserDisplayName = up.DisplayName,
 
-                UserProfile = new UserProfileDTO
-                {
-                    Id = up.Id,
-                    DisplayName = up.DisplayName
-                }
-            }).FirstOrDefaultAsync();
-
-        return model;
-    }
-
-    public async Task<UserProfileModel?> ProfilePage(int userProfileId)
-    {
-        var model = await _context.UserProfiles
-            .Where(up => up.Id == userProfileId)
-            .Select(up => new UserProfileModel
-            {
-                UserProfile = new UserProfileDTO
-                {
-                    Id = up.Id,
-                    DisplayName = up.DisplayName
-                },
-
-                Leaderships = up.Memberships
+            Leaderships = up.Memberships
                     .Where(m => m.Rank == MembershipRank.Leader)
                     .Select(m => new MembershipDTO
                     {
@@ -56,7 +29,7 @@ public class UserService : IUserService
                         }
                     }).ToList(),
 
-                Memberships = up.Memberships
+            Memberships = up.Memberships
                     .Where(m => m.Rank == MembershipRank.Member)
                     .Select(m => new MembershipDTO
                     {
@@ -69,7 +42,7 @@ public class UserService : IUserService
                         }
                     }).ToList(),
 
-                Pending = up.Memberships
+            Pending = up.Memberships
                     .Where(m => m.Rank == MembershipRank.Pending)
                     .Select(m => new MembershipDTO
                     {
@@ -82,6 +55,17 @@ public class UserService : IUserService
                         }
                     }).ToList(),
 
+        }).FirstOrDefaultAsync();
+
+        return memberships;
+    }
+
+    public async Task<UserAttendanceModel?> GetUserFutureAttendance(int userProfileId)
+    {
+        var model = await _context.UserProfiles
+            .Where(up => up.Id == userProfileId)
+            .Select(up => new UserAttendanceModel
+            {
                 NextAttendance = up.Attendance
                     .Where(a => a.Meetup.Date > DateTime.Now)
                     .OrderBy(a => a.Meetup.Date)
@@ -104,40 +88,28 @@ public class UserService : IUserService
 
                             Host = a.Meetup.Attendance
                                 .Where(a => a.Status == AttendanceStatus.Hosting)
-                                .Select(a => new UserProfileDTO { DisplayName = a.UserProfile.DisplayName })
+                                .Select(a => new UserProfileDTO { Id = a.UserProfile.Id, DisplayName = a.UserProfile.DisplayName })
                                 .FirstOrDefault(),
 
                             Movie = new MovieDTO
                             {
+                                Cast = a.Meetup.Movie.Cast,
+                                Director = a.Meetup.Movie.Director,
                                 Genres = a.Meetup.Movie.Genres,
                                 PosterURL = a.Meetup.Movie.PosterURL,
                                 ReleaseDate = a.Meetup.Movie.ReleaseDate,
+                                Runtime = a.Meetup.Movie.Runtime,
+                                Screenwriter = a.Meetup.Movie.Screenwriter,
                                 Synopsis = a.Meetup.Movie.Synopsis,
                                 Tagline = a.Meetup.Movie.Tagline,
                                 Title = a.Meetup.Movie.Title
-                            }
+                            },
+
                         }
-                    }).FirstOrDefault()
+                    }).FirstOrDefault() ?? new AttendanceDTO(),
 
-            }).FirstOrDefaultAsync() ?? new UserProfileModel();
-
-        return model;
-    }
-
-    public async Task<UserMeetupsModel?> MeetupsPastPage(int userProfileId)
-    {
-        var model = await _context.UserProfiles
-            .Where(up => up.Id == userProfileId)
-            .Select(up => new UserMeetupsModel
-            {
-                UserProfile = new UserProfileDTO
-                {
-                    Id = up.Id,
-                    DisplayName = up.DisplayName
-                },
-
-                Attendance = up.Attendance
-                    .Where(a => a.Meetup.Date < DateTime.Now)
+                FutureAttendance = up.Attendance
+                    .Where(a => a.Meetup.Date > DateTime.Now)
                     .OrderBy(a => a.Meetup.Date)
                     .Select(a => new AttendanceDTO
                     {
@@ -157,28 +129,25 @@ public class UserService : IUserService
 
                             Location = a.Meetup.Location,
                             Movie = new MovieDTO { Title = a.Meetup.Movie.Title }
-                        }
-                    }).ToList()
+                        },
+                    // Skip 1 to remove NextAttendance
+                    }).Skip(1).ToList()
 
-            }).FirstOrDefaultAsync() ?? new UserMeetupsModel();
+            }).FirstOrDefaultAsync();
+
+        if (model is null) throw new ResourceNotFoundException();
 
         return model;
     }
 
-    public async Task<UserMeetupsModel?> MeetupsFuturePage(int userProfileId)
+    public async Task<UserAttendanceModel?> GetUserPastAttendance(int userProfileId)
     {
         var model = await _context.UserProfiles
             .Where(up => up.Id == userProfileId)
-            .Select(up => new UserMeetupsModel
+            .Select(up => new UserAttendanceModel
             {
-                UserProfile = new UserProfileDTO
-                {
-                    Id = up.Id,
-                    DisplayName = up.DisplayName
-                },
-
-                Attendance = up.Attendance
-                    .Where(a => a.Meetup.Date > DateTime.Now)
+                PastAttendance = up.Attendance
+                    .Where(a => a.Meetup.Date < DateTime.Now)
                     .OrderBy(a => a.Meetup.Date)
                     .Select(a => new AttendanceDTO
                     {
@@ -201,7 +170,7 @@ public class UserService : IUserService
                         },
                     }).ToList()
 
-            }).FirstOrDefaultAsync() ?? new UserMeetupsModel();
+            }).FirstOrDefaultAsync();
 
         return model;
     }

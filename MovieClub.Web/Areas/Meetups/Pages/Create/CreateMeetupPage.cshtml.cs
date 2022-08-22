@@ -52,7 +52,7 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
                 {
                     MovieSelect = await _movieService.GetSelectList(MovieSearchValue);
 
-                    var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                    var userProfileId = await _currentUser.GetUserProfileId(HttpContext, User);
                     ClubSelect = await _clubPages.GetSelectList(userProfileId);
                 }
                 catch (Exception)
@@ -64,23 +64,23 @@ namespace MovieClub.Web.Areas.Meetups.Pages.Create
             return Page();
         }
 
-        public async Task<IActionResult> OnPostCreateAsync()
+        public async Task<IActionResult> OnPostCreateMeetup()
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    CreateMeetupModel.UserProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                    CreateMeetupModel.UserProfileId = await _currentUser.GetUserProfileId(HttpContext, User);
 
                     var movieId = await _movieCommands.ImportMovie(CreateMeetupModel.MovieTMDbId);
                     var meetupId = await _meetupCommands.CreateMeetup(CreateMeetupModel.UserProfileId, CreateMeetupModel.ClubId, movieId, CreateMeetupModel.Date, CreateMeetupModel.Location);
                     await _attendanceCommands.InviteClubMembers(CreateMeetupModel.UserProfileId, CreateMeetupModel.ClubId, meetupId);
 
-                    return RedirectToPage($"/Details/MeetupDetailsPage", new { id = meetupId, area = "Meetups" });
+                    return RedirectToPage($"/Details/MeetupDetailsPage", new { meetupId, area = "Meetups" });
                 }
                 catch (Exception)
                 {
-                    return RedirectToPage("/Error"); ;
+                    return RedirectToPage("/Error");
                 }                
             }
 

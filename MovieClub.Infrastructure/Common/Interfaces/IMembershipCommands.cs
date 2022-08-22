@@ -2,7 +2,7 @@
 
 public interface IMembershipCommands
 {
-    Task AcceptMembership(int clubId, int userId);
+    Task AcceptMembership(int membershipId);
     Task CreatePendingMembership(int clubId, int userId);
     Task DeleteMembership(int membershipId);
 }

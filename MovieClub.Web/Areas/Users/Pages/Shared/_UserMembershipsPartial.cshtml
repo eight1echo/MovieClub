@@ -1,0 +1,89 @@
+﻿@model UserMembershipsModel
+
+@if (Model.Leaderships.Any() || Model.Memberships.Any() || Model.Pending.Any())
+{
+    <div class="row mt-3">
+        <div class="col-4 offset-2 pt-1 sub-page-title text-start">Your Clubs :</div>
+        <div class="col-4 offset-1 text-center">
+            <a asp-area="Clubs" asp-page="/Create/CreateClubPage" class="page-nav-success">New</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <div class="">You aren't a member of any clubs yet.</div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-4 offset-4 text-center">
+            <a asp-area="Clubs" asp-page="/Create/CreateClubPage" class="page-nav-success">New Club</a>
+        </div>
+    </div>
+}
+
+
+<div class="row">
+    <div class="col-12">
+
+        @if (Model.Leaderships.Any())
+        { 
+            @foreach (var m in Model.Leaderships)
+            {
+                <div class="row  mt-1">
+                    <div class="col-8 offset-2 sub-page-left-item text-center">
+                        <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-clubId="@m.Club.Id" class="sub-page-link">@m.Club.Name</a>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (Model.Memberships.Any())
+        { 
+            <div class="row mt-3 mb-1">
+                <div class="col-10 offset-2 pt-1 sub-page-title text-start">Memberships :</div>
+            </div> 
+
+            @foreach (var m in Model.Memberships)
+            {
+                <div class="row">
+                    <div class="col-2 mt-2 text-center">
+                        <form asp-page-handler="DeleteMembership" method="post" onclick="return confirm('Are you sure you want to leave the Club ?')">
+                            <input type="hidden" asp-for="@Model.UserProfileId" value="@Model.UserProfileId" />
+                            <input type="hidden" asp-for="@Model.MembershipId" value="@m.Id" />
+                            <button type="submit" class="btn-danger"><i class="fa fa-times"></i></button>
+                        </form>
+                    </div>
+
+                    <div class="col-8 sub-page-left-item text-center">
+                        <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-clubId="@m.Club.Id" class="sub-page-link">@m.Club.Name</a>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (Model.Pending.Any())
+        {
+            <div class="row mt-3">
+                <div class="col-4 pt-1 sub-page-title text-center">Pending :</div>
+            </div> 
+            @foreach (var m in Model.Pending)
+            {
+                <div class="row sub-page-left-item mt-1">
+                    <div class="col-1">
+                        <form asp-page-handler="DeleteMembership" method="post" onclick="return confirm('Cancel request to join the Club ?')">
+                            <input type="hidden" asp-for="@Model.UserProfileId" />
+                            <input type="hidden" asp-for="@Model.MembershipId" value="@m.Id" />
+                            <button type="submit" class="btn-danger"><i class="fa fa-ban"></i></button>
+                        </form>
+                    </div>
+                    <div class="col-10 text-center">
+                        <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-route-clubId="@m.Club.Id" class="sub-page-link">@m.Club.Name</a>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>

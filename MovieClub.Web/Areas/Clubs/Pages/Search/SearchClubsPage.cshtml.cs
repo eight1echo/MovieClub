@@ -20,17 +20,12 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Search
 
         public List<ClubDTO> SearchedClubs { get; set; } = new List<ClubDTO>();
 
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostSearch()
+        public async Task<IActionResult> OnGet(string value)
         {
             try
             {
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                SearchedClubs = await _clubPages.SearchPage(userProfileId, Request.Form["searchvalue"]);
+                var userProfileId = await _currentUser.GetUserProfileId(HttpContext, User);
+                SearchedClubs = await _clubPages.SearchPage(userProfileId, value);
             }
             catch (Exception)
             {
@@ -40,14 +35,26 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Search
             return Page();
         }
 
+        public IActionResult OnPostSearch(string value)
+        {
+            try
+            {
+                return RedirectToPage("/Search/SearchClubsPage", new { value, area = "Clubs" });
+            }
+            catch (Exception)
+            {
+                return RedirectToPage("/Error");
+            }
+        }
+
         public async Task<IActionResult> OnPostJoin()
         {
             try
             {
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
+                var userProfileId = await _currentUser.GetUserProfileId(HttpContext, User);
                 await _membershipCommands.CreatePendingMembership(ClubId, userProfileId);
 
-                return RedirectToPage("/profile/UserProfilePage", new { id = userProfileId, area = "Users" });
+                return RedirectToPage("/Home/UserHomePage", new { area = "Users" });
             }
             catch (Exception)
             {

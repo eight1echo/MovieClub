@@ -342,14 +342,7 @@ namespace MovieClub.Infrastructure.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("BackdropURL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("Budget")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Cast")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Director")
@@ -358,13 +351,10 @@ namespace MovieClub.Infrastructure.Persistence.Migrations
                     b.Property<string>("Genres")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IMDbId")
+                    b.Property<string>("IMDbPath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LanguageTitle")
+                    b.Property<string>("LetterboxPath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PosterURL")
@@ -372,9 +362,6 @@ namespace MovieClub.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<long?>("Revenue")
-                        .HasColumnType("bigint");
 
                     b.Property<int?>("Runtime")
                         .HasColumnType("int");
@@ -509,7 +496,7 @@ namespace MovieClub.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("MovieClub.Domain.Movie", "Movie")
-                        .WithMany("Meetups")
+                        .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -548,11 +535,6 @@ namespace MovieClub.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MovieClub.Domain.Meetup", b =>
                 {
                     b.Navigation("Attendance");
-                });
-
-            modelBuilder.Entity("MovieClub.Domain.Movie", b =>
-                {
-                    b.Navigation("Meetups");
                 });
 
             modelBuilder.Entity("MovieClub.Domain.UserProfile", b =>

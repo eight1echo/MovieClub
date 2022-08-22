@@ -1,58 +1,62 @@
-﻿@page "/clubs/{id}"
+﻿@page "/clubs/{clubId}"
 @model ClubDetailsPage
-@{
 
-}
+<div class="row">
 
-@switch (@Model.PageData!.UserMembership.Rank)
-{
-    case MembershipRank.Visitor:
-        <partial name="_VisitorClubDetailsPartial" />
-        break;
-
-    case MembershipRank.Pending:
-        <partial name="_PendingClubDetailsPartial" />
-        break;
-
-    default:
-    <div class="row">
-
+    @if (Model.Memberships is not null)
+    {
         <div class="col-3">
-
-            @*Page Navigation*@
-            @await Html.PartialAsync("./_ClubNavigationPartial", Model.PageData.Club)       
-
-            @*Club Members*@
-            <partial name="_ClubMemberListPartial" />
-            
-        </div>
-
-        <div class="col-9">
-
-            <div class="row mb-3">
-                <div class="col-6 page-title text-center">Next Meetup:</div>
+            <div class="row">
+                <div class="col-3 mt-3 page-title-label">
+                    club :
+                </div>
+                <div class="col-9 page-title">
+                    @Model.Memberships.ClubName
+                </div>
             </div>
 
-            @*Next Meetup*@
-            @if (@Model.PageData.NextMeetup is not null)
-            {
-                <div class="sub-page-right">
-                    <partial name="_ClubNextMeetupPartial" />
-                </div>
-            }
-            else
-            {
-                <div class="row">
-                    <div class="col-4 offset-4 text-center">
-                        <div class="sub-page-right-list">
-                            <div class="sub-page-title">No Meetups</div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="row mt-3">
+                        <div class="col-10 offset-2 pt-1 sub-page-title text-start">Leader :</div>
+                    </div> 
+
+                    <div class="row mt-1">
+                        <div class="col-8 offset-2 sub-page-left-item text-center">
+                            <a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-profileId="@Model.Memberships.Leader.UserProfile.Id" class=" sub-page-link">@Model.Memberships.Leader.UserProfile.DisplayName</a>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            @if (Model.Memberships.UserMembership.Rank == MembershipRank.Leader )
+            {
+                <partial name="_ClubMembershipsPartial" for="Memberships" />
+                <partial name="_ClubPendingMembershipsPartial" for="Memberships" />
+            }
+
+            @if (Model.Memberships.UserMembership.Rank == MembershipRank.Member)
+            {
+                <partial name="_ClubMembershipsPartial" for="Memberships" />            
+            }
+        </div>
+
+        <div class="col-8 offset-1">
+          
+            @if (Model.Memberships.UserMembership.Rank == MembershipRank.Member || Model.Memberships.UserMembership.Rank == MembershipRank.Leader )
+            {
+                @if (Model._futureMeetups)
+                {
+                    <partial name="_ClubNextMeetupPartial" for="Meetups" />  
+                    <partial name="_ClubFutureMeetupsPartial" for="Meetups" />  
+                }
+                @if (Model._pastMeetups)
+                {
+                    <partial name="_ClubPastMeetupsPartial" for="Meetups" /> 
+                }
             }
 
         </div>
+    }
 
-    </div>
-    break;
-}
+</div>

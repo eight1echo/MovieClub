@@ -36,8 +36,9 @@ button.accept-policy {
     position: absolute;
     bottom: 0;
     width: 100%;
+    color: #656565;
     white-space: nowrap;
     line-height: 60px;
-    background-color: #14181C;
-    border-top: 3px solid #31525E;
+    background-color: #0A0A0A;
+    border-top: 3px solid #787A7D;
 }

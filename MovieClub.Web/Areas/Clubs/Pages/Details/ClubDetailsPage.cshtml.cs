@@ -2,58 +2,43 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
 {
     public class ClubDetailsPage : PageModel
     {
-        private readonly IAttendanceCommands _attendanceCommands;
-        private readonly IClubService _clubPages;
-        private readonly IMembershipCommands _membershipCommands;
         private readonly ICurrentUserService _currentUser;
+        private readonly IClubService _clubService;
+        private readonly IAttendanceCommands _attendanceCommands;
+        private readonly IMembershipCommands _membershipCommands;
 
-        public ClubDetailsPage(IClubService clubPages,
-            ICurrentUserService userService,
-            IMembershipCommands membershipCommands,
-            IAttendanceCommands attendanceCommands)
+        public ClubDetailsPage(IClubService clubService, IMembershipCommands membershipCommands, ICurrentUserService currentUser, IAttendanceCommands attendanceCommands)
         {
-            _clubPages = clubPages;
-            _currentUser = userService;
+            _clubService = clubService;
             _membershipCommands = membershipCommands;
+            _currentUser = currentUser;
             _attendanceCommands = attendanceCommands;
         }
 
         [BindProperty]
-        public ClubDetailsModel PageData { get; set; } = null!;
+        public int UserProfileId { get; set; }
 
         [BindProperty]
-        public int MembershipUserId { get; set; }
+        public ClubMeetupsModel? Meetups { get; set; }
 
-        public async Task<IActionResult> OnGet(int id)
+        [BindProperty]
+        public ClubMembershipsModel? Memberships { get; set; }
+
+        public bool _futureMeetups;
+        public bool _pastMeetups;
+
+        public async Task<IActionResult> OnGet(int clubId)
         {
             try
             {
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                PageData = await _clubPages.DetailsPage(userProfileId, id);
+                UserProfileId = await _currentUser.GetUserProfileId(HttpContext, User);
 
-                if (PageData is not null)
-                    return Page();
+                Meetups = await _clubService.GetClubFutureMeetups(UserProfileId, clubId);
+                Memberships = await _clubService.GetClubMemberships(UserProfileId, clubId);
 
-                return RedirectToPage("/NotFound");
-            }
-            catch (Exception)
-            {
-                return RedirectToPage("/Error");
-            }            
-        }
+                _futureMeetups = true;
 
-        public async Task<IActionResult> OnPostDeleteMembership()
-        {
-            try
-            {
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                if (PageData.UserMembership.Rank == MembershipRank.Leader || PageData.UserMembership.UserProfile.Id == userProfileId)
-                {
-                    await _membershipCommands.DeleteMembership(PageData.UserMembership.Id);
-                    return await OnGet(PageData.Club.Id);
-                }
-
-                return RedirectToPage("/AccessDenied");
+                return Page();
             }
             catch (Exception)
             {
@@ -61,62 +46,56 @@ namespace MovieClub.Web.Areas.Clubs.Pages.Details
             }
         }
 
-        public async Task<IActionResult> OnPostUpdateAttendance()
+        public async Task<IActionResult> OnGetPastMeetups(int clubId)
         {
             try
             {
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                if (PageData.NextMeetup!.UserAttendance is not null)
-                {
-                    if (PageData.UserMembership.UserProfile.Id == userProfileId)
-                    {
-                        await _attendanceCommands.UpdateStatus(PageData.NextMeetup.UserAttendance.Id, PageData.NextMeetup.UserAttendance.Status);
+                UserProfileId = await _currentUser.GetUserProfileId(HttpContext, User);
 
-                        return await OnGet(PageData.Club.Id);
-                    }
+                Meetups = await _clubService.GetClubPastMeetups(UserProfileId, clubId);
+                Memberships = await _clubService.GetClubMemberships(UserProfileId, clubId);
 
-                    return RedirectToPage("/AccessDenied");
-                }
+                _pastMeetups = true;
 
-                return RedirectToPage("/NotFound");
+                return Page();
             }
             catch (Exception)
             {
                 return RedirectToPage("/Error");
             }
-        }
-
-        public async Task<IActionResult> OnPostApplyToJoin()
-        {
-            try
-            {
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                await _membershipCommands.CreatePendingMembership(PageData.Club.Id, userProfileId);
-
-                return RedirectToPage("/profile/UserProfilePage", new { area = "Users" });
-            }
-            catch (Exception)
-            {
-                return RedirectToPage("/Error");
-            }            
         }
 
         public async Task<IActionResult> OnPostAcceptMembership()
         {
-            try
+            if (Memberships is not null)
             {
-                if (PageData.UserMembership.Rank is MembershipRank.Leader)
-                {
-                    await _membershipCommands.AcceptMembership(PageData.Club.Id, MembershipUserId);
-                    return await OnGet(PageData.Club.Id);
-                }
+                await _membershipCommands.AcceptMembership(Memberships.MembershipId);
+                return RedirectToPage("/Details/ClubDetailsPage", new { Memberships.ClubId, area = "Clubs" });
+            }
 
-                return RedirectToPage("/AccessDenied");
-            }
-            catch (Exception)
+            return RedirectToPage("/Error");
+        }
+
+        public async Task<IActionResult> OnPostRejectMembership()
+        {
+            if (Memberships is not null)
             {
-                return RedirectToPage("/Error");
+                await _membershipCommands.DeleteMembership(Memberships.MembershipId);
+                return RedirectToPage("/Details/ClubDetailsPage", new { Memberships.ClubId, area = "Clubs" });
             }
+
+            return RedirectToPage("/Error");
+        }
+
+        public async Task<IActionResult> OnPostUpdateAttendance()
+        {
+            if (Meetups is not null)
+            {
+                await _attendanceCommands.UpdateStatus(Meetups.UserAttendance.Id, Meetups.UserAttendance.Status);
+                return RedirectToPage("/Details/ClubDetailsPage", new { Meetups.Club.Id, area = "Clubs" });
+            }
+
+            return RedirectToPage("/Error");
         }
     }
 }

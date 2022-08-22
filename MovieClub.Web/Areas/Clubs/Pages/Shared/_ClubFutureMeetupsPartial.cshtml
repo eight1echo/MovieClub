@@ -1,0 +1,96 @@
+﻿@model ClubMeetupsModel
+
+@if (@Model.FutureMeetups.Any())
+{
+    <div class="row mt-3">
+        <div class="col-3 offset-1 sub-page-right-title pt-1">Future Meetups :</div>
+        <div class="col-2 sub-page-title offset-6 mt-3 text-center">
+            <a asp-area="Clubs" asp-page="/Details/ClubDetailsPage" asp-page-handler="PastMeetups" asp-route-clubId="@Model.Club.Id" class="page-nav-border-inactive"><i class="fa fa-history" aria-hidden="true"></i> Past Meetups</a>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-4 mt-1 sub-page-header">
+            movie:
+        </div>
+        <div class="col-3 mt-1 sub-page-header">
+            club:
+        </div>
+        <div class="col-3 mt-1 sub-page-header">
+            when:
+        </div>
+    </div>
+
+    @foreach (var m in Model.FutureMeetups)
+    {
+        <div class="row sub-page-right-item mt-1 text-center">
+
+            @if (m.Movie is not null)
+            {
+                <div class="col-4">
+                    <div class="row p-1 divide-border-right">
+                        <a asp-area="Meetups" asp-page="/Details/MeetupDetailsPage" asp-route-meetupId="@m.Id" class="sub-page-link">@m.Movie.Title</a>
+                    </div>  
+                </div>
+            }
+
+            @if (m.Host is not null)
+            {
+                <div class="col-3">
+                    <div class="row p-1 divide-border-right">
+                        <a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-profileId="@m.Id" class="sub-page-link">@m.Host.DisplayName</a>
+                    </div>
+                </div>
+            }
+ 
+            <div class="col-3 mt-1 sub-page-right-list-date">
+                <div class="row">
+                    <div class="col-6">@m.Date.ToShortDateString()</div>
+                    <div class="col-6">@m.Date.ToShortTimeString()</div>
+                </div>
+            </div>
+
+            @if (m.UserAttendance is not null)
+            {
+                <div class="col-2">
+                    @if (m.UserAttendance.Status == AttendanceStatus.Hosting)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <a asp-area="Meetups" asp-page="/Details/MeetupDetailsPage" asp-route-meetupId="@m.Id" class="form-control user-input-select rsvp-hosting">@m.UserAttendance.Status</a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <form asp-page-handler="UpdateAttendance" method="post">
+                            <div class="row">
+                                <div class="col-9">
+                                    @if (@m.UserAttendance.Status is AttendanceStatus.Attending)
+                                    {
+                                        <select class="form-select user-input-select rsvp-attending" asp-for="@Model.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(@m.UserAttendance.Status)"></select>                                    
+                                    }
+                                    @if (@m.UserAttendance.Status is AttendanceStatus.Invited)
+                                    {
+                                        <select class="form-select user-input-select rsvp-invited" asp-for="@Model.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(@m.UserAttendance.Status)"></select>                                  
+                                    }
+                                    @if (@m.UserAttendance.Status is AttendanceStatus.Declined)
+                                    {
+                                        <select class="form-select user-input-select rsvp-declined" asp-for="@Model.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(@m.UserAttendance.Status)"></select>                               
+                                    }  
+                                
+                                </div>
+                                <div class="col-1">
+                                    <input type="hidden" asp-for="@Model.Club.Id" value="@Model.Club.Id" />
+                                    <input type="hidden" asp-for="@Model.UserAttendance.Id" value="@m.UserAttendance.Id" />
+                                    <input type="hidden" asp-for="@Model.UserAttendance.UserProfileId" value="@m.UserAttendance.UserProfileId" />
+                                    <button class="btn-sm btn-success" type="submit"><i class="fa fa-check mt-1" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    }                        
+                </div>
+            }
+        </div>
+    }
+}

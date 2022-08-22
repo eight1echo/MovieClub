@@ -1,114 +1,87 @@
 ﻿@page "/meetups/create"
-@model MovieClub.Web.Areas.Meetups.Pages.Create.CreateMeetupPage
-@{
-}
-
-<form method="post" id="Search"></form>
+@model CreateMeetupPage
 
 <div class="row">
+    <div class="col-6 offset-3 mt-4">
 
-    <div class="col-6 offset-3 mt-3">
-
-        <div class="row">
-            <div class="col-4 page-nav-title text-center">Create Meetup:</div>
+        <div class="row mt-4">
+            <div class="col-3 sub-page-title text-center pt-1">Create Meetup :</div>
         </div>
 
-        <div class="row mt-4 sub-page-right">
-
-            <div class="row text-center">
-                <div class="sub-page-title">Search for a Movie:</div>
-            </div>
-
-            <div class="row pt-4 text-center">
-                <div class="col-8 offset-2 text-center">
-                    <input type="text" asp-for="MovieSearchValue" class="form-control user-input" form="Search" placeholder="Search"/>
-                </div>
-
-                <div class="col-2">
-                    <input asp-page-handler="SearchMovies" type="submit" value="Search" class="btn btn-primary invisible" form="Search"/>
-                </div>
-            </div>
-
-        </div>
-
-        @if (Model.MovieSearchValue is not null)
-        {
-            @if (Model.ClubSelect.Count != 0)
+        <div class="row p-4 sub-page-right">
+            <form method="post">
+            @if(Model.MovieSelect.Any())
             {
-                @if(Model.MovieSelect.Any())
-                {
-                <div class="row mt-4">
-                    <form method="post">
-                        <div class="col-10 offset-1 sub-page-right mt-3">
+                <div class="row mt-2">
+                    <div class="col-3 pt-1 sub-page-header">Movie: </div>
 
-                            <div class="row pt-5 ">
-                                <div class="col-3 sub-heading">Select Movie: </div>
-
-                                <div class="col-8 text-center form-group">
-                                    <select class="form-control user-input" asp-for="CreateMeetupModel.MovieTMDbId" asp-items="@Model.MovieSelect">
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row pt-5 ">
-                                <div class="col-3 sub-heading">Select Club: </div>
-
-                                <div class="col-8 text-center form-group">
-                                    <select class="form-control user-input" asp-for="CreateMeetupModel.ClubId" asp-items="@Model.ClubSelect">
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row pt-5">
-                                <div class="col-3 sub-heading">Date & Time: </div>
-
-                                <div class="col-8 form-group">
-                                    <input asp-for="CreateMeetupModel.Date" type="datetime-local" class="form-control user-input" value="@DateTime.Now" min="@DateTime.Now"/>
-                                    <span asp-validation-for="CreateMeetupModel.Date" class="text-danger"></span>
-                                </div>
-                            </div>
-
-
-                            <div class="row pt-5">
-                                <div class="col-3 sub-heading">Location: </div>
-
-                                <div class="col-8 form-group">
-                                    <input type="text" asp-for="CreateMeetupModel.Location" class="form-control user-input" />
-                                    <span asp-validation-for="CreateMeetupModel.Location" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="row pt-5">
-                                <div class="col-2 offset-6 form-group">
-                                    <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-success" />
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                    <div class="col-8 text-center form-group">
+                        <select class="form-select user-input" asp-for="CreateMeetupModel.MovieTMDbId" asp-items="@Model.MovieSelect"></select>
+                    </div>
                 </div>
+
+                @if (Model.ClubSelect.Any())
+                {
+                    <div class="row pt-5">
+                        <div class="col-3 sub-page-header">Club: </div>
+
+                        <div class="col-8 text-center">
+                            <select class="form-select user-input" asp-for="CreateMeetupModel.ClubId" asp-items="@Model.ClubSelect">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pt-5">
+                        <div class="col-3 sub-page-header">Date & Time: </div>
+
+                        <div class="col-8 form-group">
+                            <input asp-for="CreateMeetupModel.Date" type="datetime-local" class="form-control user-input"/>                    
+                        </div>
+                    </div>
+
+                    <div class="row pt-5">
+                        <div class="col-3 sub-page-header">Location: </div>
+
+                        <div class="col-8 form-group">
+                            <input type="text" asp-for="CreateMeetupModel.Location" class="form-control user-input" />                    
+                        </div>
+                    </div>
+
+                    <div class="row pt-5">
+                        <div class="col-2 offset-6 form-group">
+                            <input asp-page-handler="CreateMeetup" type="submit" value="Create" class="btn btn-success" />
+                        </div>
+                    </div>
                 }
                 else
                 {
-                <div class="row mt-5 text-center">
-                    <div class="page-title">No Movies Found.</div>
-                </div>
-                }
+                    <div class="row pt-5">
+                        <div class="col-12 text-center">
+                            <a asp-area="Clubs" asp-page="/Create/CreateClubPage" class="">Create</a>
+                            <span style="font-size: 18px"> or join a Club before you try to schedule a Meetup.</span>
+                        </div>
+                    </div>
+                }               
             }
             else
             {
-               <div class="row">
-                    <div class="sub-page-right mt-3">
-                        <div class="row mt-3 text-center">
-                            <div class="">
-                                <a asp-area="Clubs" asp-page="/Create/CreateClubPage" class="page-nav-link">Create a Club </a> before you try to schedule a Meetup.
-                            </div>
-                        </div>                            
+                <div class="row mt-2">
+                    <form method="post">
+                        <div class="col-3 sub-page-header">Movie: </div>
+                        <div class="col-8 text-center form-group">
+                            <input type="text" asp-for="MovieSearchValue" class="form-control user-input" placeholder="Search"/>
+                        </div>
+                        <div class="col-1">
+                            <input asp-page-handler="SearchMovies" type="submit" value="Search" class="btn btn-primary invisible" />
+                        </div>
+                    </form> 
+                    <div class="col-8 offset-3 mt-1 text-center">
+                        <span asp-validation-for="CreateMeetupModel.Date" class="text-danger"></span>
+                        <span asp-validation-for="CreateMeetupModel.Location" class="text-danger"></span>
                     </div>
-                </div> 
+                </div>
             }
-
-
-
-        }
+        </form>
+        </div>
     </div>
 </div>

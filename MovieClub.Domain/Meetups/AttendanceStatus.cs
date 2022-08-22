@@ -4,5 +4,5 @@ public enum AttendanceStatus
     Hosting,
     Invited,
     Declined,
-    Attending,
+    Attending
 }

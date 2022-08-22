@@ -1,0 +1,42 @@
+﻿@page "/home"
+@model UserHomePage
+
+<div class="row">
+
+    @if (Model.UserMemberships is not null)
+    {
+        <div class="col-3">
+            <div class="row">
+                <div class="col-3 mt-3 page-title-label">
+                    profile :
+                </div>
+                <div class="col-9 page-title">
+                    @Model.UserMemberships.UserDisplayName
+                </div>
+            </div>
+
+            <partial name="_UserMembershipsPartial" for="UserMemberships" />
+        </div>
+    }
+
+    @if (Model.UserAttendance is not null)
+    {
+        <div class="col-8 offset-1">
+            @if (Model._pastAttendance)
+            {
+                <partial name="_UserPastAttendanceListPartial" for="UserAttendance"/>
+            }
+            @if (Model._upcomingAttendance)
+            {
+                @if (Model.UserAttendance.NextAttendance is not null)
+                {
+                    <partial name="_UserNextMeetupPartial" for="UserAttendance"/>
+                }
+                @if (Model.UserAttendance.FutureAttendance is not null)
+                {
+                    <partial name="_UserFutureAttendanceListPartial" for="UserAttendance"/>
+                }
+            }            
+        </div>
+    }
+</div>

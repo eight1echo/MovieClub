@@ -11,11 +11,18 @@ public class MeetupCommands : IMeetupCommands
 
     public async Task<int> CreateMeetup(int userId, int clubId, int movieId, DateTime date, string location)
     {
-        var meetup = new Meetup(userId, clubId, movieId, date, location);
+        var club = await _context.Clubs.Where(c => c.Id == clubId && c.Memberships.Any(m => m.UserProfileId == userId)).FirstOrDefaultAsync();
 
-        _context.Meetups.Add(meetup);
-        await _context.SaveChangesAsync();
+        if (club is not null)
+        {
+            var meetup = new Meetup(userId, clubId, movieId, date, location);
 
-        return meetup.Id;
+            _context.Meetups.Add(meetup);
+            await _context.SaveChangesAsync();
+
+            return meetup.Id;
+        }
+
+        throw new Exception("User tried to create a Meetup for a Club they are not a member of.");
     }
 }

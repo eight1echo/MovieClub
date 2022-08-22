@@ -23,23 +23,43 @@ public class MovieCommands : IMovieCommands
             {
                 var newMovie = new Movie(tmdbId)
                 {
-                    BackdropURL = tmdbMovie.Backdrop_Path,
-                    Budget = tmdbMovie.Budget,
-                    IMDbId = tmdbMovie.IMDb_Id,
-                    Language = tmdbMovie.Original_Language,
-                    LanguageTitle = tmdbMovie.Original_Title,
+                    IMDbPath = tmdbMovie.IMDb_Id,
+                    LetterboxPath = tmdbMovie.Title!.Replace(' ', '-').ToLower(),
                     PosterURL = "https://image.tmdb.org/t/p/w500/" + tmdbMovie.Poster_Path,
                     ReleaseDate = tmdbMovie.Release_Date ?? DateTime.MinValue,
-                    Revenue = tmdbMovie.Revenue,
                     Runtime = tmdbMovie.Runtime,
                     Synopsis = tmdbMovie.Overview,
                     Tagline = tmdbMovie.Tagline,
                     Title = tmdbMovie.Title
                 };
 
+                if (tmdbMovie.Credits is not null)
+                {
+                    if (tmdbMovie.Credits.Cast is not null)
+                    {
+                        var cast = tmdbMovie.Credits.Cast.Select(c => c.Name).Take(2).ToArray();
+                        newMovie.Cast = string.Join(", ", cast);
+                    }
+
+                    if (tmdbMovie.Credits.Crew is not null)
+                    {
+                        var director = tmdbMovie.Credits.Crew.Where(c => c.Job == "Director").FirstOrDefault();
+                        if (director is not null)
+                        {
+                            newMovie.Director = director.Name;
+                        }
+
+                        var screenwriter = tmdbMovie.Credits.Crew.Where(c => c.Job == "Screenplay").FirstOrDefault() ?? tmdbMovie.Credits.Crew.Where(c => c.Job == "Writer").FirstOrDefault();
+                        if (screenwriter is not null)
+                        {
+                            newMovie.Screenwriter = screenwriter.Name;
+                        }
+                    }
+                }
+
                 if (tmdbMovie.Genres is not null)
                 {
-                    var genres = tmdbMovie.Genres.Select(g => g.Name).ToArray();
+                    var genres = tmdbMovie.Genres.Select(g => g.Name).Take(3).ToArray();
                     newMovie.Genres = string.Join(", ", genres);
                 }
 

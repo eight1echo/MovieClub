@@ -12,10 +12,14 @@ public class CreateClubPage : PageModel
     }
 
     [BindProperty]
+    public int UserProfileId { get; set; }
+
+    [BindProperty]
     public CreateClubModel PageData { get; set; } = new CreateClubModel();
 
-    public IActionResult OnGetAsync()
+    public async Task<IActionResult> OnGetAsync()
     {
+        UserProfileId = await _currentUser.GetUserProfileId(HttpContext, User);
         return Page();
     }
 
@@ -25,10 +29,9 @@ public class CreateClubPage : PageModel
         {
             if (ModelState.IsValid)
             {
-                var userProfileId = await _currentUser.GetProfileIdFromSession(HttpContext, User);
-                var clubId = await _clubCommands.Create(userProfileId, PageData.Name!);
+                var clubId = await _clubCommands.Create(UserProfileId, PageData.Name);
 
-                return RedirectToPage("/details/ClubDetailsPage", new { id = clubId, area = "Clubs" });
+                return RedirectToPage("/Details/ClubDetailsPage", new { clubId, area = "Clubs" });
             }
 
             return Page();

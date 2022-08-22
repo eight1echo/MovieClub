@@ -12,7 +12,11 @@ namespace MovieClub.Web.Areas.Users.Pages.Create
         }
 
         [BindProperty]
-        public CreateProfileModel PageData { get; set; }
+        public int UserProfileId { get; set; }
+
+        [BindProperty]
+        public CreateProfileModel PageData { get; set; } = new CreateProfileModel();
+
         public IActionResult OnGetAsync()
         {
             return Page();
@@ -22,15 +26,20 @@ namespace MovieClub.Web.Areas.Users.Pages.Create
         {
             try
             {
-                if (ModelState.IsValid)
+                if (PageData is not null)
                 {
-                    var currentUser = await _currentUser.GetCurrentUser(User);
-                    var profileId = await _userCommands.CreateProfile(currentUser.Id, PageData.DisplayName!);
+                    if (ModelState.IsValid)
+                    {
+                        var currentUser = await _currentUser.GetCurrentUser(User);
+                        UserProfileId = await _userCommands.CreateProfile(currentUser.Id, PageData.DisplayName!);
 
-                    return RedirectToPage("/profile/UserProfilePage", new { id = profileId, area = "Users" });
+                        return RedirectToPage("/Home/UserhomePage", new { area = "Users" });
+                    }
+
+                    return Page();
                 }
 
-                return Page();
+                return RedirectToPage("/NotFound");
             }
             catch (Exception)
             {

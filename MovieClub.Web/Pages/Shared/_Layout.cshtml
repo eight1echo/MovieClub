@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
             <div class="container navigation">
-                <a class="navbar-brand" asp-page="/Index">MOVIE CLUB</a>
+                <a class="navbar-title" asp-page="/Index">MOVIE CLUB</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,21 +23,20 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                           <form class="row ms-auto mt-1" method="post">
-                              <div class="col">
-                                  <input type="text" class="form-control user-input" placeholder="Search Clubs" name="searchvalue" maxlength="22"/>              
-                              </div>
-                              <div class="col-auto">
-                                  <button asp-area="Clubs" asp-page="/Search/SearchClubsPage" asp-page-handler="Search" type="submit" class="invisible">Search</button>
-                              </div>
+                        <li class="nav-item"></li>
+                        <li class="nav-item"></li>
+                        <li class="nav-item nav-search text-center">
+                            <form class="row" method="post"
+                                asp-area="Clubs" asp-page="/Search/SearchClubsPage" asp-page-handler="Search" asp-route-value="value">
+                                <div class="col-10">
+                                    <input type="text" class="form-control user-input" placeholder="Search Clubs" name="value" maxlength="22"/>              
+                                </div>
+                                <div class="col-2">
+                                    <button  type="submit" class="invisible">Search</button>
+                                </div>
                             </form>
                         </li>
-                        <li class="nav-item">
-                            
-                        </li>
                     </ul>
-                    
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -50,7 +49,7 @@
         </main>
     </div>
 
-    <footer class="footer text-muted">
+    <footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-1">

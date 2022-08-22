@@ -9,10 +9,10 @@ public class MembershipCommands : IMembershipCommands
         _context = context;
     }
 
-    public async Task AcceptMembership(int clubId, int userId)
+    public async Task AcceptMembership(int membershipId)
     {
         var membership = await _context.Memberships
-            .Where(m => m.ClubId == clubId && m.UserProfileId == userId)
+            .Where(m => m.Id == membershipId)
             .FirstOrDefaultAsync();
 
         if (membership is not null)
@@ -21,12 +21,12 @@ public class MembershipCommands : IMembershipCommands
 
             var upcomingMeetups = await _context.Meetups
                 .Include(m => m.Attendance)
-                .Where(m => m.ClubId == clubId && m.Date > DateTime.Now)
+                .Where(m => m.ClubId == membership.ClubId && m.Date > DateTime.Now)
                 .ToListAsync();
 
             foreach (var meetup in upcomingMeetups)
             {
-                meetup.InviteMember(userId, meetup.Id);
+                meetup.InviteMember(membership.UserProfileId, meetup.Id);
             }
 
             await _context.SaveChangesAsync();
@@ -44,10 +44,18 @@ public class MembershipCommands : IMembershipCommands
         {
             var attendance = await _context.Attendance
             .Where(a => a.UserProfileId == membership.UserProfileId && a.Meetup.ClubId == membership.ClubId)
+            .Include(a => a.Meetup)
             .ToListAsync();
 
             if (attendance.Any())
+            {
+                foreach (var a in attendance.Where(a => a.Status == AttendanceStatus.Hosting))
+                {
+                    _context.Meetups.Remove(a.Meetup);
+                }
+
                 _context.Attendance.RemoveRange(attendance);
+            }
 
             _context.Memberships.Remove(membership);
             await _context.SaveChangesAsync();

@@ -3,7 +3,7 @@ public class DateInTheFuture : ValidationAttribute
 {
     public override string FormatErrorMessage(string name)
     {
-        return "Date must be in the future.";
+        return "Date and Time must be in the future.";
     }
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)

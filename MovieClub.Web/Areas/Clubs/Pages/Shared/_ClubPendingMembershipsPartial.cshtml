@@ -1,0 +1,34 @@
+﻿@model ClubMembershipsModel
+
+@if (Model.Pending.Any())
+{   
+    <div class="row mt-3 mb-1">
+        <div class="col-10 offset-2 pt-1 sub-page-title text-start">Membership Requests :</div>
+    </div> 
+    @foreach (var m in Model.Pending)
+    {
+        <div class="row ">
+
+            <div class="col-2 mt-2 text-center">
+                <form asp-page-handler="RejectMembership" method="post" onclick="return confirm('Are you sure you reject?')">
+                    <input type="hidden" asp-for="@Model.ClubId" value="@Model.ClubId"/>
+                    <input type="hidden" asp-for="@Model.MembershipId" value="@m.Id" />
+                    <button type="submit" class="btn-danger"><i class="fa fa-times"></i></button>
+                </form>
+            </div>
+            
+            <div class="col-8 sub-page-left-item text-center">
+                <a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-profileId="@m.UserProfile.Id" class="sub-page-link">@m.UserProfile.DisplayName</a>
+            </div>
+
+            <div class="col-2 mt-2 text-center">
+                <form asp-page-handler="AcceptMembership" method="post" onclick="return confirm('Are you sure you accept?')">
+                    <input type="hidden" asp-for="@Model.ClubId" value="@Model.ClubId"/>
+                    <input type="hidden" asp-for="@Model.MembershipId" value="@m.Id" />
+                    <button type="submit" class="btn-success"><i class="fa fa-check"></i></button>
+                </form>
+            </div>
+            
+        </div>
+    }
+}

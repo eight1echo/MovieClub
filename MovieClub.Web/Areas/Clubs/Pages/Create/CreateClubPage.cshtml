@@ -1,33 +1,26 @@
 ﻿@page "/clubs/create"
 @model CreateClubPage
-@{
-}
 
 <div class="row">
     <div class="col-6 offset-3 mt-4">
 
-        <div class="row">
-            <div class="col-4 page-nav-title text-center">Create Club:</div>
+        <div class="row mt-4">
+            <div class="col-3 sub-page-title text-center pt-1">Create Club :</div>
         </div>
 
-         <div class="sub-page-right mt-4">
+         <form asp-page-handler="CreateClub" method="post" class="row p-3 sub-page-right">
+            <div class="col-2 offset-1 mt-2 sub-page-header">Name:</div>
 
-            <form asp-page-handler="CreateClub" method="post">
-                <div class="row mt-2">
-                    <div class="col-2 offset-1 sub-heading">Name:</div>
+            <div class="col-5 form-group">
+                <input type="hidden" asp-for="@Model.UserProfileId" value="@Model.UserProfileId" class="form-control user-input" />
+                <input asp-for="PageData.Name" class="form-control user-input" />
+                <span asp-validation-for="PageData.Name" class="text-danger"></span>
+            </div>
 
-                    <div class="col-5 form-group">
-                        <input asp-for="PageData.Name" class="form-control user-input" />
-                        <span asp-validation-for="PageData.Name" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-2 offset-1 text-center form-group">
-                        <input type="submit" value="Create" class="btn btn-success" />
-                    </div>
-                </div>
-            </form>
-
-        </div>
+            <div class="col-2 offset-1 text-center form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
 
     </div>
 </div>
