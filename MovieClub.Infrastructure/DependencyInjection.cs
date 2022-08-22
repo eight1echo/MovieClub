@@ -7,7 +7,7 @@ using MovieClub.Web.Areas.Clubs;
 namespace MovieClub.Infrastructure;
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
     {
         // Access
         services.AddTransient<IAttendanceCommands, AttendanceCommands>();
@@ -19,7 +19,7 @@ public static class DependencyInjection
 
         // Database
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=MovieClub;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
+            options.UseSqlServer(connectionString));
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         // Identity

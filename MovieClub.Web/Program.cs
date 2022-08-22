@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration["DbConnection"]);
 builder.Services.AddServices();
 
 builder.Services.AddSession(options => {
