@@ -44,10 +44,6 @@ namespace MovieClub.Web.Areas.Users.Pages.Home
 
                 return Page();
             }
-            catch (ResourceNotFoundException)
-            {
-                return RedirectToPage("/NotFound");
-            }
             catch (Exception)
             {
                 return RedirectToPage("/Error");

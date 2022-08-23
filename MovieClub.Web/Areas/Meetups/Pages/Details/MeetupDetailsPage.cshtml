@@ -1,2 +1,41 @@
 ﻿@page "/meetups/{meetupId}"
 @model MeetupDetailsPage
+
+<div class="row">
+
+    @if (Model.MeetupDetails is not null)
+    {
+        <div class="col-3">
+            <div class="row">
+                <div class="col-12 mt-3 sub-page-right-title">
+                    Meetup Attendance:
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="row mt-3">
+                        <div class="col-10 offset-2 pt-1 sub-page-title text-start">Host :</div>
+                    </div>
+
+                    <div class="row mt-1">
+                        <div class="col-8 offset-2 sub-page-left-item text-center">
+                            <a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-profileId="@Model.MeetupDetails.Meetup.Host.Id" class=" sub-page-link">@Model.MeetupDetails.Meetup.Host.DisplayName</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <partial name="_MeetupAttendanceListPartial" for="MeetupDetails.Attendance" />
+
+        </div>
+
+        <div class="col-8 offset-1">
+
+            <partial name="_MeetupDetailsPartial" for="MeetupDetails" />
+
+        </div>
+    }
+
+</div>

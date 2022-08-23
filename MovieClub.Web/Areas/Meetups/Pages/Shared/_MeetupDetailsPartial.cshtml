@@ -1,0 +1,175 @@
+﻿@model MeetupDetailsModel
+
+@if (Model.Meetup is not null)
+{
+    <div class="row mt-2">
+        <div class="col-3 offset-1 sub-page-right-title pt-1 pb-1">Meetup Details :</div>
+        <div class="col-2 mt-2 sub-page-title offset-6 text-center">
+            <a asp-area="Meetups" asp-page="/Create/CreateMeetupPage" class="page-nav-success">Host A Meetup</a>
+        </div>
+    </div>
+
+    @if (Model.Meetup.Movie is not null)
+    {
+        <div class="row sub-page-right">
+
+            <div class="row">
+
+                <div class="col-4 mt-2">
+                    <div class="row">
+                        <div class="col-8 offset-2 sub-page-nobg text-center">
+                            <img class="movie-poster" src="@Model.Meetup.Movie.PosterURL" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-8">
+
+                    <div class="row">
+                        <div class="col-11">
+
+                            <div class="row text-center">
+                                <div class="col-12">
+                                    <a asp-area="Meetups" asp-page="/Details/MeetupDetailsPage" asp-route-meetupId="@Model.Meetup.Id" class="movie-title">@Model.Meetup.Movie.Title</a>
+                                </div>
+                            </div>
+
+                            <div class="row divide-border-bottom text-center">
+                                <div class="col-3 mt-3 divide-border-right">
+                                    <div class="row">
+                                        <div class="movie-year">@Model.Meetup.Movie.ReleaseDate.Year</div>
+                                    </div>
+                                    <div class="row p-1">
+                                        <div class="movie-runtime">@Model.Meetup.Movie.Runtime <span style="font-size: 14px">minutes</span></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="movie-tagline">" @Model.Meetup.Movie.Tagline "</div>
+                                    </div>
+                                    <div class="row p-2">
+                                        <div class="col-6">
+                                            <a href="https://www.imdb.com/title/@Model.Meetup.Movie.IMDBPath" target=”_blank”><img class="logo-imdb" src="/images/logo-imdb.png" /></a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="https://letterboxd.com/film/@Model.Meetup.Movie.LetterboxPath" target=”_blank”><img class="logo-letterboxd" src="/images/logo-lboxd.png" /></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3 mt-3 divide-border-left">
+                                    <div class="movie-genres">@Model.Meetup.Movie.Genres</div>
+                                </div>
+                            </div>
+
+                            <div class="row text-center">
+                                <div class="col-3 divide-border-right">
+                                    <div class="row pt-2">
+                                        <div class="movie-label">directed by:</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="movie-credit">@Model.Meetup.Movie.Director</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row pt-2">
+                                        <div class="movie-label">starring:</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="movie-credit">@Model.Meetup.Movie.Cast</div>
+                                    </div>
+                                </div>
+                                <div class="col-3 divide-border-left">
+                                    <div class="row pt-2">
+                                        <div class="movie-label">written by:</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="movie-credit">@Model.Meetup.Movie.Screenwriter</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-3 text-center">
+                                <p class="col-12 movie-synopsis">@Model.Meetup.Movie.Synopsis</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4 mt-1 sub-page-header">
+                                    host:
+                                </div>
+                                <div class="col-2 mt-1 sub-page-header">
+                                    when:
+                                </div>
+                                <div class="col-3 mt-1 sub-page-header">
+                                    where:
+                                </div>
+                                <div class="col-3 mt-1 sub-page-header">
+                                    rsvp:
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                @if (Model.Meetup.Host is not null)
+                                {
+                                    <div class="col-4">
+                                        <div class="row p-1">
+                                            <div class="col-10 offset-1 mt-2">
+                                                <a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-profileId="@Model.Meetup.Host.Id" class="form-control user-input-link">@Model.Meetup.Host.DisplayName </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="col-2 p-1 mt-1 text-center meetup-details">
+                                    <div>@Model.Meetup.Date.ToShortDateString()</div>
+                                    <div>@Model.Meetup.Date.ToShortTimeString()</div>
+                                </div>
+                                <div class="col-3 p-1 mt-3 text-center meetup-details">
+                                    <div class="">@Model.Meetup.Location </div>
+                                </div>
+                                @if (@Model.Meetup.UserAttendance.Status is not AttendanceStatus.Hosting)
+                                {
+                                    <div class="col-3 p-1">
+                                        <form asp-page-handler="UpdateAttendance" method="post">
+                                            <div class="row mt-2">
+                                                <div class="col-10 offset-1">
+                                                    @if (@Model.Meetup.UserAttendance.Status is AttendanceStatus.Attending)
+                                                    {
+                                                        <select class="form-select user-input-select rsvp-attending" asp-for="@Model.Meetup.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(Model.Meetup.UserAttendance.Status)"></select>
+                                                    }
+                                                    @if (@Model.Meetup.UserAttendance.Status is AttendanceStatus.Invited)
+                                                    {
+                                                        <select class="form-select user-input-select rsvp-invited" asp-for="@Model.Meetup.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(Model.Meetup.UserAttendance.Status)"></select>
+                                                    }
+                                                    @if (@Model.Meetup.UserAttendance.Status is AttendanceStatus.Declined)
+                                                    {
+                                                        <select class="form-select user-input-select rsvp-declined" asp-for="@Model.Meetup.UserAttendance.Status" asp-items="@GetSelectList.AttendanceSelect(Model.Meetup.UserAttendance.Status)"></select>
+                                                    }
+                                                </div>
+                                                <div class="col-1 p-1">
+                                                    <input type="hidden" asp-for="@Model.Meetup.Id" value="@Model.Meetup.Id" />
+                                                    <input type="hidden" asp-for="@Model.Meetup.UserAttendance.Id" value="@Model.Meetup.UserAttendance.Id" />
+                                                    <button class="btn-success" type="submit"><i class="fa fa-check mt-1"></i></button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-3 p-1">
+                                        <div class="row">
+                                            <div class="col-10 offset-1 mt-2">
+                                                <a asp-area="Meetups" asp-page="/Details/MeetupDetailsPage" asp-route-meetupId="@Model.Meetup.Id" class="form-control user-input-select rsvp-hosting">@Model.Meetup.UserAttendance.Status</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

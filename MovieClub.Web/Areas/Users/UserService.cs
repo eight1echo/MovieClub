@@ -135,8 +135,6 @@ public class UserService : IUserService
 
             }).FirstOrDefaultAsync();
 
-        if (model is null) throw new ResourceNotFoundException();
-
         return model;
     }
 

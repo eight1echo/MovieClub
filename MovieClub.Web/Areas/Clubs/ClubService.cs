@@ -42,9 +42,9 @@ public class ClubService : IClubService
                         Location = m.Location,
 
                         Host = m.Attendance
-                                    .Where(a => a.Status == AttendanceStatus.Hosting)
-                                    .Select(a => new UserProfileDTO { Id = a.UserProfile.Id, DisplayName = a.UserProfile.DisplayName })
-                                    .FirstOrDefault(),
+                            .Where(a => a.Status == AttendanceStatus.Hosting)
+                            .Select(a => new UserProfileDTO { Id = a.UserProfile.Id, DisplayName = a.UserProfile.DisplayName })
+                            .FirstOrDefault(),
 
                         Movie = new MovieDTO
                         {

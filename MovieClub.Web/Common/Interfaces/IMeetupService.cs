@@ -2,5 +2,5 @@
 
 public interface IMeetupService
 {
-
+    Task<MeetupDetailsModel?> GetMeetupDetails(int userProfileId, int meetupId);
 }

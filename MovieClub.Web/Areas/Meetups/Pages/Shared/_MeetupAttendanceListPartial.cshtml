@@ -1,0 +1,52 @@
+﻿@model MeetupAttendanceModel
+
+<div class="row">
+    <div class="col-12">
+
+        @if (Model.Attending.Any())
+        {
+            <div class="row mt-3 mb-1">
+                <div class="col-10 offset-2 pt-1 sub-page-title text-start">Attending :</div>
+            </div>
+            @foreach (var m in Model.Attending)
+            {
+                <div class="row">
+                    <div class="col-8 offset-2 sub-page-left-item text-center">
+                        <a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-profileId="@m.UserProfile.Id" class="sub-page-link">@m.UserProfile.DisplayName</a>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (Model.Invited.Any())
+        {
+            <div class="row mt-3 mb-1">
+                <div class="col-10 offset-2 pt-1 sub-page-title text-start">Invited :</div>
+            </div>
+            @foreach (var m in Model.Invited)
+            {
+                <div class="row">
+                    <div class="col-8 offset-2 sub-page-left-item text-center">
+                        <a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-profileId="@m.UserProfile.Id" class="sub-page-link">@m.UserProfile.DisplayName</a>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (Model.Declined.Any())
+        {
+            <div class="row mt-3 mb-1">
+                <div class="col-10 offset-2 pt-1 sub-page-title text-start">Can't Attend :</div>
+            </div>
+            @foreach (var m in Model.Declined)
+            {
+                <div class="row">
+                    <div class="col-8 offset-2 sub-page-left-item text-center">
+                        <a asp-area="Users" asp-page="/Profile/UserProfilePage" asp-route-profileId="@m.UserProfile.Id" class="sub-page-link">@m.UserProfile.DisplayName</a>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>
