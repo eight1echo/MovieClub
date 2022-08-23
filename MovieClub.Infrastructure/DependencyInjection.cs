@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MovieClub.Infrastructure.External.TMDb;
 using MovieClub.Infrastructure.Persistence.Access;
